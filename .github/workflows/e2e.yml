@@ -1,0 +1,64 @@
+name: E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      web_base_url:
+        description: 'Web admin origin to test against'
+        required: false
+        default: ''
+  # Uncomment once a staging environment is reachable from CI runners:
+  # schedule:
+  #   - cron: '0 2 * * *' # nightly, matching Test Strategy's "before every release" cadence
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'playwright.config.ts'
+      - 'package.json'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      # Full local stack (Postgres, Redis, Kafka, Mailpit, backend, web
+      # admin, Kong) so the same suite that runs on a laptop runs here --
+      # see vietgara-backend/docker-compose.yml and README.md
+      # "Environments". Skipped when web_base_url points somewhere already
+      # running (a staging deploy).
+      - name: Start the local stack
+        if: ${{ github.event.inputs.web_base_url == '' }}
+        run: |
+          git clone --depth 1 https://github.com/viettechno/vietgara-backend.git ../vietgara-backend
+          cp ../vietgara-backend/.env.example ../vietgara-backend/.env
+          docker compose -f ../vietgara-backend/docker-compose.yml up -d --wait
+
+      - name: Wait for the web admin
+        run: npx wait-on ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }} -t 120000
+
+      - name: Run the suite
+        run: npm test
+        env:
+          WEB_BASE_URL: ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }}
+          API_BASE_URL: ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }}/api
+          MAILPIT_URL: http://localhost:8025
+          CI: true
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

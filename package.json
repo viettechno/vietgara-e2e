@@ -1,0 +1,42 @@
+{
+  "name": "vietgara-e2e",
+  "version": "1.0.0",
+  "description": "Automated end-to-end tests for VietGara (Playwright + TypeScript), driving the real web admin against a running backend. Scenario source of truth: vietgara-docs/docs/05-Testing/E2E_Scenarios.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "codegen": "playwright codegen $WEB_BASE_URL",
+    "generate:api": "swagger2openapi ../vietgara-proto/openapi/vietgara.swagger.json -o src/api/openapi.json && openapi-typescript src/api/openapi.json -o src/api/schema.d.ts",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viettechno/vietgara-e2e.git"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.3",
+    "dotenv": "^18.0.4",
+    "eslint": "^10.11.0",
+    "eslint-plugin-playwright": "^2.12.0",
+    "openapi-typescript": "^7.13.0",
+    "prettier": "^3.9.9",
+    "swagger2openapi": "^7.0.8",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
