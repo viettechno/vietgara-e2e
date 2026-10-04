@@ -1,5 +1,5 @@
 // A thin JSON client over Playwright's APIRequestContext, matching the
-// conventions of vietgara-web-admin/src/lib/api.ts (same error envelope,
+// conventions of vietgara-owner-web/src/lib/api.ts (same error envelope,
 // same REST paths) but built for test setup: it never touches localStorage
 // or auto-refreshes -- each ApiClient instance is bound to one bearer token
 // for the lifetime of one logical actor (see src/api/client.ts).

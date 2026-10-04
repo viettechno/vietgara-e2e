@@ -1,6 +1,6 @@
 // Types of the VietGara REST API, generated from vietgara-proto's OpenAPI
 // document (`npm run generate:api`). Only aliases live here -- mirrors the
-// same pattern as vietgara-web-admin/src/api/types.ts so the two stay easy
+// same pattern as vietgara-owner-web/src/api/types.ts so the two stay easy
 // to cross-reference.
 import type { components } from './schema.js'
 

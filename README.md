@@ -1,6 +1,6 @@
 # vietgara-e2e
 
-Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-web-admin` against a running `vietgara-backend`.
+Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` against a running `vietgara-backend`.
 
 **Scenarios are written in [`vietgara-docs`](https://github.com/viettechno/vietgara-docs) first** ([`docs/05-Testing/E2E_Scenarios/`](https://github.com/viettechno/vietgara-docs/tree/main/docs/05-Testing/E2E_Scenarios)), with a stable ID, named test data and exact expected results. This repo automates them under the same ID — a spec here should always be traceable to one scenario there, never the other way around. A behaviour with no documented scenario gets one before it gets a test.
 
@@ -8,7 +8,7 @@ Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + 
 
 Playwright is the framework [`01_Test_Strategy.md`](https://github.com/viettechno/vietgara-docs/blob/main/docs/05-Testing/01_Test_Strategy.md) already named: auto-waiting locators (no manual `sleep`/polling for most UI state), first-class TypeScript, a trace viewer that records the whole run for a failing test (DOM snapshots, network, console — usually enough to diagnose a CI failure without reproducing it locally), real multi-browser engines, and a test runner with built-in parallelism and retries.
 
-A dedicated repo (rather than `vietgara-web-admin/e2e/`, the original plan) keeps the suite's own dependencies, CI cadence and — later — mobile E2E (Customer App, Technician App, via Maestro or Detox, added as sibling top-level directories the same way `tests/` and `src/` sit here) independent of any one frontend's toolchain and release cycle.
+A dedicated repo (rather than `vietgara-owner-web/e2e/`, the original plan) keeps the suite's own dependencies, CI cadence and — later — mobile E2E (Customer App, Technician App, via Maestro or Detox, added as sibling top-level directories the same way `tests/` and `src/` sit here) independent of any one frontend's toolchain and release cycle.
 
 ## Project layout
 
@@ -29,12 +29,12 @@ tests/
 
 [`00_Test_Data.md §4`](https://github.com/viettechno/vietgara-docs/blob/main/docs/05-Testing/E2E_Scenarios/00_Test_Data.md#4-baseline-setup) says it directly: _"It uses only features that have their own scenarios [...] When the suite is automated, this becomes an API fixture."_ Every spec should exercise the UI only for what its own scenario is actually about; everything else it needs first (an account, a garage, a customer, a stocked item) is created over the API via `freshOwner` / `owner.api.*`, the same way a human tester would rely on the baseline instead of clicking through unrelated screens. This keeps specs fast, and keeps a failure pointing at the one thing under test.
 
-The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI document `vietgara-web-admin` uses (`npm run generate:api`, requires the sibling `../vietgara-proto` checkout) — one source of truth for both.
+The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI document `vietgara-owner-web` uses (`npm run generate:api`, requires the sibling `../vietgara-proto` checkout) — one source of truth for both.
 
 ## Prerequisites
 
 - Node.js 22+
-- A running VietGara stack: `vietgara-backend` (+ Postgres, Mailpit; Redis/Kafka optional in dev, see its own README) and `vietgara-web-admin`, reachable from wherever this suite runs.
+- A running VietGara stack: `vietgara-backend` (+ Postgres, Mailpit; Redis/Kafka optional in dev, see its own README) and `vietgara-owner-web`, reachable from wherever this suite runs.
 - Google Chrome installed (the `chromium` project launches it via `channel: 'chrome'` rather than a Playwright-managed download — see `playwright.config.ts` for why, and how to switch back).
 
 ## Setup
