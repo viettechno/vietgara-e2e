@@ -26,29 +26,29 @@ export class RepairOrderCreateForm {
 
   async pickVehicle(query: string, optionText: string): Promise<void> {
     await this.vehicleField.fill(query)
-    await this.page.getByRole('listbox').getByRole('button', { name: optionText }).first().click()
+    await this.page.getByRole('listbox').getByRole('option', { name: optionText }).first().click()
   }
 
   lineRow(index: number): Locator {
-    return this.page.locator('.line-items-table tbody tr').nth(index)
+    return this.page.locator('table tbody tr').nth(index)
   }
 
   async fillLine(index: number, line: RepairOrderLineInput): Promise<void> {
     const row = this.lineRow(index)
     await row.locator('select').selectOption(line.itemType === 'Part' ? 'REPAIR_ORDER_ITEM_TYPE_PART' : 'REPAIR_ORDER_ITEM_TYPE_LABOR')
     if (line.itemType === 'Part' && line.itemSku) {
-      const itemField = row.locator('input[type="search"]')
+      const itemField = row.locator('input[role="combobox"]')
       await itemField.fill(line.itemSku)
-      await this.page.getByRole('listbox').getByRole('button', { name: line.itemSku }).first().click()
+      await this.page.getByRole('listbox').getByRole('option', { name: line.itemSku }).first().click()
     }
-    const inputs = row.locator('input:not([type="search"])')
+    const inputs = row.locator('input:not([role="combobox"]):not([readonly])')
     await inputs.nth(0).fill(line.description)
     await inputs.nth(1).fill(line.quantity)
     await inputs.nth(2).fill(line.unitPrice)
   }
 
   async addLine(line: RepairOrderLineInput): Promise<void> {
-    const before = await this.page.locator('.line-items-table tbody tr').count()
+    const before = await this.page.locator('table tbody tr').count()
     await this.addLineButton.click()
     await this.fillLine(before, line)
   }
@@ -67,7 +67,7 @@ export class RepairOrderDetailPage {
   }
 
   lineRow(index: number): Locator {
-    return this.page.locator('.line-items-table tbody tr').nth(index)
+    return this.page.locator('table tbody tr').nth(index)
   }
 
   async setLineStatus(index: number, status: 'Not started' | 'In progress' | 'Completed'): Promise<void> {

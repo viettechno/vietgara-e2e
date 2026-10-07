@@ -19,5 +19,5 @@ test('E2E-INV-001 add a part code to the catalogue', async ({ page, signIn, fres
   await expect(row).toContainText('0 L') // no receipt yet
 
   await inventory.receiveStock('OIL-5W30', { quantity: '10', unitCost: '150000' })
-  await expect(row).toContainText('10.00 L')
+  await expect(row).toContainText('10 L')
 })

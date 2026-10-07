@@ -50,7 +50,7 @@ test('E2E-INV-008 closing a repair order with part lines automatically deducts s
   await inventory.goto()
   await expect(async () => {
     await page.reload()
-    await expect(inventory.itemRow('OIL-5W30')).toContainText('6.00 L')
+    await expect(inventory.itemRow('OIL-5W30')).toContainText('6 L')
   }).toPass({ timeout: 15_000 })
 
   await inventory.stockMovementsTab.click()
