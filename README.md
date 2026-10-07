@@ -1,5 +1,16 @@
 # vietgara-e2e
 
+> **Purpose:** This repo is the **automated end-to-end test suite** for VietGara — Playwright + TypeScript tests that drive the real web app against a running backend. It contains no product code.
+
+| | |
+| --- | --- |
+| **Type** | Test suite |
+| **Used by** | QA and CI, before every release |
+| **Does** | Automates the scenarios documented in `vietgara-docs` (`docs/05-Testing/E2E_Scenarios`) under the same IDs |
+| **Built with** | Playwright, TypeScript, a typed API client for test setup, Mailpit for OTP e-mails |
+| **Tests** | `vietgara-owner-web` through `vietgara-backend` (Kong, Postgres, Mailpit) |
+| **Related** | `vietgara-docs` (scenarios), `vietgara-backend/testing/blackbox` (API-level tests) |
+
 Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` against a running `vietgara-backend`.
 
 **Scenarios are written in [`vietgara-docs`](https://github.com/viettechno/vietgara-docs) first** ([`docs/05-Testing/E2E_Scenarios/`](https://github.com/viettechno/vietgara-docs/tree/master/docs/05-Testing/E2E_Scenarios)), with a stable ID, named test data and exact expected results. This repo automates them under the same ID — a spec here should always be traceable to one scenario there, never the other way around. A behaviour with no documented scenario gets one before it gets a test.
