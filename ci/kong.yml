@@ -1,6 +1,6 @@
 # A copy of vietgara-backend/kong/kong.yml (the repository is private, so CI cannot read it).
 # Keep the routes in step with it when the gateway changes there.
-_format_version: "3.0"
+_format_version: '3.0'
 _transform: true
 
 services:
