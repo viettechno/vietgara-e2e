@@ -24,6 +24,6 @@ export class GaragesPage {
   }
 
   garageRow(name: string): Locator {
-    return this.page.locator('article.garage-row', { hasText: name })
+    return this.page.locator('main li', { hasText: name })
   }
 }

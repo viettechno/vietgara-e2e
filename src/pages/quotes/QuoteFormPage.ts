@@ -33,11 +33,11 @@ export class QuoteFormPage {
   /** Types into a SearchSelect field and picks the option whose visible text contains `optionText`. */
   async pickSearchSelect(field: Locator, query: string, optionText: string): Promise<void> {
     await field.fill(query)
-    await this.page.getByRole('listbox').getByRole('button', { name: optionText }).first().click()
+    await this.page.getByRole('listbox').getByRole('option', { name: optionText }).first().click()
   }
 
   lineRow(index: number): Locator {
-    return this.page.locator('.line-items-table tbody tr').nth(index)
+    return this.page.locator('table tbody tr').nth(index)
   }
 
   async fillLine(index: number, line: QuoteLineInput): Promise<void> {
@@ -50,7 +50,7 @@ export class QuoteFormPage {
   }
 
   async addLine(line: QuoteLineInput): Promise<void> {
-    const before = await this.page.locator('.line-items-table tbody tr').count()
+    const before = await this.page.locator('table tbody tr').count()
     await this.addLineButton.click()
     await this.fillLine(before, line)
   }

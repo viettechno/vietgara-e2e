@@ -1,5 +1,16 @@
 # vietgara-e2e
 
+> **Purpose:** This repo is the **automated end-to-end test suite** for VietGara — Playwright + TypeScript tests that drive the real web app against a running backend. It contains no product code.
+
+|                |                                                                                                            |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Type**       | Test suite                                                                                                 |
+| **Used by**    | QA and CI, before every release                                                                            |
+| **Does**       | Automates the scenarios documented in `vietgara-docs` (`docs/05-Testing/E2E_Scenarios`) under the same IDs |
+| **Built with** | Playwright, TypeScript, a typed API client for test setup, Mailpit for OTP e-mails                         |
+| **Tests**      | `vietgara-owner-web` through `vietgara-backend` (Kong, Postgres, Mailpit)                                  |
+| **Related**    | `vietgara-docs` (scenarios), `vietgara-backend/testing/blackbox` (API-level tests)                         |
+
 Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` against a running `vietgara-backend`.
 
 **Scenarios are written in [`vietgara-docs`](https://github.com/viettechno/vietgara-docs) first** ([`docs/05-Testing/E2E_Scenarios/`](https://github.com/viettechno/vietgara-docs/tree/master/docs/05-Testing/E2E_Scenarios)), with a stable ID, named test data and exact expected results. This repo automates them under the same ID — a spec here should always be traceable to one scenario there, never the other way around. A behaviour with no documented scenario gets one before it gets a test.
@@ -64,6 +75,23 @@ npm run report         # reopen the last HTML report
 ```
 
 A failed run's HTML report links each failure to its trace (`npx playwright show-trace <path>`, or open the report and click through) — a full timeline with DOM snapshots, network requests and console output at the moment it failed.
+
+## The stack from published images (what CI uses)
+
+No source checkout is needed: `ci/compose.yml` runs Postgres, Redis, Kafka, Mailpit, the backend, both web apps and Kong from the **public** images in `ghcr.io/viettechno/*`. The gateway config `ci/kong.yml` is a copy of `vietgara-backend/kong/kong.yml` (that repository is private); keep it in step when the gateway changes there.
+
+```bash
+export BACKEND_TAG=$(ci/resolve-tag.sh vietgara-backend)        # newest release tag, or pass a tag: ci/resolve-tag.sh vietgara-backend v1.5.0
+export OWNER_WEB_TAG=$(ci/resolve-tag.sh vietgara-owner-web)
+export ADMIN_WEB_TAG=$(ci/resolve-tag.sh vietgara-admin-web)
+docker compose -f ci/compose.yml up -d --wait                    # http://localhost:8000 and Mailpit on :8025
+npm test
+docker compose -f ci/compose.yml down -v
+```
+
+Images are tagged with `git describe` (`v1.5.0`, `v1.5.0-4-g0c94831`) and published when a change merges to `master` or a `v*` tag is pushed, so the suite tests what ships, not an unmerged branch. The backend image is `linux/amd64` only: on Apple silicon set `DOCKER_DEFAULT_PLATFORM=linux/amd64`. To try an unpublished web build, build the image locally (`docker build --platform linux/amd64 -t ghcr.io/viettechno/vietgara-owner-web:local ../vietgara-owner-web`) and set `OWNER_WEB_TAG=local`. Use `KONG_PROXY_PORT` / `MAILPIT_UI_PORT` to avoid clashing with a dev stack already on 8000 / 8025.
+
+The **E2E** GitHub workflow does exactly this on every pull request touching the suite, and can be started by hand with chosen image tags (`backend_tag`, `owner_web_tag`, `admin_web_tag`) or pointed at a running environment (`web_base_url`).
 
 ## Writing a new spec
 
