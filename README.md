@@ -76,6 +76,23 @@ npm run report         # reopen the last HTML report
 
 A failed run's HTML report links each failure to its trace (`npx playwright show-trace <path>`, or open the report and click through) — a full timeline with DOM snapshots, network requests and console output at the moment it failed.
 
+## The stack from published images (what CI uses)
+
+No source checkout is needed: `ci/compose.yml` runs Postgres, Redis, Kafka, Mailpit, the backend, both web apps and Kong from the **public** images in `ghcr.io/viettechno/*`. The gateway config `ci/kong.yml` is a copy of `vietgara-backend/kong/kong.yml` (that repository is private); keep it in step when the gateway changes there.
+
+```bash
+export BACKEND_TAG=$(ci/resolve-tag.sh vietgara-backend)        # newest release tag, or pass a tag: ci/resolve-tag.sh vietgara-backend v1.5.0
+export OWNER_WEB_TAG=$(ci/resolve-tag.sh vietgara-owner-web)
+export ADMIN_WEB_TAG=$(ci/resolve-tag.sh vietgara-admin-web)
+docker compose -f ci/compose.yml up -d --wait                    # http://localhost:8000 and Mailpit on :8025
+npm test
+docker compose -f ci/compose.yml down -v
+```
+
+Images are tagged with `git describe` (`v1.5.0`, `v1.5.0-4-g0c94831`) and published when a change merges to `master` or a `v*` tag is pushed, so the suite tests what ships, not an unmerged branch. The backend image is `linux/amd64` only: on Apple silicon set `DOCKER_DEFAULT_PLATFORM=linux/amd64`. To try an unpublished web build, build the image locally (`docker build --platform linux/amd64 -t ghcr.io/viettechno/vietgara-owner-web:local ../vietgara-owner-web`) and set `OWNER_WEB_TAG=local`. Use `KONG_PROXY_PORT` / `MAILPIT_UI_PORT` to avoid clashing with a dev stack already on 8000 / 8025.
+
+The **E2E** GitHub workflow does exactly this on every pull request touching the suite, and can be started by hand with chosen image tags (`backend_tag`, `owner_web_tag`, `admin_web_tag`) or pointed at a running environment (`web_base_url`).
+
 ## Writing a new spec
 
 1. Find the scenario in `vietgara-docs` (or write it there first if it doesn't exist yet — see "Scenarios are written... first" above).

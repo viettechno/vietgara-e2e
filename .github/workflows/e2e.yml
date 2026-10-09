@@ -4,7 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       web_base_url:
-        description: 'Web admin origin to test against'
+        description: 'Test an environment that is already running (e.g. staging) instead of starting the stack'
+        required: false
+        default: ''
+      backend_tag:
+        description: 'vietgara-backend image tag (default: the newest release tag on ghcr.io)'
+        required: false
+        default: ''
+      owner_web_tag:
+        description: 'vietgara-owner-web image tag (default: the newest release tag)'
+        required: false
+        default: ''
+      admin_web_tag:
+        description: 'vietgara-admin-web image tag (default: the newest release tag)'
         required: false
         default: ''
   # Uncomment once a staging environment is reachable from CI runners:
@@ -14,6 +26,8 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
+      - 'ci/**'
+      - '.github/workflows/e2e.yml'
       - 'playwright.config.ts'
       - 'package.json'
 
@@ -21,6 +35,8 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      WEB_BASE_URL: ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,28 +49,40 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
-      # Full local stack (Postgres, Redis, Kafka, Mailpit, backend, web
-      # admin, Kong) so the same suite that runs on a laptop runs here --
-      # see vietgara-backend/docker-compose.yml and README.md
-      # "Environments". Skipped when web_base_url points somewhere already
-      # running (a staging deploy).
-      - name: Start the local stack
+      # The full stack (Postgres, Redis, Kafka, Mailpit, backend, both web apps,
+      # Kong) runs from the PUBLISHED images (ghcr.io/viettechno/*, public), so
+      # no source repository is cloned and no registry login is needed. See
+      # ci/compose.yml. Skipped when web_base_url points at a running environment.
+      - name: Resolve image tags
         if: ${{ github.event.inputs.web_base_url == '' }}
+        env:
+          REQUESTED_BACKEND: ${{ github.event.inputs.backend_tag }}
+          REQUESTED_OWNER_WEB: ${{ github.event.inputs.owner_web_tag }}
+          REQUESTED_ADMIN_WEB: ${{ github.event.inputs.admin_web_tag }}
         run: |
-          git clone --depth 1 https://github.com/viettechno/vietgara-backend.git ../vietgara-backend
-          cp ../vietgara-backend/.env.example ../vietgara-backend/.env
-          docker compose -f ../vietgara-backend/docker-compose.yml up -d --wait
+          {
+            echo "BACKEND_TAG=$(ci/resolve-tag.sh vietgara-backend "$REQUESTED_BACKEND")"
+            echo "OWNER_WEB_TAG=$(ci/resolve-tag.sh vietgara-owner-web "$REQUESTED_OWNER_WEB")"
+            echo "ADMIN_WEB_TAG=$(ci/resolve-tag.sh vietgara-admin-web "$REQUESTED_ADMIN_WEB")"
+          } | tee -a "$GITHUB_ENV"
 
-      - name: Wait for the web admin
-        run: npx wait-on ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }} -t 120000
+      - name: Start the stack
+        if: ${{ github.event.inputs.web_base_url == '' }}
+        run: docker compose -f ci/compose.yml up -d --wait
+
+      - name: Wait for the web app
+        run: npx wait-on ${{ env.WEB_BASE_URL }} -t 120000
 
       - name: Run the suite
         run: npm test
         env:
-          WEB_BASE_URL: ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }}
-          API_BASE_URL: ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }}/api
+          API_BASE_URL: ${{ env.WEB_BASE_URL }}/api
           MAILPIT_URL: http://localhost:8025
           CI: true
+
+      - name: Stack logs
+        if: ${{ failure() && github.event.inputs.web_base_url == '' }}
+        run: docker compose -f ci/compose.yml logs --no-color --tail 200
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
