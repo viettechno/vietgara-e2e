@@ -11,7 +11,7 @@ export class RegisterPage {
     this.fullName = page.getByLabel('Full name')
     this.email = page.getByLabel('Email', { exact: true })
     this.password = page.getByLabel('Password', { exact: true })
-    this.submit = page.getByRole('button', { name: 'Sign up' })
+    this.submit = page.getByRole('button', { name: 'Create account' })
   }
 
   async goto(): Promise<void> {
