@@ -1,0 +1,57 @@
+name: E2E (manual)
+
+# Run the end-to-end suite by hand against the versions you choose.
+#
+#   Actions > "E2E (manual)" > Run workflow
+#
+# Each tag is the image tag published by the app's CI (a `git describe` string such
+# as v1.5.0 or v1.5.0-5-g2f65e37). Leave a field empty to use the newest release
+# tag of that app. A tag that does not exist fails fast and lists the newest ones.
+
+run-name: >-
+  E2E (manual) · backend ${{ inputs.backend_tag || 'newest' }} ·
+  owner-web ${{ inputs.owner_web_tag || 'newest' }} ·
+  admin-web ${{ inputs.admin_web_tag || 'newest' }}${{ inputs.web_base_url != '' && format(' · existing env {0}', inputs.web_base_url) || '' }}${{ inputs.grep != '' && format(' · {0}', inputs.grep) || '' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      backend_tag:
+        description: 'vietgara-backend image tag (empty: newest release tag)'
+        type: string
+        required: false
+        default: ''
+      owner_web_tag:
+        description: 'vietgara-owner-web image tag (empty: newest release tag)'
+        type: string
+        required: false
+        default: ''
+      admin_web_tag:
+        description: 'vietgara-admin-web image tag (empty: newest release tag)'
+        type: string
+        required: false
+        default: ''
+      grep:
+        description: 'Only run scenarios whose title matches, e.g. E2E-QUO or E2E-INV-008 (empty: all)'
+        type: string
+        required: false
+        default: ''
+      web_base_url:
+        description: 'Instead of starting the stack, test an environment that is already running, e.g. https://vietgara-staging.viettechno.com (tags are ignored)'
+        type: string
+        required: false
+        default: ''
+
+concurrency:
+  group: e2e-manual-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  e2e:
+    uses: ./.github/workflows/e2e.yml
+    with:
+      backend_tag: ${{ inputs.backend_tag }}
+      owner_web_tag: ${{ inputs.owner_web_tag }}
+      admin_web_tag: ${{ inputs.admin_web_tag }}
+      grep: ${{ inputs.grep }}
+      web_base_url: ${{ inputs.web_base_url }}

@@ -1,42 +1,52 @@
 name: E2E
 
+# The test job itself. It runs on every pull request that touches the suite
+# (with the newest release images) and is reused by the manual workflow
+# ".github/workflows/e2e-manual.yml", which lets you pick the versions to test.
+
 on:
-  workflow_dispatch:
-    inputs:
-      web_base_url:
-        description: 'Test an environment that is already running (e.g. staging) instead of starting the stack'
-        required: false
-        default: ''
-      backend_tag:
-        description: 'vietgara-backend image tag (default: the newest release tag on ghcr.io)'
-        required: false
-        default: ''
-      owner_web_tag:
-        description: 'vietgara-owner-web image tag (default: the newest release tag)'
-        required: false
-        default: ''
-      admin_web_tag:
-        description: 'vietgara-admin-web image tag (default: the newest release tag)'
-        required: false
-        default: ''
-  # Uncomment once a staging environment is reachable from CI runners:
-  # schedule:
-  #   - cron: '0 2 * * *' # nightly, matching Test Strategy's "before every release" cadence
   pull_request:
     paths:
       - 'src/**'
       - 'tests/**'
       - 'ci/**'
       - '.github/workflows/e2e.yml'
+      - '.github/workflows/e2e-manual.yml'
       - 'playwright.config.ts'
       - 'package.json'
+  workflow_call:
+    inputs:
+      backend_tag:
+        description: 'vietgara-backend image tag (empty: the newest release tag)'
+        type: string
+        default: ''
+      owner_web_tag:
+        description: 'vietgara-owner-web image tag (empty: the newest release tag)'
+        type: string
+        default: ''
+      admin_web_tag:
+        description: 'vietgara-admin-web image tag (empty: the newest release tag)'
+        type: string
+        default: ''
+      web_base_url:
+        description: 'Test an environment that is already running instead of starting the stack (tags are ignored)'
+        type: string
+        default: ''
+      grep:
+        description: 'Only run tests whose title matches this pattern (empty: all)'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
 
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
-      WEB_BASE_URL: ${{ github.event.inputs.web_base_url || 'http://localhost:8000' }}
+      WEB_BASE_URL: ${{ inputs.web_base_url || 'http://localhost:8000' }}
+      EXISTING_ENV: ${{ (inputs.web_base_url || '') != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -53,40 +63,84 @@ jobs:
       # Kong) runs from the PUBLISHED images (ghcr.io/viettechno/*, public), so
       # no source repository is cloned and no registry login is needed. See
       # ci/compose.yml. Skipped when web_base_url points at a running environment.
-      - name: Resolve image tags
-        if: ${{ github.event.inputs.web_base_url == '' }}
+      - name: Resolve and check the image tags
+        if: ${{ env.EXISTING_ENV != 'true' }}
         env:
-          REQUESTED_BACKEND: ${{ github.event.inputs.backend_tag }}
-          REQUESTED_OWNER_WEB: ${{ github.event.inputs.owner_web_tag }}
-          REQUESTED_ADMIN_WEB: ${{ github.event.inputs.admin_web_tag }}
+          REQUESTED_BACKEND: ${{ inputs.backend_tag }}
+          REQUESTED_OWNER_WEB: ${{ inputs.owner_web_tag }}
+          REQUESTED_ADMIN_WEB: ${{ inputs.admin_web_tag }}
         run: |
+          backend=$(ci/resolve-tag.sh vietgara-backend "$REQUESTED_BACKEND")
+          owner_web=$(ci/resolve-tag.sh vietgara-owner-web "$REQUESTED_OWNER_WEB")
+          admin_web=$(ci/resolve-tag.sh vietgara-admin-web "$REQUESTED_ADMIN_WEB")
+          ci/check-tag.sh vietgara-backend "$backend"
+          ci/check-tag.sh vietgara-owner-web "$owner_web"
+          ci/check-tag.sh vietgara-admin-web "$admin_web"
           {
-            echo "BACKEND_TAG=$(ci/resolve-tag.sh vietgara-backend "$REQUESTED_BACKEND")"
-            echo "OWNER_WEB_TAG=$(ci/resolve-tag.sh vietgara-owner-web "$REQUESTED_OWNER_WEB")"
-            echo "ADMIN_WEB_TAG=$(ci/resolve-tag.sh vietgara-admin-web "$REQUESTED_ADMIN_WEB")"
+            echo "BACKEND_TAG=$backend"
+            echo "OWNER_WEB_TAG=$owner_web"
+            echo "ADMIN_WEB_TAG=$admin_web"
           } | tee -a "$GITHUB_ENV"
 
       - name: Start the stack
-        if: ${{ github.event.inputs.web_base_url == '' }}
+        if: ${{ env.EXISTING_ENV != 'true' }}
         run: docker compose -f ci/compose.yml up -d --wait
 
       - name: Wait for the web app
         run: npx wait-on ${{ env.WEB_BASE_URL }} -t 120000
 
       - name: Run the suite
-        run: npm test
         env:
           API_BASE_URL: ${{ env.WEB_BASE_URL }}/api
           MAILPIT_URL: http://localhost:8025
           CI: true
+          PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/results.json
+          GREP: ${{ inputs.grep }}
+        run: |
+          args=(--reporter=github,html,json)
+          if [ -n "$GREP" ]; then args+=(--grep "$GREP"); fi
+          npx playwright test "${args[@]}"
+
+      - name: Summary
+        if: ${{ !cancelled() }}
+        env:
+          GREP: ${{ inputs.grep }}
+        run: |
+          {
+            echo "## E2E result"
+            echo
+            if [ "$EXISTING_ENV" = "true" ]; then
+              echo "Target: an existing environment, \`$WEB_BASE_URL\`"
+            else
+              echo "| App | Image tag | Digest |"
+              echo "| --- | --- | --- |"
+              for row in "vietgara-backend:$BACKEND_TAG" "vietgara-owner-web:$OWNER_WEB_TAG" "vietgara-admin-web:$ADMIN_WEB_TAG"; do
+                pkg=${row%%:*}; tag=${row#*:}
+                digest=$(docker image inspect --format '{{index .RepoDigests 0}}' "ghcr.io/viettechno/$pkg:$tag" 2>/dev/null | sed 's/.*@//' || true)
+                echo "| \`$pkg\` | \`$tag\` | \`${digest:-n/a}\` |"
+              done
+            fi
+            echo
+            echo "Scenarios: \`${GREP:-all}\`"
+            echo
+            if [ -f test-results/results.json ]; then
+              jq -r '"| Passed | Failed | Flaky | Skipped |\n| --- | --- | --- | --- |\n| \(.stats.expected) | \(.stats.unexpected) | \(.stats.flaky) | \(.stats.skipped) |"' test-results/results.json
+              failed=$(jq -r '[.. | objects | select(has("specs")) | .specs[] | select(.ok == false) | .title] | .[]' test-results/results.json)
+              if [ -n "$failed" ]; then echo; echo "Failed scenarios:"; echo "$failed" | sed 's/^/- /'; fi
+            else
+              echo "The suite did not produce a result file (it did not start, or crashed)."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Stack logs
-        if: ${{ failure() && github.event.inputs.web_base_url == '' }}
+        if: ${{ failure() && env.EXISTING_ENV != 'true' }}
         run: docker compose -f ci/compose.yml logs --no-color --tail 200
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/results.json
           retention-days: 14
