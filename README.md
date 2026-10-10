@@ -70,7 +70,7 @@ See `.env.example` for what each variable means and its default. The two shapes 
 | Environment                                                    | WEB_BASE_URL            | API_BASE_URL                                                   |
 | -------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------- |
 | Docker Compose (Kong)                                          | `http://localhost:8000` | `http://localhost:8000/api`                                    |
-| Backend run natively (`make run`), web admin via `npm run dev` | `http://localhost:5173` | `http://localhost:5173/api` (vite's dev proxy forwards `/api`) |
+| Backend run natively (`make run`), owner web via `npm run dev` | `http://localhost:5173` | `http://localhost:5173/api` (vite's dev proxy forwards `/api`) |
 
 ## Running the suite
 
@@ -111,7 +111,7 @@ The **E2E** GitHub workflow does exactly this on every pull request touching the
 4. Assert what the scenario's Expected results say, in the same terms (visible text, not implementation details).
 5. Run it, watch it fail once for a real reason before making it pass — a spec that has never failed hasn't proven it can catch anything.
 
-Locators prefer `getByRole` / `getByLabel` / `getByText` over CSS selectors, matching Playwright's own guidance and the web admin's semantic HTML (labelled inputs, accessible button names, `role="dialog"` modals) — see any file under `src/pages/` for the pattern. Every test starts pinned to English (see the `page` fixture in `src/fixtures/index.ts`) so locator text stays stable regardless of a previous test's language choice; scenarios specifically about the language switcher override this deliberately in their own spec.
+Locators prefer `getByRole` / `getByLabel` / `getByText` over CSS selectors, matching Playwright's own guidance and the owner web's semantic HTML (labelled inputs, accessible button names, `role="dialog"` modals) — see any file under `src/pages/` for the pattern. Every test starts pinned to English (see the `page` fixture in `src/fixtures/index.ts`) so locator text stays stable regardless of a previous test's language choice; scenarios specifically about the language switcher override this deliberately in their own spec.
 
 ## Test data
 
