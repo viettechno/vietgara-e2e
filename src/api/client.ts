@@ -124,11 +124,11 @@ export class ApiClient {
     return this.patch(`/v1/garages/${garageId}`, input)
   }
 
-  inviteStaff(garageId: string, accountId: string, groupIds: string[]): Promise<Invitation> {
-    return this.post(`/v1/garages/${garageId}/invitations`, { accountId, groupIds })
+  inviteStaff(garageId: string, userId: string, groupIds: string[]): Promise<Invitation> {
+    return this.post(`/v1/garages/${garageId}/invitations`, { userId, groupIds })
   }
 
-  lookupStaffCandidate(garageId: string, text: string): Promise<{ accountId?: string; candidateType?: string }> {
+  lookupStaffCandidate(garageId: string, text: string): Promise<{ userId?: string; candidateType?: string }> {
     return this.get(`/v1/garages/${garageId}/staff-candidates${query({ query: text })}`)
   }
 

@@ -1,4 +1,4 @@
-// Reads e-mails Mailpit caught for a test account: OTP codes and
+// Reads e-mails Mailpit caught for a test user: OTP codes and
 // invitation links. Local-only (README §3.1) -- staging swaps the domain
 // for plus-addresses of a mailbox QA owns and reads them by hand instead.
 import type { APIRequestContext } from '@playwright/test'

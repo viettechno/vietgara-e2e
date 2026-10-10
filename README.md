@@ -38,7 +38,7 @@ tests/
 
 ### Why an API client (`src/api/`)
 
-[`00_Test_Data.md §4`](https://github.com/viettechno/vietgara-docs/blob/master/docs/05-Testing/E2E_Scenarios/00_Test_Data.md#4-baseline-setup) says it directly: _"It uses only features that have their own scenarios [...] When the suite is automated, this becomes an API fixture."_ Every spec should exercise the UI only for what its own scenario is actually about; everything else it needs first (an account, a garage, a customer, a stocked item) is created over the API via `freshOwner` / `owner.api.*`, the same way a human tester would rely on the baseline instead of clicking through unrelated screens. This keeps specs fast, and keeps a failure pointing at the one thing under test.
+[`00_Test_Data.md §4`](https://github.com/viettechno/vietgara-docs/blob/master/docs/05-Testing/E2E_Scenarios/00_Test_Data.md#4-baseline-setup) says it directly: _"It uses only features that have their own scenarios [...] When the suite is automated, this becomes an API fixture."_ Every spec should exercise the UI only for what its own scenario is actually about; everything else it needs first (a user, a garage, a customer, a stocked item) is created over the API via `freshOwner` / `owner.api.*`, the same way a human tester would rely on the baseline instead of clicking through unrelated screens. This keeps specs fast, and keeps a failure pointing at the one thing under test.
 
 The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI document `vietgara-owner-web` uses (`npm run generate:api`, requires the sibling `../vietgara-proto` checkout) — one source of truth for both.
 
@@ -105,7 +105,7 @@ Locators prefer `getByRole` / `getByLabel` / `getByText` over CSS selectors, mat
 
 ## Test data
 
-Single-use accounts follow `00_Test_Data.md`'s own convention, `signup.<scenario id>.<unique>@vietgara.test` (the `freshOwner` fixture adds the uniqueness suffix, since this suite may run repeatedly against one long-lived environment where the doc's bare form would collide on a second run). Never a real e-mail address or phone number — `vietgara.test` is reserved (RFC 2606) and can never belong to a real person.
+Single-use users follow `00_Test_Data.md`'s own convention, `signup.<scenario id>.<unique>@vietgara.test` (the `freshOwner` fixture adds the uniqueness suffix, since this suite may run repeatedly against one long-lived environment where the doc's bare form would collide on a second run). Never a real e-mail address or phone number — `vietgara.test` is reserved (RFC 2606) and can never belong to a real person.
 
 ## What's automated so far
 

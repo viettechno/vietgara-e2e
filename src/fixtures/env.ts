@@ -9,7 +9,7 @@ export const env = {
   apiBaseUrl: ensureTrailingSlash(process.env.API_BASE_URL ?? 'http://localhost:8000/api'),
   mailpitUrl: process.env.MAILPIT_URL ?? 'http://localhost:8025',
   platformAdminEmail: process.env.PLATFORM_ADMIN_EMAIL ?? 'qa.admin@vietgara.test',
-  testAccountPassword: process.env.TEST_ACCOUNT_PASSWORD ?? 'Qa@123456',
+  testUserPassword: process.env.TEST_USER_PASSWORD ?? 'Qa@123456',
 }
 
 function ensureTrailingSlash(url: string): string {

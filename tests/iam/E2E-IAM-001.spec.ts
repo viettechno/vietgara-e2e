@@ -19,7 +19,7 @@ test('E2E-IAM-001 sign up with e-mail and verify with the code', async ({ page, 
   const verify = new VerifyEmailPage(page)
   await verify.submitCode(code)
 
-  // Verified accounts land on the authenticated app (garages, since a
+  // Verified users land on the authenticated app (garages, since a
   // brand-new owner has none yet) -- not back on /verify-email or /login.
   await expect(page).toHaveURL(/\/garages/)
   await expect(page.getByRole('heading', { name: 'Garages' })).toBeVisible()
