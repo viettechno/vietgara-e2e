@@ -91,7 +91,25 @@ docker compose -f ci/compose.yml down -v
 
 Images are tagged with `git describe` (`v1.5.0`, `v1.5.0-4-g0c94831`) and published when a change merges to `master` or a `v*` tag is pushed, so the suite tests what ships, not an unmerged branch. The backend image is `linux/amd64` only: on Apple silicon set `DOCKER_DEFAULT_PLATFORM=linux/amd64`. To try an unpublished web build, build the image locally (`docker build --platform linux/amd64 -t ghcr.io/viettechno/vietgara-owner-web:local ../vietgara-owner-web`) and set `OWNER_WEB_TAG=local`. Use `KONG_PROXY_PORT` / `MAILPIT_UI_PORT` to avoid clashing with a dev stack already on 8000 / 8025.
 
-The **E2E** GitHub workflow does exactly this on every pull request touching the suite, and can be started by hand with chosen image tags (`backend_tag`, `owner_web_tag`, `admin_web_tag`) or pointed at a running environment (`web_base_url`).
+### Run it by hand against chosen versions (GitHub Actions)
+
+The **E2E** workflow (`.github/workflows/e2e.yml`) is the test job. It runs on every pull request that touches the suite, with the newest release images. To test **specific versions**, use the **E2E (manual)** workflow (`.github/workflows/e2e-manual.yml`): *Actions → E2E (manual) → Run workflow*, or from a terminal:
+
+```bash
+gh workflow run "E2E (manual)" \
+  -f backend_tag=v1.5.0-5-g2f65e37 \
+  -f owner_web_tag=v1.2.0 \
+  -f admin_web_tag=v1.2.0 \
+  -f grep=E2E-QUO            # optional: a scenario ID or module prefix
+```
+
+| Input | Meaning |
+| --- | --- |
+| `backend_tag`, `owner_web_tag`, `admin_web_tag` | Image tag of `ghcr.io/viettechno/vietgara-backend`, `-owner-web`, `-admin-web` (a `git describe` string such as `v1.5.0` or `v1.5.0-5-g2f65e37`). Empty means the newest release tag of that app. A tag that does not exist fails at once and the log lists the newest ones (`ci/check-tag.sh`) |
+| `grep` | Only run scenarios whose title matches, for example `E2E-QUO`, `E2E-INV-008` or `repair`. Empty runs everything |
+| `web_base_url` | Test an environment that is already running (for example staging) instead of starting the stack. The tags are ignored |
+
+The run is named after the versions it tests. Its **summary** lists each image tag with its digest, the pass/fail/flaky/skipped counts and the failed scenarios; the Playwright HTML report (with traces) and `results.json` are attached as the `playwright-report` artifact for 14 days. Find the published tags of an app with `ci/resolve-tag.sh <package>` (newest release) or on the package page of the app's GitHub repository.
 
 ## Writing a new spec
 
