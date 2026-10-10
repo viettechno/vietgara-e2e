@@ -11,7 +11,7 @@
 | **Tests**      | `vietgara-owner-web` through `vietgara-backend` (Kong, Postgres, Mailpit)                                  |
 | **Related**    | `vietgara-docs` (scenarios), `vietgara-backend/testing/blackbox` (API-level tests)                         |
 
-Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` against a running `vietgara-backend`.
+Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` (and, from Release 4.2, `vietgara-admin-web`) against a running `vietgara-backend`.
 
 **Scenarios are written in [`vietgara-docs`](https://github.com/viettechno/vietgara-docs) first** ([`docs/05-Testing/E2E_Scenarios/`](https://github.com/viettechno/vietgara-docs/tree/master/docs/05-Testing/E2E_Scenarios)), with a stable ID, named test data and exact expected results. This repo automates them under the same ID — a spec here should always be traceable to one scenario there, never the other way around. A behaviour with no documented scenario gets one before it gets a test.
 
@@ -41,6 +41,16 @@ tests/
 [`00_Test_Data.md §4`](https://github.com/viettechno/vietgara-docs/blob/master/docs/05-Testing/E2E_Scenarios/00_Test_Data.md#4-baseline-setup) says it directly: _"It uses only features that have their own scenarios [...] When the suite is automated, this becomes an API fixture."_ Every spec should exercise the UI only for what its own scenario is actually about; everything else it needs first (a user, a garage, a customer, a stocked item) is created over the API via `freshOwner` / `owner.api.*`, the same way a human tester would rely on the baseline instead of clicking through unrelated screens. This keeps specs fast, and keeps a failure pointing at the one thing under test.
 
 The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI document `vietgara-owner-web` uses (`npm run generate:api`, requires the sibling `../vietgara-proto` checkout) — one source of truth for both.
+
+## Roadmap: Phase 4, Quality Foundation
+
+Per the [Release Plan](https://github.com/viettechno/vietgara-docs/blob/master/docs/01-Product/Release_Plan/Release_Plan_Phase4.md) in `vietgara-docs`. Today the suite has 6 specs (one test each) against 114 documented scenarios. Phase 4 changes how it is fed and how far it goes:
+
+- **Shared test data (Release 4.0).** A private repository `vietgara-testdata` holds a YAML dataset (users, garages, staff, customers, vehicles, suppliers, parts, plans) with short names (`owner1`, `gara1-1`, `gara1-2`, `advisor1-1`, `customer1-1-1`) and a Go and a TypeScript loader. This suite pins a tag of it and `00_Test_Data.md` in `vietgara-docs` is generated from it. Fixed names are for the read-mostly baseline; scenario-owned data (sign-up, password reset, destructive scenarios) is still created with a unique suffix and deleted in teardown.
+- **Passwords.** One shared test password for the baseline users on the stubbed stack; on staging it comes from a CI secret (`passwordRef` in the dataset), never from the repository. The platform admin has its own secret and, once MFA ships, a fixed TOTP secret.
+- **Seed and purge.** A seeder creates the dataset through the public API; a privileged, test-only purge removes every user under the test domain after the run (the API cannot remove used records because of the delete-or-deactivate rule). It is off in production and refuses anything outside the test domain.
+- **Scope (Release 4.2).** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set nightly, traces on failure and a quarantine rule for flaky tests. Mobile device tests are deliberately left for later.
+- **Every later release** adds its own scenarios as part of its Definition of Done.
 
 ## Prerequisites
 
