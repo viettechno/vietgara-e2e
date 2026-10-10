@@ -93,7 +93,7 @@ Images are tagged with `git describe` (`v1.5.0`, `v1.5.0-4-g0c94831`) and publis
 
 ### Run it by hand against chosen versions (GitHub Actions)
 
-The **E2E** workflow (`.github/workflows/e2e.yml`) is the test job. It runs on every pull request that touches the suite, with the newest release images. To test **specific versions**, use the **E2E (manual)** workflow (`.github/workflows/e2e-manual.yml`): *Actions → E2E (manual) → Run workflow*, or from a terminal:
+The **E2E** workflow (`.github/workflows/e2e.yml`) is the test job. It runs on every pull request that touches the suite, with the newest release images. To test **specific versions**, use the **E2E (manual)** workflow (`.github/workflows/e2e-manual.yml`): _Actions → E2E (manual) → Run workflow_, or from a terminal:
 
 ```bash
 gh workflow run "E2E (manual)" \
@@ -103,11 +103,11 @@ gh workflow run "E2E (manual)" \
   -f grep=E2E-QUO            # optional: a scenario ID or module prefix
 ```
 
-| Input | Meaning |
-| --- | --- |
+| Input                                           | Meaning                                                                                                                                                                                                                                                                                         |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `backend_tag`, `owner_web_tag`, `admin_web_tag` | Image tag of `ghcr.io/viettechno/vietgara-backend`, `-owner-web`, `-admin-web` (a `git describe` string such as `v1.5.0` or `v1.5.0-5-g2f65e37`). Empty means the newest release tag of that app. A tag that does not exist fails at once and the log lists the newest ones (`ci/check-tag.sh`) |
-| `grep` | Only run scenarios whose title matches, for example `E2E-QUO`, `E2E-INV-008` or `repair`. Empty runs everything |
-| `web_base_url` | Test an environment that is already running (for example staging) instead of starting the stack. The tags are ignored |
+| `grep`                                          | Only run scenarios whose title matches, for example `E2E-QUO`, `E2E-INV-008` or `repair`. Empty runs everything                                                                                                                                                                                 |
+| `web_base_url`                                  | Test an environment that is already running (for example staging) instead of starting the stack. The tags are ignored                                                                                                                                                                           |
 
 The run is named after the versions it tests. Its **summary** lists each image tag with its digest, the pass/fail/flaky/skipped counts and the failed scenarios; the Playwright HTML report (with traces) and `results.json` are attached as the `playwright-report` artifact for 14 days. Find the published tags of an app with `ci/resolve-tag.sh <package>` (newest release) or on the package page of the app's GitHub repository.
 
