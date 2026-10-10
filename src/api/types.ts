@@ -6,7 +6,7 @@ import type { components } from './schema.js'
 
 type Schemas = components['schemas']
 
-export type Account = Schemas['v1Account']
+export type User = Schemas['v1User']
 export type Session = Schemas['v1Session']
 export type OtpChallenge = Schemas['v1OtpChallenge']
 export type Garage = Schemas['v1Garage']

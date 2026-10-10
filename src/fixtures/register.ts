@@ -8,12 +8,12 @@ export type RegisteredOwner = {
   password: string
   fullName: string
   session: Session
-  /** Bound to this account's access token -- ready to create garages etc. */
+  /** Bound to this user's access token -- ready to create garages etc. */
   api: ApiClient
 }
 
 /**
- * Registers, reads the OTP from Mailpit and verifies a brand-new account,
+ * Registers, reads the OTP from Mailpit and verifies a brand-new user,
  * entirely over the API (00_Test_Data.md §4: "When the suite is automated,
  * this becomes an API fixture"). Fast and independent of the web admin's
  * own sign-up form, which 01_Identity_Access.md's specs test directly.
@@ -30,7 +30,7 @@ export async function registerAndVerify(
   // would collide on the second run. CI against a freshly seeded DB does
   // not need it, but it is harmless there too.
   const email = `signup.${localPart}.${Date.now()}@vietgara.test`
-  const password = env.testAccountPassword
+  const password = env.testUserPassword
   const fullName = options.fullName ?? `QA Owner ${localPart.toUpperCase()}`
 
   // Register already e-mails the first OTP (AuthService.Register); asking

@@ -4,8 +4,8 @@
 // authenticated app state without going through the login form (the login
 // form itself is what 01_Identity_Access.md's own specs exercise).
 //
-// Naming follows 00_Test_Data.md: single-use accounts this suite creates
-// are `signup.<scenario id>@vietgara.test`, password `Qa@123456` (env.testAccountPassword).
+// Naming follows 00_Test_Data.md: single-use users this suite creates
+// are `signup.<scenario id>@vietgara.test`, password `Qa@123456` (env.testUserPassword).
 import { test as base } from '@playwright/test'
 import { ApiClient } from '../api/client.js'
 import { MailpitClient } from '../api/mailpit.js'
@@ -52,7 +52,7 @@ export const test = base.extend<Fixtures>({
         ({ session, garageId }: { session: Session; garageId?: string }) => {
           localStorage.setItem('vietgara.accessToken', session.accessToken ?? '')
           localStorage.setItem('vietgara.refreshToken', session.refreshToken ?? '')
-          if (session.account) localStorage.setItem('vietgara.account', JSON.stringify(session.account))
+          if (session.user) localStorage.setItem('vietgara.user', JSON.stringify(session.user))
           if (garageId) localStorage.setItem('vietgara.garageId', garageId)
         },
         { session, garageId },
@@ -60,7 +60,7 @@ export const test = base.extend<Fixtures>({
     })
   },
 
-  // A brand-new, verified owner account with no garage yet -- the
+  // A brand-new, verified owner user with no garage yet -- the
   // starting point for most module tests. `localPart` becomes
   // `signup.<localPart>@vietgara.test` (00_Test_Data.md's convention);
   // pass the scenario ID, e.g. freshOwner('quo001').
