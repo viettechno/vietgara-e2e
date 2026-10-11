@@ -3,7 +3,7 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { RegisterPage, VerifyEmailPage } from '../../src/pages/auth/RegisterPage.js'
 
-test('E2E-IAM-001 sign up with e-mail and verify with the code', async ({ page, mailpit }) => {
+test('E2E-IAM-001 sign up with e-mail and verify with the code', { tag: '@smoke' }, async ({ page, mailpit }) => {
   const email = `signup.iam001.${Date.now()}@vietgara.test`
   const fullName = 'QA Signup IAM001'
 

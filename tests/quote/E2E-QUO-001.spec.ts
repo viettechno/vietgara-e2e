@@ -3,7 +3,7 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { QuoteFormPage } from '../../src/pages/quotes/QuoteFormPage.js'
 
-test('E2E-QUO-001 create a draft quote with labor and part lines', async ({ page, signIn, freshOwner }) => {
+test('E2E-QUO-001 create a draft quote with labor and part lines', { tag: '@smoke' }, async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('quo001')
   const garage = await owner.api.createGarage({ name: 'QA Gara QUO001' })
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer An Nguyen', phone: '0911000001' })

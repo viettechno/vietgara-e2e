@@ -3,7 +3,7 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 
-test('E2E-TEN-001 create the first garage', async ({ page, signIn, freshOwner }) => {
+test('E2E-TEN-001 create the first garage', { tag: '@smoke' }, async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('ten001')
   await signIn(owner.session)
 
