@@ -22,12 +22,13 @@ export default defineConfig({
     baseURL: webBaseUrl,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
-    // Off by default: video capture needs Playwright's ffmpeg helper,
-    // which (like the bundled browsers) is fetched from Microsoft's CDN --
-    // unavailable in network-restricted sandboxes. Set to
-    // 'retain-on-failure' wherever `npx playwright install ffmpeg` can
-    // actually reach the network (most CI runners can).
-    video: 'off',
+    // Video for failures only: `npx playwright install chromium` also
+    // fetches Playwright's ffmpeg helper from the same CDN (verified via
+    // `npx playwright install --dry-run chromium` on @playwright/test
+    // 1.63.0: it lists "FFmpeg (playwright ffmpeg v1011)" alongside the
+    // browser), so recording works wherever the browser install can reach
+    // the network -- CI included. No extra install step needed.
+    video: 'retain-on-failure',
   },
 
   projects: [

@@ -85,7 +85,16 @@ npx playwright test -g "E2E-QUO-010"                 # one scenario by ID
 npm run report         # reopen the last HTML report
 ```
 
-A failed run's HTML report links each failure to its trace (`npx playwright show-trace <path>`, or open the report and click through) — a full timeline with DOM snapshots, network requests and console output at the moment it failed.
+A failed run's HTML report links each failure to its trace (`npx playwright show-trace <path>`, or open the report and click through) — a full timeline with DOM snapshots, network requests and console output at the moment it failed. Failures also keep their video (`video: 'retain-on-failure'` in `playwright.config.ts`, stored under `test-results/` and uploaded as CI artifacts); passing runs discard theirs.
+
+### Quarantine (flaky tests)
+
+A test that fails then passes on retry is flaky: retag it `@quarantine` with a ticket link in a comment, so the `test` / `test:smoke` gates skip it (`--grep-invert @quarantine`). It must be fixed within one sprint (the Release 4.2 flaky-test rule).
+
+```bash
+npm run test:quarantine                       # @quarantine-tagged subset only (CI reports, never blocks)
+npx playwright test --list --grep @quarantine # what is currently quarantined
+```
 
 ## The stack from published images (what CI uses)
 
