@@ -144,3 +144,66 @@ jobs:
             playwright-report/
             test-results/results.json
           retention-days: 14
+
+  smoke:
+    # Fast @smoke gate on every pull request: same setup and stack as `e2e`
+    # but runs only the @smoke-tagged subset (`npm run test:smoke`). The
+    # full suite stays on `e2e`; the nightly split is a later item.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      WEB_BASE_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      # Same published-image stack as `e2e` (see ci/compose.yml); newest
+      # release tags, since a pull_request event carries no version inputs.
+      - name: Resolve and check the image tags
+        run: |
+          backend=$(ci/resolve-tag.sh vietgara-backend "")
+          owner_web=$(ci/resolve-tag.sh vietgara-owner-web "")
+          admin_web=$(ci/resolve-tag.sh vietgara-admin-web "")
+          ci/check-tag.sh vietgara-backend "$backend"
+          ci/check-tag.sh vietgara-owner-web "$owner_web"
+          ci/check-tag.sh vietgara-admin-web "$admin_web"
+          {
+            echo "BACKEND_TAG=$backend"
+            echo "OWNER_WEB_TAG=$owner_web"
+            echo "ADMIN_WEB_TAG=$admin_web"
+          } | tee -a "$GITHUB_ENV"
+
+      - name: Start the stack
+        run: docker compose -f ci/compose.yml up -d --wait
+
+      - name: Wait for the web app
+        run: npx wait-on ${{ env.WEB_BASE_URL }} -t 120000
+
+      - name: Run the smoke suite
+        env:
+          API_BASE_URL: ${{ env.WEB_BASE_URL }}/api
+          MAILPIT_URL: http://localhost:8025
+          CI: true
+        run: npm run test:smoke
+
+      - name: Stack logs
+        if: ${{ failure() }}
+        run: docker compose -f ci/compose.yml logs --no-color --tail 200
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-smoke
+          path: |
+            playwright-report/
+            test-results/junit.xml
+          retention-days: 14

@@ -76,6 +76,7 @@ See `.env.example` for what each variable means and its default. The two shapes 
 
 ```bash
 npm test              # headless, every project
+npm run test:smoke    # @smoke-tagged subset only (the pull-request gate)
 npm run test:headed   # watch the browser
 npm run test:ui       # Playwright's UI mode -- best for writing/debugging a spec
 npm run test:debug    # step through with the inspector

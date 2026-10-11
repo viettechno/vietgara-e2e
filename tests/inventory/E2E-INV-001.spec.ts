@@ -4,7 +4,7 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'
 
-test('E2E-INV-001 add a part code to the catalogue', async ({ page, signIn, freshOwner }) => {
+test('E2E-INV-001 add a part code to the catalogue', { tag: '@smoke' }, async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('inv001')
   const garage = await owner.api.createGarage({ name: 'QA Gara INV001' })
   await signIn(owner.session, garage.id)

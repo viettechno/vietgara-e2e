@@ -3,7 +3,7 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { RepairOrderCreateForm } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 
-test('E2E-REP-001 create an ad-hoc repair order', async ({ page, signIn, freshOwner }) => {
+test('E2E-REP-001 create an ad-hoc repair order', { tag: '@smoke' }, async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('rep001')
   const garage = await owner.api.createGarage({ name: 'QA Gara REP001' })
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer Binh Tran' })
