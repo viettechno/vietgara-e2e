@@ -12,6 +12,14 @@ async function globalSetup(_config: FullConfig): Promise<void> {
     console.log('[seed] SEED_BASELINE=0: skipping the baseline seed')
     return
   }
+  // Never seed a foreign environment implicitly (staging via web_base_url,
+  // someone else's dev stack): the seed creates real users. Those runs set
+  // EXISTING_ENV=true (see .github/workflows/e2e.yml) and provision — or
+  // skip — the baseline explicitly instead.
+  if (process.env.EXISTING_ENV === 'true') {
+    console.log('[seed] EXISTING_ENV=true: skipping the baseline seed on a foreign environment')
+    return
+  }
   const context = await request.newContext({ baseURL: env.apiBaseUrl })
   try {
     const summary = await seedBaseline(context, {
