@@ -26,7 +26,7 @@ export async function jsonRequest<T>(
   request: APIRequestContext,
   method: Method,
   path: string,
-  options: { token?: string; body?: unknown } = {},
+  options: { token?: string; body?: unknown; headers?: Record<string, string> } = {},
 ): Promise<T> {
   // A leading slash would resolve against the base URL's *origin*, not its
   // path (standard URL-resolution behaviour) -- silently dropping the
@@ -40,6 +40,7 @@ export async function jsonRequest<T>(
     headers: {
       ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
       'Accept-Language': 'en',
+      ...options.headers,
     },
     data: options.body,
   })
