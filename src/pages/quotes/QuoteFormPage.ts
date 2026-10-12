@@ -13,7 +13,12 @@ export class QuoteFormPage {
   readonly deleteButton: Locator
 
   constructor(readonly page: Page) {
-    this.customerField = page.getByLabel('Customer', { exact: true })
+    // The Phase-5.1 CustomerPicker does not take the Field label's id, so
+    // the input has no label association; locate it by its placeholder
+    // (the suite pins the UI to English in fixtures). Vehicle still uses
+    // the labelled SearchSelect. (Owner-web follow-up: pass the Field id
+    // into CustomerPicker to restore the association.)
+    this.customerField = page.getByPlaceholder('Search by name, phone, e-mail or plate…')
     this.vehicleField = page.getByLabel('Vehicle', { exact: true })
     this.addLineButton = page.getByRole('button', { name: 'Add line item' })
     this.saveButton = page.getByRole('button', { name: 'Save', exact: true })
@@ -34,6 +39,15 @@ export class QuoteFormPage {
   async pickSearchSelect(field: Locator, query: string, optionText: string): Promise<void> {
     await field.fill(query)
     await this.page.getByRole('listbox').getByRole('option', { name: optionText }).first().click()
+  }
+
+  /** Picks a customer in the Phase-5.1 CustomerPicker: type, then press the
+   * row's "Use this profile" button. Rows render without listbox/option
+   * roles, so selection goes by row text, not by role. */
+  async pickCustomer(query: string, optionText: string): Promise<void> {
+    await this.customerField.fill(query)
+    const row = this.page.locator('li', { hasText: optionText }).first()
+    await row.getByRole('button', { name: 'Use this profile' }).click()
   }
 
   lineRow(index: number): Locator {

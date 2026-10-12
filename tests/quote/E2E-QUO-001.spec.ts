@@ -14,7 +14,7 @@ test('E2E-QUO-001 create a draft quote with labor and part lines', { tag: '@smok
   const quoteForm = new QuoteFormPage(page)
   await quoteForm.goto()
 
-  await quoteForm.pickSearchSelect(quoteForm.customerField, 'An Nguyen', customer.fullName ?? '')
+  await quoteForm.pickCustomer('An Nguyen', customer.fullName ?? '')
   await quoteForm.pickSearchSelect(quoteForm.vehicleField, vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
 
   await quoteForm.fillLine(0, { itemType: 'Labor', description: 'Oil change service', quantity: '1', unitPrice: '250000' })
