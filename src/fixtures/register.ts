@@ -22,7 +22,7 @@ export async function registerAndVerify(
   api: ApiClient,
   mailpit: MailpitClient,
   localPart: string,
-  options: { fullName?: string; phone?: string } = {},
+  options: { fullName?: string; phone?: string; locale?: string } = {},
 ): Promise<RegisteredOwner> {
   // A unique suffix rather than the doc's bare `signup.<scenario id>@...`:
   // this fixture may run many times against one long-lived environment
@@ -35,7 +35,10 @@ export async function registerAndVerify(
 
   // Register already e-mails the first OTP (AuthService.Register); asking
   // for a second one immediately would hit the 30-second resend cooldown.
-  const initial = await api.register({ email, password, fullName, phone: options.phone })
+  // The locale pins the language of the user's e-mails and of the default
+  // role/group names, which snapshot it at verification: specs asserting
+  // on group names register with 'LOCALE_EN'.
+  const initial = await api.register({ email, password, fullName, phone: options.phone, locale: options.locale })
   const asOwner = api.withToken(initial.accessToken)
 
   const message = await mailpit.waitForMessage(email, { subjectContains: 'VietGara' })

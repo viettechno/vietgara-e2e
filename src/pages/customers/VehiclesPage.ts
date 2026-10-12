@@ -5,7 +5,9 @@ export class VehiclesPage {
   readonly searchField: Locator
 
   constructor(readonly page: Page) {
-    this.searchField = page.getByLabel('Search')
+    // Placeholder: the label is shared with the clear button. Pinned
+    // English copy (fixtures force `en`).
+    this.searchField = page.getByPlaceholder('Search plate, make, model…')
   }
 
   async goto(): Promise<void> {

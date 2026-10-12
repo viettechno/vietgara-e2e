@@ -9,7 +9,9 @@ import { expect, test } from '../../src/fixtures/index.js'
 import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'
 
 test('E2E-INV-010 permissions: view-only, and full access', async ({ page, signIn, freshOwner }) => {
-  const owner = await freshOwner('inv010owner')
+  // English-locale owner: the default Technician group name snapshots
+  // the owner's locale at verification.
+  const owner = await freshOwner('inv010owner', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara INV010' })
   await owner.api.createItem(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30', unit: 'L' })
 

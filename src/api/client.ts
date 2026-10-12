@@ -36,7 +36,7 @@ import type {
   Vehicle,
 } from './types.js'
 
-export type RegisterInput = { email: string; password: string; fullName: string; phone?: string }
+export type RegisterInput = { email: string; password: string; fullName: string; phone?: string; locale?: string }
 export type GarageInput = { name: string; address?: string; timezone?: string; defaultQuoteApprovalMode?: QuoteApprovalMode }
 export type CustomerInput = { fullName: string; phone?: string; email?: string; address?: string; personalDataConsent?: boolean }
 export type VehicleInput = {

@@ -11,7 +11,9 @@ import { GarageSwitcher } from '../../src/pages/garages/GarageSwitcher.js'
 import { MyInvitationsPage, StaffPage } from '../../src/pages/staff/StaffPage.js'
 
 test('E2E-TEN-007 invite an existing user by e-mail and accept from the e-mail link', async ({ page, signIn, freshOwner, mailpit }) => {
-  const owner = await freshOwner('ten007owner')
+  // English-locale owner: default group names snapshot the owner's
+  // locale at verification, and the invite flow ticks groups by name.
+  const owner = await freshOwner('ten007owner', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara TEN007' })
   const freelancer = await freshOwner('ten007guest')
   await signIn(owner.session, garage.id)

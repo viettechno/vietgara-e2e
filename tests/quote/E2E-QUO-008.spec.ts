@@ -31,7 +31,7 @@ test('E2E-QUO-008 manual mode records the decision directly', async ({ page, sig
   const quoteForm = new QuoteFormPage(page)
   await quoteForm.open(quote.id ?? '')
   await quoteForm.sendButton.click()
-  await expect(page.getByText('Sent')).toBeVisible()
+  await expect(page.getByText('Sent').first()).toBeVisible()
 
   // MANUAL mode sends nothing: no banner link, no e-mail even with an address on file.
   await expect(page.getByRole('button', { name: 'Copy link' })).toBeHidden()

@@ -13,7 +13,7 @@ test('E2E-LIC-001 a new owner gets a 14-day trial with trial limits', async ({ p
   const subscription = new SubscriptionPage(page)
   await subscription.goto()
 
-  await expect(page.getByText('Free trial')).toBeVisible()
+  await expect(page.getByText('Free trial').first()).toBeVisible()
   await expect(page.getByText('Trial', { exact: true }).first()).toBeVisible()
   // Usage meters render the label and the "used / max" value in separate
   // spans, so each half is asserted on its own (trial: 1 garage, 5 staff).

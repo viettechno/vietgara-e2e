@@ -7,7 +7,9 @@ export class CustomersPage {
 
   constructor(readonly page: Page) {
     this.newCustomerButton = page.getByRole('button', { name: 'New customer' })
-    this.searchField = page.getByLabel('Search')
+    // Placeholder, not label: the label text is shared with the clear
+    // button. Pinned English copy (fixtures force `en`).
+    this.searchField = page.getByPlaceholder('Search customers…')
   }
 
   async goto(): Promise<void> {
