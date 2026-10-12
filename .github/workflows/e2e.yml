@@ -112,7 +112,14 @@ jobs:
         run: |
           npx playwright test tests/testdata/baseline.spec.ts --reporter=line
           docker compose -f ci/compose.yml restart backend
-          docker compose -f ci/compose.yml wait backend
+          # `compose wait` blocks until a container STOPS (forever for a
+          # server): poll the image's own healthcheck instead, bounded.
+          for i in $(seq 1 36); do
+            status=$(docker inspect vietgara-e2e-backend-1 --format '{{.State.Health.Status}}' 2>/dev/null || echo starting)
+            if [ "$status" = "healthy" ]; then break; fi
+            if [ "$i" = "36" ]; then docker compose -f ci/compose.yml logs --tail 50 backend; exit 1; fi
+            sleep 5
+          done
 
       - name: Wait for the web app
         run: npx wait-on ${{ env.WEB_BASE_URL }} -t 120000
