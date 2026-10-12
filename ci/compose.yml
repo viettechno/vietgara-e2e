@@ -78,7 +78,7 @@ services:
       HTTP_PORT: 8080
       API_DOCS_ENABLED: 'false'
       APP_BASE_URL: http://localhost:${KONG_PROXY_PORT:-8000}
-      PLATFORM_ADMIN_EMAILS: qa.admin@vietgara.test
+      PLATFORM_ADMIN_EMAILS: admin@vietgara.test
       REDIS_ADDR: redis:6379
       ENTITLEMENT_CACHE_TTL: 5m
       KAFKA_BROKERS: kafka:9092
