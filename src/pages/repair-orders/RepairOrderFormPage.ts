@@ -57,9 +57,15 @@ export class RepairOrderCreateForm {
 /** The repair order detail/Kanban-card page at /repair-orders/:id (E2E-REP-003..012). */
 export class RepairOrderDetailPage {
   readonly closeButton: Locator
+  readonly createSettlementButton: Locator
+  readonly viewSettlementLink: Locator
 
   constructor(readonly page: Page) {
     this.closeButton = page.getByRole('button', { name: 'Close repair order' })
+    // A closed order offers settlement creation (E2E-BIL-001); the link to
+    // the new settlement appears once it exists.
+    this.createSettlementButton = page.getByRole('button', { name: 'Create settlement' })
+    this.viewSettlementLink = page.getByRole('link', { name: 'View settlement' })
   }
 
   async goto(orderId: string): Promise<void> {

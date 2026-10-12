@@ -11,6 +11,7 @@ export class QuoteFormPage {
   readonly sendButton: Locator
   readonly convertButton: Locator
   readonly deleteButton: Locator
+  readonly exportPdfButton: Locator
 
   constructor(readonly page: Page) {
     // The Phase-5.1 CustomerPicker does not take the Field label's id, so
@@ -25,6 +26,7 @@ export class QuoteFormPage {
     this.sendButton = page.getByRole('button', { name: 'Send for approval' })
     this.convertButton = page.getByRole('button', { name: 'Convert to repair order' })
     this.deleteButton = page.getByRole('button', { name: 'Delete', exact: true })
+    this.exportPdfButton = page.getByRole('button', { name: 'Export PDF' })
   }
 
   async goto(): Promise<void> {

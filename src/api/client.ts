@@ -17,6 +17,7 @@ import type {
   ListResponse,
   PaymentMethod,
   Plan,
+  PublicQuote,
   Quote,
   QuoteApprovalMode,
   QuoteItemType,
@@ -231,12 +232,13 @@ export class ApiClient {
     return this.post(`/v1/garages/${garageId}/quotes/${quoteId}/conversion`)
   }
 
-  // Public link: no bearer token (see withToken(undefined)).
-  getPublicQuote(token: string) {
+  // Public link: no bearer token (see withToken(undefined)). The gateway
+  // unwraps the single-message responses, so these answer bare quotes.
+  getPublicQuote(token: string): Promise<PublicQuote> {
     return this.get(`/v1/public/quotes/${token}`)
   }
 
-  decidePublicQuote(token: string, decisions: QuoteLineDecisionInput[]) {
+  decidePublicQuote(token: string, decisions: QuoteLineDecisionInput[]): Promise<PublicQuote> {
     return this.post(`/v1/public/quotes/${token}/decision`, { decisions })
   }
 
