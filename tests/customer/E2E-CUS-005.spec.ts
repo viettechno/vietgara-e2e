@@ -16,7 +16,14 @@ test('E2E-CUS-005 register a vehicle for a customer', async ({ page, signIn, fre
 
   const detail = new CustomerDetailPage(page)
   await detail.goto(customer.id ?? '')
-  await detail.registerVehicle({ plate: '51A-555.55', make: 'Kia', model: 'Morning', year: 2019, vin: 'KNABE511AKT000001', engine: 'G4LA0001' })
+  await detail.registerVehicle({
+    plate: '51A-555.55',
+    make: 'Kia',
+    model: 'Morning',
+    year: 2019,
+    vin: 'KNABE511AKT000001',
+    engine: 'G4LA0001',
+  })
   await expect(detail.vehicleRow('51A-555.55')).toBeVisible()
   await expect(detail.vehicleRow('51A-555.55')).toContainText('Kia')
 

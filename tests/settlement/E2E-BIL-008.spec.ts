@@ -10,11 +10,7 @@ import { newIdempotencyKey } from '../../src/api/client.js'
 import { DashboardPage } from '../../src/pages/reporting/DashboardPage.js'
 import { SettlementsPage } from '../../src/pages/settlements/SettlementsPage.js'
 
-test('E2E-BIL-008 the outstanding filter and the dashboard revenue follow the settlement', async ({
-  page,
-  signIn,
-  freshOwner,
-}) => {
+test('E2E-BIL-008 the outstanding filter and the dashboard revenue follow the settlement', async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('bil008')
   const garage = await owner.api.createGarage({ name: 'QA Gara BIL008' })
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer An BIL008', phone: '0911000088' })
@@ -22,7 +18,12 @@ test('E2E-BIL-008 the outstanding filter and the dashboard revenue follow the se
 
   const paidOrder = await closedRepairOrder(owner.api, garage.id ?? '', customer.id ?? '', vehicle.id ?? '')
   const paid = await pendingSettlement(owner.api, garage.id ?? '', paidOrder.id ?? '')
-  await owner.api.recordSettlementPayment(garage.id ?? '', paid.id ?? '', { amount: '970000', method: 'PAYMENT_METHOD_CASH' }, newIdempotencyKey())
+  await owner.api.recordSettlementPayment(
+    garage.id ?? '',
+    paid.id ?? '',
+    { amount: '970000', method: 'PAYMENT_METHOD_CASH' },
+    newIdempotencyKey(),
+  )
 
   const openOrder = await closedRepairOrder(owner.api, garage.id ?? '', customer.id ?? '', vehicle.id ?? '')
   const pending = await pendingSettlement(owner.api, garage.id ?? '', openOrder.id ?? '')

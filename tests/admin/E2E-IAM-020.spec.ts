@@ -20,10 +20,15 @@ test('E2E-IAM-020 platform admin uses the admin web; others are denied', async (
   test.skip(!(await datasetAvailable()) || env.seedEnv !== 'stubbed', 'needs the seeded baseline: `npm run testdata` on the stubbed stack')
   const dataset = await loadDataset()
 
-  const adminSession = await api.login(email(dataset, 'admin'), stubbedPassword(dataset, 'admin')).catch(() => undefined)
-  test.skip(!adminSession?.user?.platformAdmin, 'platform admin not provisioned: seed the baseline and restart the backend')
+  const login = await api.login(email(dataset, 'admin'), stubbedPassword(dataset, 'admin')).catch(() => undefined)
+  // test.skip throws, but TypeScript cannot see that: the explicit throw
+  // after it narrows `provisioned` for the sign-in below (unreachable).
+  if (login?.user?.platformAdmin !== true) {
+    test.skip(true, 'platform admin not provisioned: seed the baseline and restart the backend')
+    throw new Error('unreachable: skipped')
+  }
 
-  await signIn(adminSession, undefined)
+  await signIn(login, undefined)
 
   const plans = new AdminPlansPage(page)
   await plans.goto()

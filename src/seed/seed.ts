@@ -48,14 +48,15 @@ type SeedEnv = {
 }
 
 /** Password for a baseline user: the dataset value where it has one, else the CI secret. */
-export function baselinePassword(dataset: Dataset, seedEnv: SeedEnv, key: string): string {
-  const entry = dataset.environments[seedEnv]
+export function baselinePassword(dataset: Dataset, env: SeedEnv, key: string): string {
+  const target = env.seedEnv
+  const entry = dataset.environments[target]
   const direct = user(dataset, key).platformAdmin ? entry?.adminPassword : entry?.password
   if (direct) return direct
   // Staging keeps only `passwordRef` in the dataset: same secret for every
   // persona, platform admin included (its own ADMIN_PASSWORD secret is
   // wired by using TEST_USER_PASSWORD=... per actor in CI).
-  return seedEnv === 'stubbed' ? stubbedPassword(dataset, key) : seedEnvPassword(seedEnv, seedEnvPasswordName(dataset, key))
+  return target === 'stubbed' ? stubbedPassword(dataset, key) : seedEnvPassword(target, seedEnvPasswordName(dataset, key))
 }
 
 function seedEnvPasswordName(dataset: Dataset, key: string): string {
@@ -181,7 +182,7 @@ async function loginOrRegister(
 
 /** True when the backend answered over HTTP (even with an error status). */
 function isHttpAnswer(error: unknown): boolean {
-  return typeof error === 'object' && error !== null && 'status' in error && typeof (error as { status: unknown }).status === 'number'
+  return typeof error === 'object' && error !== null && 'status' in error && typeof (error as { status?: unknown }).status === 'number'
 }
 
 function equalFold(left: string | undefined, right: string | undefined): boolean {

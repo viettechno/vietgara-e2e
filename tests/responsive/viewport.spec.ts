@@ -18,11 +18,7 @@ const viewports = [
 ]
 
 for (const viewport of viewports) {
-  test(`viewport at ${viewport.name}: home, customers and quotes have no horizontal overflow`, async ({
-    page,
-    signIn,
-    freshOwner,
-  }) => {
+  test(`viewport at ${viewport.name}: home, customers and quotes have no horizontal overflow`, async ({ page, signIn, freshOwner }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height })
 
     const owner = await freshOwner('viewport')
@@ -48,6 +44,8 @@ for (const viewport of viewports) {
 
 /** At most 1px of horizontal overflow (sub-pixel rounding), on the real document — not a screenshot. */
 async function expectNoOverflow(page: Page): Promise<void> {
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+  // String form: tsconfig has no DOM lib (Node-only), so `document` cannot
+  // be named in a callback — the browser still evaluates the same expression.
+  const overflow = await page.evaluate('document.documentElement.scrollWidth - document.documentElement.clientWidth')
   expect(overflow, 'horizontal overflow in px').toBeLessThanOrEqual(1)
 }

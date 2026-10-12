@@ -10,12 +10,7 @@ import type { RepairOrder, Settlement } from '../api/types.js'
 
 export const CHAIN_TOTAL = '970,000'
 
-export async function closedRepairOrder(
-  api: ApiClient,
-  garageId: string,
-  customerId: string,
-  vehicleId: string,
-): Promise<RepairOrder> {
+export async function closedRepairOrder(api: ApiClient, garageId: string, customerId: string, vehicleId: string): Promise<RepairOrder> {
   const order = await api.createRepairOrder(garageId, {
     vehicleId,
     lines: [
