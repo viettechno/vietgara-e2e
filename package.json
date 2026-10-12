@@ -7,7 +7,7 @@
   "scripts": {
     "test": "playwright test --grep-invert @quarantine",
     "test:smoke": "playwright test --grep @smoke --grep-invert @quarantine",
-    "test:quarantine": "playwright test --grep @quarantine",
+    "test:quarantine": "playwright test --grep @quarantine --pass-with-no-tests",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
