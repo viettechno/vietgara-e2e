@@ -19,12 +19,15 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 4 : undefined,
+  // Two workers on CI: four Chromium instances plus video encoding alongside
+  // the whole stack starved the shared runners into 10s-timeout flakes.
+  workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI
     ? [['github'], ['html', { open: 'never' }], ['junit', { outputFile: 'test-results/junit.xml' }]]
     : [['list'], ['html', { open: 'never' }]],
   timeout: 30_000,
-  expect: { timeout: 10_000 },
+  // Generous assertions on CI: page loads share the runner with the stack.
+  expect: { timeout: process.env.CI ? 20_000 : 10_000 },
 
   use: {
     baseURL: webBaseUrl,

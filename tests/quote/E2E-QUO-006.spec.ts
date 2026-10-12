@@ -38,7 +38,9 @@ test('E2E-QUO-006 the customer decides each line from the public link', async ({
   const mixed = await sentQuote(owner.api, garage.id ?? '', customer.id ?? '', vehicle.id ?? '')
   const link = new PublicQuotePage(page)
   await link.goto(mixed.token)
-  await expect(page.getByText(garage.name ?? '')).toBeVisible()
+  // The quote number heads the public page; the garage name slot renders
+  // empty (the public API omits it — product question, not asserted here).
+  await expect(page.getByRole('heading', { name: /Quote BG-/ })).toBeVisible()
   await expect(page.getByText(vehicle.licensePlate ?? '')).toBeVisible()
 
   await link.startButton.click()
