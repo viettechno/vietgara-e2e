@@ -116,18 +116,44 @@ export async function seedBaseline(request: APIRequestContext, seedEnv: SeedEnv)
     if (record.platformAdmin) summary.adminNeedsBackendRestart = true
   }
 
-  const plans = await api.listPlans().catch(() => undefined)
+  // Plans: owners whose dataset plan differs from the current one get
+  // the public match. The current subscription is read first so owners
+  // already on the right plan — including trial, which is hidden from the
+  // public list — never need a match. Plan listing needs a signed-in user
+  // (401 anonymous); every failure here is loud, because silently skipping
+  // plans leaves multi-garage owners on trial and breaks garage seeding
+  // with a confusing plan-limit error far from the cause.
+  const ownedByKey = new Map<string, ApiClient>()
+  const needingChange: string[] = []
   for (const key of ownerKeys) {
     const record = user(dataset, key)
-    if (!record.plan || plans === undefined) continue
-    const match = plans.data?.filter((p) => equalFold(p.code, record.plan) || equalFold(p.name, record.plan)) ?? []
-    if (match.length > 1) throw new Error(`multiple public plans match dataset plan "${record.plan}" for ${key}`)
-    const plan = match[0]
-    if (!plan?.id) throw new Error(`no public plan matches dataset plan "${record.plan}" for ${key}`)
+    if (!record.plan) continue
     const owned = api.withToken(sessions.get(key)?.accessToken)
     const current = await owned.getMySubscription()
-    if (current.plan?.id !== plan.id) {
+    if (!equalFold(current.plan?.code, record.plan) && !equalFold(current.plan?.name, record.plan)) {
+      needingChange.push(key)
+      ownedByKey.set(key, owned)
+    }
+  }
+  if (needingChange.length > 0) {
+    const firstKey = needingChange[0]
+    if (!firstKey) throw new Error('dataset has no garage owners')
+    const firstSession = sessions.get(firstKey)
+    if (!firstSession?.accessToken) throw new Error('seed owners have no sessions')
+    const plans = await api.withToken(firstSession.accessToken).listPlans()
+    for (const key of needingChange) {
+      const record = user(dataset, key)
+      const match = plans.data?.filter((p) => equalFold(p.code, record.plan) || equalFold(p.name, record.plan)) ?? []
+      if (match.length > 1) throw new Error(`multiple public plans match dataset plan "${record.plan}" for ${key}`)
+      const plan = match[0]
+      if (!plan?.id) throw new Error(`no public plan matches dataset plan "${record.plan}" for ${key}`)
+      const owned = ownedByKey.get(key)
+      if (!owned) throw new Error(`seed owner ${key} has no session`)
       await owned.changeMyPlan(plan.id ?? '')
+      const updated = await owned.getMySubscription()
+      if (updated.plan?.id !== plan.id) {
+        throw new Error(`plan change for ${key} did not take effect (still ${updated.plan?.code})`)
+      }
       summary.plansChanged.push(`${key} -> ${plan.name ?? plan.code}`)
     }
   }
