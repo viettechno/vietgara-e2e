@@ -25,9 +25,23 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
   const garageId = garage?.id
   if (!garageId) throw new Error('Garage not found')
 
-  // Subscribe to QA Small plan (2 staff)
+  // Subscribe to QA Small plan (2 staff, 1 garage) — create it first when
+  // the stack has none (it is a test plan, not a built-in one)
   const plans = await api.withToken(owner.session.accessToken).listPlans()
-  const smallPlan = plans.data?.find((p) => p.code === 'qa-small' || p.name === 'QA Small')
+  let smallPlan = plans.data?.find((p) => p.code === 'qa-small' || p.name === 'QA Small')
+  if (!smallPlan?.id) {
+    smallPlan = await adminApi.createPlan({
+      code: `qa-small-${Date.now()}`,
+      name: 'QA Small',
+      price: '100000',
+      billingCycle: 'BILLING_CYCLE_MONTHLY',
+      maxGarages: 1,
+      maxStaff: 2,
+      maxTransactionsPerDay: 50,
+      isPublic: true,
+      isActive: true,
+    })
+  }
   if (smallPlan?.id) {
     await api.withToken(owner.session.accessToken).changeMyPlan(smallPlan.id, adminApi)
   }

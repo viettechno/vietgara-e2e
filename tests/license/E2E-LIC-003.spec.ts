@@ -32,10 +32,11 @@ test('E2E-LIC-003 downgrade is refused while usage exceeds the new plan', async 
   const starterPlan = plans.data?.find((p) => p.name === 'Starter')
   if (starterPlan?.name) {
     await subscription.planCard(starterPlan.name).getByRole('button', { name: 'Choose this plan' }).click()
-    // Over the limit: the dialog offers only Close, with the usage message
-    // (scope to the dialog: the dialog chrome has its own Close icon).
+    // Over the limit: the dialog explains the usage mismatch. Dismiss with
+    // Escape (the dialog buttons share names with the dialog chrome).
     await expect(page.getByText(/usage exceeds|plan limit is reached|upgrade to add more/i)).toBeVisible()
-    await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+    await page.keyboard.press('Escape')
+    await expect(page.getByText(/usage exceeds|plan limit is reached|upgrade to add more/i)).toBeHidden()
   }
 
   // Deactivate one garage

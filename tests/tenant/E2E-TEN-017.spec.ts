@@ -37,7 +37,8 @@ test('E2E-TEN-017 create a custom role in the role editor', async ({ page, fresh
   // Verify no default tag
   await expect(page.getByText('Default')).toBeHidden()
 
-  // Clean up: delete the role
+  // Clean up: delete the role from the list (the editor has no Delete)
+  await page.goto('/roles')
   await page.getByRole('button', { name: 'Delete: QA Supplier Clerk' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Delete', exact: true }).click()
   await expect(page.getByText('QA Supplier Clerk').first()).toBeHidden()

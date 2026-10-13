@@ -38,7 +38,8 @@ test('E2E-REP-012 permissions: no access, view-only, and full access', async ({ 
   await detail.goto(orderId)
   await detail.setLineStatus(0, 'In progress')
   await detail.saveLine(0)
-  await expect(page.getByText('In progress')).toBeVisible()
+  // The status badge plus the line's own status select share the text.
+  await expect(page.getByText('In progress').first()).toBeVisible()
 
   // Complete and close (closing applies at once: no Confirm dialog)
   await detail.setLineStatus(0, 'Completed')

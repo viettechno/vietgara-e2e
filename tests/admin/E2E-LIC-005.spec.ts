@@ -10,9 +10,15 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   const plansPage = new AdminPlansPage(page)
   await plansPage.goto()
 
+  // Unique codes: a retry re-runs against the same DB, where fixed codes
+  // would collide with the previous attempt's plans.
+  const stamp = Date.now()
+  const hiddenCode = `qa-hidden-${stamp}`
+  const yearlyCode = `qa-yearly-${stamp}`
+
   // Create QA Hidden plan
   await plansPage.newPlanButton.click()
-  await page.getByLabel('Code').fill('qa-hidden')
+  await page.getByLabel('Code').fill(hiddenCode)
   await page.getByLabel('Name').fill('QA Hidden')
   await page.getByLabel('Price').fill('50000')
   await page.getByLabel('Billing cycle').selectOption('BILLING_CYCLE_MONTHLY')
@@ -21,13 +27,13 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   await page.getByLabel('Max transactions per day').fill('5')
   await page.getByLabel('Shown to customers').uncheck()
   await page.getByRole('button', { name: 'Save' }).click()
-  await expect(page.getByText('Changes saved.')).toBeVisible()
-  await expect(plansPage.row('qa-hidden')).toBeVisible()
-  await expect(plansPage.row('qa-hidden').getByText('Hidden').first()).toBeVisible()
+  await expect(page.getByText('Changes saved.').first()).toBeVisible()
+  await expect(plansPage.row(hiddenCode)).toBeVisible()
+  await expect(plansPage.row(hiddenCode).getByText('Hidden').first()).toBeVisible()
 
   // Create QA Yearly plan
   await plansPage.newPlanButton.click()
-  await page.getByLabel('Code').fill('qa-yearly')
+  await page.getByLabel('Code').fill(yearlyCode)
   await page.getByLabel('Name').fill('QA Yearly')
   await page.getByLabel('Price').fill('5000000')
   await page.getByLabel('Billing cycle').selectOption('BILLING_CYCLE_YEARLY')
@@ -35,8 +41,8 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   await page.getByLabel('Max staff').fill('30')
   await page.getByLabel('Max transactions per day').fill('300')
   await page.getByRole('button', { name: 'Save' }).click()
-  await expect(page.getByText('Changes saved.')).toBeVisible()
-  await expect(plansPage.row('qa-yearly')).toBeVisible()
+  await expect(page.getByText('Changes saved.').first()).toBeVisible()
+  await expect(plansPage.row(yearlyCode)).toBeVisible()
 
   // Try to create duplicate code qa-small (assuming it exists in baseline)
   await plansPage.newPlanButton.click()
@@ -47,7 +53,7 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   await page.getByRole('button', { name: 'Cancel' }).click()
 
   // Verify code field is not editable on edit
-  await plansPage.row('qa-yearly').getByRole('button', { name: 'Edit' }).click()
+  await plansPage.row(yearlyCode).getByRole('button', { name: 'Edit' }).click()
   await expect(page.getByLabel('Code')).toBeDisabled()
   await page.getByRole('button', { name: 'Cancel' }).click()
 })
