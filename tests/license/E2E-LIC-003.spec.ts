@@ -4,7 +4,7 @@ import { expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'
 
-test('E2E-LIC-003 downgrade is refused while usage exceeds the new plan', async ({ page, api, freshOwner, signIn }) => {
+test('E2E-LIC-003 downgrade is refused while usage exceeds the new plan', async ({ page, api, freshOwner, signIn, adminApi }) => {
   // Create owner and set up on Pro plan with 2 garages
   const owner = await freshOwner('lic003')
   await signIn(owner.session)
@@ -13,7 +13,7 @@ test('E2E-LIC-003 downgrade is refused while usage exceeds the new plan', async 
   const plans = await api.withToken(owner.session.accessToken).listPlans()
   const proPlan = plans.data?.find(p => p.name === 'Pro')
   if (proPlan?.id) {
-    await api.withToken(owner.session.accessToken).changeMyPlan(proPlan.id)
+    await api.withToken(owner.session.accessToken).changeMyPlan(proPlan.id, adminApi)
   }
 
   const garages = new GaragesPage(page)

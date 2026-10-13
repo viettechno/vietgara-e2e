@@ -4,7 +4,7 @@ import { expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'
 
-test('E2E-LIC-004 staff limit counts members and pending invitations once per person', async ({ page, api, freshOwner, signIn }) => {
+test('E2E-LIC-004 staff limit counts members and pending invitations once per person', async ({ page, api, freshOwner, signIn, adminApi }) => {
   // Create owner and subscribe to QA Small plan (2 staff, 1 garage)
   const owner = await freshOwner('lic004-owner')
   await signIn(owner.session)
@@ -23,7 +23,7 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
   const plans = await api.withToken(owner.session.accessToken).listPlans()
   const smallPlan = plans.data?.find(p => p.code === 'qa-small' || p.name === 'QA Small')
   if (smallPlan?.id) {
-    await api.withToken(owner.session.accessToken).changeMyPlan(smallPlan.id)
+    await api.withToken(owner.session.accessToken).changeMyPlan(smallPlan.id, adminApi)
   }
 
   // Verify usage shows 0/2 staff initially

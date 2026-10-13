@@ -4,9 +4,8 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'
 
-test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', async ({ page, freshOwner, signIn, api }) => {
-  const admin = await freshOwner('lic006-admin')
-  await signIn(admin.session, undefined)
+test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', async ({ page, freshOwner, signIn, adminSession, adminApi }) => {
+  await signIn(adminSession, undefined)
 
   // Create a test plan
   const plansPage = new AdminPlansPage(page)
@@ -24,7 +23,9 @@ test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', 
 
   // Create an owner and subscribe to the plan
   const owner = await freshOwner('lic006-owner')
-  await api.withToken(owner.session.accessToken).changeMyPlan('qa-limit-test')
+  const listed = await owner.api.listPlans()
+  const created = (listed.data ?? []).find((p) => p.code === 'qa-limit-test')
+  await owner.api.changeMyPlan(created?.id ?? '', adminApi)
 
   // Admin changes max staff from 2 to 3
   await plansPage.row('qa-limit-test').getByRole('button', { name: 'Edit' }).click()

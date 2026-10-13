@@ -18,6 +18,14 @@ type Fixtures = {
   mailpit: MailpitClient
   signIn: (session: Session, garageId?: string) => Promise<void>
   freshOwner: (localPart: string, options?: { fullName?: string; phone?: string; locale?: string }) => Promise<RegisteredOwner>
+  /**
+   * A client signed in as the baseline platform admin (seeded by the
+   * global setup). The test is skipped when that login is not a platform
+   * admin, so a stack without the baseline shows as skipped, never red.
+   */
+  adminApi: ApiClient
+  /** The same baseline platform admin's session, for `signIn` in the admin web. */
+  adminSession: Session
 }
 
 export const test = base.extend<Fixtures>({
@@ -58,6 +66,19 @@ export const test = base.extend<Fixtures>({
         { session, garageId },
       )
     })
+  },
+
+  adminSession: async ({ api }, use, testInfo) => {
+    const session = await api.login(env.platformAdminEmail, env.platformAdminPassword).catch(() => undefined)
+    if (session?.user?.platformAdmin !== true) {
+      testInfo.skip(true, 'platform admin not provisioned: seed the baseline (global setup) first')
+      return
+    }
+    await use(session)
+  },
+
+  adminApi: async ({ api, adminSession }, use) => {
+    await use(api.withToken(adminSession.accessToken))
   },
 
   // A brand-new, verified owner user with no garage yet -- the

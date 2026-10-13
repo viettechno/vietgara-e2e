@@ -4,9 +4,8 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'
 
-test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', async ({ page, freshOwner, signIn }) => {
-  const admin = await freshOwner('lic005-admin')
-  await signIn(admin.session, undefined)
+test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', async ({ page, adminSession, signIn }) => {
+  await signIn(adminSession, undefined)
 
   const plansPage = new AdminPlansPage(page)
   await plansPage.goto()

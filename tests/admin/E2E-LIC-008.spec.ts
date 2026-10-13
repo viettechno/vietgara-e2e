@@ -4,14 +4,13 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminSubscriptionsPage } from '../../src/pages/admin/AdminPages.js'
 
-test('E2E-LIC-008 platform admin finds and extends a subscription', async ({ page, freshOwner, signIn, api }) => {
-  const admin = await freshOwner('lic008-admin')
-  await signIn(admin.session, undefined)
+test('E2E-LIC-008 platform admin finds and extends a subscription', async ({ page, freshOwner, signIn, adminSession }) => {
+  await signIn(adminSession, undefined)
 
   // Create an owner with trial
   const owner = await freshOwner('lic008-owner')
-  const subBefore = await api.withToken(owner.session.accessToken).getMySubscription()
-  const trialEnd = (subBefore as { periodEnd: string }).periodEnd
+  const subBefore = await owner.api.getMySubscription()
+  const trialEnd = subBefore.currentPeriodEnd ?? ''
 
   const subsPage = new AdminSubscriptionsPage(page)
   await subsPage.goto()
@@ -41,8 +40,8 @@ test('E2E-LIC-008 platform admin finds and extends a subscription', async ({ pag
   await expect(page.getByText('Subscription extended.')).toBeVisible()
 
   // Verify owner sees extended trial
-  const subAfter = await api.withToken(owner.session.accessToken).getMySubscription()
-  const newTrialEnd = new Date((subAfter as { periodEnd: string }).periodEnd)
+  const subAfter = await owner.api.getMySubscription()
+  const newTrialEnd = new Date(subAfter.currentPeriodEnd ?? '')
   const oldTrialEnd = new Date(trialEnd)
   expect(newTrialEnd.getTime() - oldTrialEnd.getTime()).toBeGreaterThan(29 * 24 * 60 * 60 * 1000)
 })

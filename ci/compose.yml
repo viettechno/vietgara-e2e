@@ -2,7 +2,7 @@
 # (ghcr.io/viettechno/*): no source checkout, no build, no registry login.
 #
 #   BACKEND_TAG / OWNER_WEB_TAG / ADMIN_WEB_TAG  image tags (see ci/resolve-tag.sh)
-#   KONG_PROXY_PORT / MAILPIT_UI_PORT            host ports (default 8000 / 8025)
+#   KONG_PROXY_PORT / MAILPIT_UI_PORT / PG_PORT  host ports (default 8000 / 8025 / 15432)
 #
 # Derived from vietgara-backend/docker-compose.yml (the local development
 # stack, which builds from source). Values here are throw-away CI values.
@@ -16,6 +16,10 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vietgara
+    # Published on loopback for the time-shifting setup helpers of the
+    # subscription and invitation scenarios (src/fixtures/timeshift.ts).
+    ports:
+      - '127.0.0.1:${PG_PORT:-15432}:5432'
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U user -d vietgara']
       interval: 5s
@@ -80,12 +84,14 @@ services:
       APP_BASE_URL: http://localhost:${KONG_PROXY_PORT:-8000}
       PLATFORM_ADMIN_EMAILS: admin@vietgara.test
       REDIS_ADDR: redis:6379
-      ENTITLEMENT_CACHE_TTL: 5m
+      # Short, so the period-end and grace-end scenarios (E2E-LIC-010/011)
+      # wait seconds, not the production-like defaults of 1h / 5m.
+      ENTITLEMENT_CACHE_TTL: 1s
       KAFKA_BROKERS: kafka:9092
       KAFKA_TOPIC_PREFIX: vietgara
       KAFKA_CONSUMER_GROUP: vietgara-backend
       OUTBOX_RELAY_INTERVAL: 1s
-      LICENSE_EXPIRY_JOB_INTERVAL: 1h
+      LICENSE_EXPIRY_JOB_INTERVAL: 5s
       MAIL_PROVIDER: smtp
       MAIL_FROM_ADDRESS: no-reply@vietgara.test
       MAIL_FROM_NAME: VietGara
