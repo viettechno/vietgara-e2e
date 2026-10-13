@@ -52,13 +52,13 @@ test('E2E-REP-005 assign technicians to a line', async ({ page, freshOwner, sign
   await detail.assignTechnician(0, 'QA Tech REP005-2')
   await detail.saveLine(0)
 
-  // Verify both assigned
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-1')).toBeVisible()
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-2')).toBeVisible()
+  // Verify both assigned (checkbox states: the labels render regardless)
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeChecked()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).toBeChecked()
 
   // Unassign one (uncheck, not check: the box is already checked)
   await detail.unassignTechnician(0, 'QA Tech REP005-2')
   await detail.saveLine(0)
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-1')).toBeVisible()
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-2')).toBeHidden()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeChecked()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).not.toBeChecked()
 })
