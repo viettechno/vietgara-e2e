@@ -36,9 +36,12 @@ export async function registerAndVerify(
   // Register already e-mails the first OTP (AuthService.Register); asking
   // for a second one immediately would hit the 30-second resend cooldown.
   // The locale pins the language of the user's e-mails and of the default
-  // role/group names, which snapshot it at verification: specs asserting
-  // on group names register with 'LOCALE_EN'.
-  const initial = await api.register({ email, password, fullName, phone: options.phone, locale: options.locale })
+  // role/group names, which snapshot it at verification: every spec reads
+  // English text (the `page` fixture pins `vietgara.language` to `en`), and
+  // the app applies the user's locale on sign-in (SessionContext), so the
+  // default here is English. Pass an explicit locale only for the language
+  // scenarios themselves (E2E-IAM-018).
+  const initial = await api.register({ email, password, fullName, phone: options.phone, locale: options.locale ?? 'LOCALE_EN' })
   const asOwner = api.withToken(initial.accessToken)
 
   const message = await mailpit.waitForMessage(email, { subjectContains: 'VietGara' })

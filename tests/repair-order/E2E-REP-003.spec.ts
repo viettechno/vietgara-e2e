@@ -1,21 +1,13 @@
 // E2E-REP-003 · A repair order created from an approved quote inherits its data
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
-import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 
 test('E2E-REP-003 repair order from approved quote inherits data', async ({ page, api, freshOwner, signIn }) => {
   const owner = await freshOwner('rep003')
-  await signIn(owner.session)
-
-  const garages = new GaragesPage(page)
-  await garages.goto()
-  await garages.createGarage({ name: 'QA Gara REP003', address: '1 Test St, Quan 1, TP.HCM' })
-
-  // Get garage ID
-  const listed = await api.withToken(owner.session.accessToken).listGarages()
-  const garage = listed.data?.find(g => g.name === 'QA Gara REP003')
-  const garageId = garage?.id
+  const garage = await owner.api.createGarage({ name: 'QA Gara REP003' })
+  const garageId = garage.id ?? ''
   if (!garageId) throw new Error('Garage not found')
+  await signIn(owner.session, garageId)
 
   // Create customer and vehicle via API
   const customer = await api.withToken(owner.session.accessToken).createCustomer(garageId, {
@@ -60,9 +52,9 @@ test('E2E-REP-003 repair order from approved quote inherits data', async ({ page
     { lineId: line1Id, approved: true },
   ])
 
-  // Convert to repair order
+  // Convert to repair order (the API answers the bare repairOrderId)
   const convertResult = await api.withToken(owner.session.accessToken).convertQuote(garageId, quote.id)
-  const repairOrderId = (convertResult as { repairOrder?: { id: string } }).repairOrder?.id
+  const repairOrderId = convertResult.repairOrderId ?? ''
   if (!repairOrderId) throw new Error('No repair order created')
 
   // Verify repair order in UI
@@ -72,5 +64,5 @@ test('E2E-REP-003 repair order from approved quote inherits data', async ({ page
   await expect(page.getByText('Oil change')).toBeVisible()
   await expect(page.getByText('Oil filter')).toBeVisible()
   await expect(page.getByText('350,000')).toBeVisible() // Total
-  await expect(page.getByText('Open')).toBeVisible() // Status
+  await expect(page.getByText('To Do')).toBeVisible() // Status (OPEN renders as To Do)
 })

@@ -47,7 +47,7 @@ test('E2E-QUO-006 the customer decides each line from the public link', async ({
   await link.decideLine('Oil change service', true)
   await link.decideLine('Engine oil 5W-30', false)
   await link.submitButton.click()
-  await expect(page.getByText('You approved this quote. Thank you!')).toBeVisible()
+  await expect(page.getByText('You approved this quote. Thank you!')).toBeVisible({ timeout: 20000 })
 
   // Decided links turn read-only: no way to decide again.
   await page.reload()

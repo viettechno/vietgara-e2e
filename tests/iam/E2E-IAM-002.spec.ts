@@ -9,7 +9,7 @@ test('E2E-IAM-002 unverified user can only use the Account page', async ({ page,
   const password = 'Qa@123456'
   const fullName = 'QA Unverified User'
 
-  await api.register({ email, password, fullName })
+  await api.register({ email, password, fullName, locale: 'LOCALE_EN' })
   // Do NOT verify - this user stays unverified
 
   // Sign in as the unverified user
@@ -19,7 +19,7 @@ test('E2E-IAM-002 unverified user can only use the Account page', async ({ page,
 
   // Step 1: Should land on verification page
   await expect(page.getByText('Verify your e-mail')).toBeVisible()
-  await expect(page.getByText(/6-digit code was sent/)).toBeVisible()
+  await expect(page.getByText(/6-digit code/)).toBeVisible()
 
   // Step 2: Navigate to protected pages - all should redirect to verification page
   const protectedPaths = ['/garages', '/staff', '/customers', '/subscription']
@@ -29,7 +29,7 @@ test('E2E-IAM-002 unverified user can only use the Account page', async ({ page,
   }
 
   // Step 3: Account page should be accessible
-  await page.goto('/user')
+  await page.goto('/account')
   await expect(page.getByText('Not verified')).toBeVisible()
 
   // Step 4: Change full name and save

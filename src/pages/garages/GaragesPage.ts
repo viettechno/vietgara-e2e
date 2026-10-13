@@ -21,6 +21,10 @@ export class GaragesPage {
     await this.nameField.fill(input.name)
     if (input.address) await this.page.getByLabel('Address').fill(input.address)
     await this.saveButton.click()
+    // Wait for the creation to land before returning: callers list garages
+    // over the API immediately after, and without this the read races the
+    // `Saving…` mutation (seen as "Garage not found" on slow CI runners).
+    await this.page.getByRole('dialog').waitFor({ state: 'hidden' })
   }
 
   garageRow(name: string): Locator {

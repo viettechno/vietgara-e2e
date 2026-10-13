@@ -21,8 +21,18 @@ test('E2E-BIL-004 each payment gets a numbered payment voucher', async ({ page, 
   const vehicle = await owner.api.createVehicle(garage.id ?? '', { customerId: customer.id ?? '', licensePlate: '51A-411.41' })
   const order = await closedRepairOrder(owner.api, garage.id ?? '', customer.id ?? '', vehicle.id ?? '')
   const settlement = await pendingSettlement(owner.api, garage.id ?? '', order.id ?? '')
-  await owner.api.recordSettlementPayment(garage.id ?? '', settlement.id ?? '', { amount: '500000', method: 'PAYMENT_METHOD_CASH' }, newIdempotencyKey())
-  await owner.api.recordSettlementPayment(garage.id ?? '', settlement.id ?? '', { amount: '470000', method: 'PAYMENT_METHOD_BANK_TRANSFER' }, newIdempotencyKey())
+  await owner.api.recordSettlementPayment(
+    garage.id ?? '',
+    settlement.id ?? '',
+    { amount: '500000', method: 'PAYMENT_METHOD_CASH' },
+    newIdempotencyKey(),
+  )
+  await owner.api.recordSettlementPayment(
+    garage.id ?? '',
+    settlement.id ?? '',
+    { amount: '470000', method: 'PAYMENT_METHOD_BANK_TRANSFER' },
+    newIdempotencyKey(),
+  )
   await signIn(owner.session, garage.id)
 
   const detail = new SettlementDetailPage(page)
@@ -39,9 +49,9 @@ test('E2E-BIL-004 each payment gets a numbered payment voucher', async ({ page, 
 
   // Each voucher opens as a PDF named after its number.
   for (const number of vouchers) {
-    const download = page.waitForEvent('download')
-    await page.getByRole('button', { name: `Voucher PDF: ${number}` }).click()
-    const file = await download
+    const downloadPromise = page.waitForEvent('download')
+    await detail.voucherButton(number).click()
+    const file = await downloadPromise
     expect(file.suggestedFilename()).toBe(`${number}.pdf`)
     const path = await file.path()
     const { readFile } = await import('node:fs/promises')

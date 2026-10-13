@@ -4,7 +4,13 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'
 
-test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', async ({ page, freshOwner, signIn, adminSession, adminApi }) => {
+test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', async ({
+  page,
+  freshOwner,
+  signIn,
+  adminSession,
+  adminApi,
+}) => {
   await signIn(adminSession, undefined)
 
   // Create a test plan
@@ -18,8 +24,8 @@ test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', 
   await page.getByLabel('Max garages').fill('1')
   await page.getByLabel('Max staff').fill('2')
   await page.getByLabel('Max transactions per day').fill('10')
-  await page.getByRole('button', { name: 'Create', exact: true }).click()
-  await expect(page.getByText('Plan created.')).toBeVisible()
+  await page.getByRole('button', { name: 'Save' }).click()
+  await expect(page.getByText('Changes saved.')).toBeVisible()
 
   // Create an owner and subscribe to the plan
   const owner = await freshOwner('lic006-owner')
@@ -31,7 +37,7 @@ test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', 
   await plansPage.row('qa-limit-test').getByRole('button', { name: 'Edit' }).click()
   await page.getByLabel('Max staff').fill('3')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await expect(page.getByText('Plan updated.')).toBeVisible()
+  await expect(page.getByText('Changes saved.')).toBeVisible()
 
   // Verify the plan shows updated limits
   await expect(plansPage.row('qa-limit-test')).toBeVisible()

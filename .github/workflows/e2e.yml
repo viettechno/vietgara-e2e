@@ -128,6 +128,10 @@ jobs:
         env:
           API_BASE_URL: ${{ env.WEB_BASE_URL }}/api
           MAILPIT_URL: http://localhost:8025
+          # Direct database access for the time-shifting helpers
+          # (src/fixtures/timeshift.ts): ci/compose.yml publishes Postgres on
+          # 127.0.0.1:${PG_PORT:-15432}. Without it E2E-LIC-010/011 skip.
+          DATABASE_URL: postgres://user:password@localhost:15432/vietgara
           CI: true
           PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/results.json
           GREP: ${{ inputs.grep }}

@@ -26,7 +26,8 @@ test('E2E-CUS-010 manage suppliers', async ({ page, signIn, freshOwner, adminApi
     email: 'sales.daunhot@vietgara.test',
   })
   await expect(suppliers.row('QA Supplier Dau Nhot Mien Nam')).toContainText('Mr. Tuan')
-  await expect(suppliers.row('QA Supplier Dau Nhot Mien Nam')).toContainText('0912000003')
+  // Phones are stored normalized (E.164): 0912000003 shows as +84912000003.
+  await expect(suppliers.row('QA Supplier Dau Nhot Mien Nam')).toContainText('+84912000003')
 
   await suppliers.search('Dau Nhot')
   await expect(page.locator('tbody tr')).toHaveCount(1)

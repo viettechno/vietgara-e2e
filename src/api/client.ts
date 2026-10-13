@@ -74,8 +74,7 @@ export type StockReceiptInput = { quantity: string; unitCost?: string }
 export type StockReceiptResult = { transaction?: StockTransaction; item?: Item }
 
 // A valid 1x1 PNG: the transfer screenshot the plan payment flow requires.
-const TRANSFER_EVIDENCE_PNG =
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+const TRANSFER_EVIDENCE_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
 export class ApiClient {
   constructor(
@@ -205,6 +204,7 @@ export class ApiClient {
     code: string
     name: string
     price: string
+    currency?: string
     billingCycle: 'BILLING_CYCLE_MONTHLY' | 'BILLING_CYCLE_YEARLY'
     maxGarages: number
     maxStaff: number
@@ -213,9 +213,10 @@ export class ApiClient {
     isPublic?: boolean
     isActive?: boolean
   }): Promise<Plan> {
-    const { maxGarages, maxStaff, maxTransactionsPerDay, ...rest } = input
+    const { maxGarages, maxStaff, maxTransactionsPerDay, currency, ...rest } = input
     return this.post('/v1/admin/plans', {
       ...rest,
+      currency: currency ?? 'VND',
       limits: { maxGarages, maxStaff, maxTransactionsPerDay },
     })
   }

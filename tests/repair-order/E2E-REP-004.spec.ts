@@ -23,9 +23,10 @@ test('E2E-REP-004 Kanban board columns reflect line progress', async ({ page, fr
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!
 
-  // Step 1: Both lines Not started -> To Do column
+  // Step 1: Both lines Not started -> To Do column (the board is Kanban:
+  // columns are regions, cards show the plate — never the order id).
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('To Do')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'To Do' }).getByText('51A-444.44')).toBeVisible()
 
   // Step 2: Set line 1 to In progress -> In Progress column
   const detail = new RepairOrderDetailPage(page)
@@ -33,7 +34,7 @@ test('E2E-REP-004 Kanban board columns reflect line progress', async ({ page, fr
   await detail.setLineStatus(0, 'In progress')
   await detail.saveLine(0)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('In Progress')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'In Progress' }).getByText('51A-444.44')).toBeVisible()
 
   // Step 3: Set line 1 to Completed, line 2 to In progress -> In Progress column
   await detail.goto(orderId)
@@ -42,12 +43,12 @@ test('E2E-REP-004 Kanban board columns reflect line progress', async ({ page, fr
   await detail.setLineStatus(1, 'In progress')
   await detail.saveLine(1)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('In Progress')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'In Progress' }).getByText('51A-444.44')).toBeVisible()
 
   // Step 4: Set both lines to Completed -> Completed column
   await detail.goto(orderId)
   await detail.setLineStatus(1, 'Completed')
   await detail.saveLine(1)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('Completed')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Completed' }).getByText('51A-444.44')).toBeVisible()
 })

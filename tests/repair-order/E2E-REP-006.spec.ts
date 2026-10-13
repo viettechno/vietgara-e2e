@@ -24,16 +24,16 @@ test('E2E-REP-006 update line progress; order status derived', async ({ page, fr
 
   const detail = new RepairOrderDetailPage(page)
 
-  // Step 1: Both Not started -> To Do
+  // Step 1: Both Not started -> To Do (Kanban regions, cards show the plate)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('To Do')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'To Do' }).getByText('51A-666.66')).toBeVisible()
 
   // Step 2: Line A -> In progress -> In Progress
   await detail.goto(orderId)
   await detail.setLineStatus(0, 'In progress')
   await detail.saveLine(0)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('In Progress')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'In Progress' }).getByText('51A-666.66')).toBeVisible()
 
   // Step 3: Line A -> Completed, Line B -> In progress -> In Progress
   await detail.goto(orderId)
@@ -42,12 +42,12 @@ test('E2E-REP-006 update line progress; order status derived', async ({ page, fr
   await detail.setLineStatus(1, 'In progress')
   await detail.saveLine(1)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('In Progress')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'In Progress' }).getByText('51A-666.66')).toBeVisible()
 
   // Step 4: Both Completed -> Completed
   await detail.goto(orderId)
   await detail.setLineStatus(1, 'Completed')
   await detail.saveLine(1)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('Completed')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Completed' }).getByText('51A-666.66')).toBeVisible()
 })

@@ -19,7 +19,7 @@ test('E2E-LIC-008 platform admin finds and extends a subscription', async ({ pag
   await subsPage.search(owner.email)
   await expect(subsPage.row(owner.email)).toBeVisible()
   await expect(subsPage.row(owner.email).getByText('Free trial')).toBeVisible()
-  await expect(subsPage.row(owner.email).getByText('Trial')).toBeVisible()
+  await expect(subsPage.row(owner.email).getByText('Trial', { exact: true })).toBeVisible()
 
   // Filter by Trial status
   await page.getByRole('combobox', { name: 'Status' }).selectOption('Trial')

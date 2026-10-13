@@ -10,22 +10,28 @@ test('E2E-IAM-018 interface and e-mail language', async ({ page, api, mailpit })
   const password = 'Qa@123456'
   const fullName = 'QA IAM018 Vietnamese'
 
-  const initial = await api.register({ email, password, fullName, locale: 'vi' })
+  const initial = await api.register({ email, password, fullName, locale: 'LOCALE_VI' })
   const message = await mailpit.waitForMessage(email, { subjectContains: 'VietGara' })
   const otpCode = mailpit.extractOtp(message)
   await api.withToken(initial.accessToken).verifyEmail(otpCode, initial.refreshToken ?? '')
 
+  // The switcher is a dropdown (button + radio items), not a combobox.
+  const switchLanguage = async (label: 'English' | 'Tiếng Việt') => {
+    await page.getByRole('button', { name: /language|ngôn ngữ/i }).click()
+    await page.getByRole('menuitemradio', { name: label }).click()
+  }
+
   // Step 1: Switch language on sign-in page to English
   const login = new LoginPage(page)
   await login.goto()
-  await page.getByRole('combobox', { name: /language/i }).selectOption('en')
+  await switchLanguage('English')
 
   // Step 2: Sign in as the Vietnamese user
   await login.signInAs(email, password)
   await expect(page).toHaveURL(/\/garages/)
 
   // Step 3: Use header language switcher to choose English, reload
-  await page.getByRole('combobox', { name: /language/i }).selectOption('en')
+  await switchLanguage('English')
   await page.reload()
   await expect(page.getByRole('button', { name: 'Add garage' })).toBeVisible()
 
@@ -51,6 +57,6 @@ test('E2E-IAM-018 interface and e-mail language', async ({ page, api, mailpit })
 
   // Step 6: Switch back to Vietnamese
   await login.goto()
-  await page.getByRole('combobox', { name: /language/i }).selectOption('vi')
+  await switchLanguage('Tiếng Việt')
   await expect(page.getByText('Tiếng Việt')).toBeVisible()
 })

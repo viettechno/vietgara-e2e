@@ -52,7 +52,7 @@ test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, 
   // Transaction 3 is refused.
   const quoteForm = new QuoteFormPage(page)
   await quoteForm.goto()
-  await quoteForm.pickCustomer('An Nguyen', customer.fullName ?? '')
+  await quoteForm.pickCustomer(customer.fullName ?? '', customer.fullName ?? '')
   await quoteForm.pickSearchSelect(quoteForm.vehicleField, vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
   await quoteForm.fillLine(0, { itemType: 'Labor', description: 'Second job', quantity: '1', unitPrice: '100000' })
   await quoteForm.saveButton.click()

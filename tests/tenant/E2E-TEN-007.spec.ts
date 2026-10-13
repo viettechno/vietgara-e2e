@@ -29,10 +29,13 @@ test('E2E-TEN-007 invite an existing user by e-mail and accept from the e-mail l
 
   await signIn(freelancer.session)
   await page.goto(invitationLink)
-  await expect(page.getByText(/invited you to join/)).toBeVisible()
+  // The page header description also contains "invited you to join" — scope
+  // to the invitation heading.
+  await expect(page.getByRole('heading', { name: /invited you to join/ })).toBeVisible()
   const invitations = new MyInvitationsPage(page)
   await invitations.acceptButton.click()
-  await expect(page.getByText(/You joined/)).toBeVisible()
+  // Accepting navigates to /garages (the joined-garage toast unmounts).
+  await expect(page).toHaveURL(/\/garages/)
 
   // The invitee now works in the garage: it is selectable and its data opens.
   await new GarageSwitcher(page).switchTo('QA Gara TEN007')
