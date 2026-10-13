@@ -33,6 +33,9 @@ test('E2E-REP-005 assign technicians to a line', async ({ page, freshOwner, sign
   await form.pickVehicle(vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
   await form.fillLine(0, { itemType: 'Labor', description: 'Brake repair', quantity: '1', unitPrice: '200000' })
   await form.createButton.click()
+  // Wait for the creation to land: without this the URL below is still
+  // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
+  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
 
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!

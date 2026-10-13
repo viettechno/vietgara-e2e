@@ -18,6 +18,9 @@ test('E2E-REP-004 Kanban board columns reflect line progress', async ({ page, fr
   await form.fillLine(0, { itemType: 'Labor', description: 'Line 1', quantity: '1', unitPrice: '100000' })
   await form.addLine({ itemType: 'Labor', description: 'Line 2', quantity: '1', unitPrice: '100000' })
   await form.createButton.click()
+  // Wait for the creation to land: without this the URL below is still
+  // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
+  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
 
   // Get repair order ID from URL
   const orderUrl = page.url()
