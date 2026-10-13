@@ -46,11 +46,10 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
     await api.withToken(owner.session.accessToken).changeMyPlan(smallPlan.id, adminApi)
   }
 
-  // Verify usage shows 0/2 staff initially (label and value are separate
-  // elements in the usage rows, so assert them separately)
+  // Verify usage shows 0/2 staff initially (the usage value is unique to
+  // the Staff row: Garages is 1/1, Transactions 0/50 on QA Small)
   const subPage = new SubscriptionPage(page)
   await subPage.goto()
-  await expect(page.getByText('Staff')).toBeVisible()
   await expect(page.getByText('0 / 2').first()).toBeVisible()
 
   // Create freelancer and invite

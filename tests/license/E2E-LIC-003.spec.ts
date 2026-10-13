@@ -39,12 +39,13 @@ test('E2E-LIC-003 downgrade is refused while usage exceeds the new plan', async 
     await expect(page.getByText(/usage exceeds|plan limit is reached|upgrade to add more/i)).toBeHidden()
   }
 
-  // Deactivate one garage
+  // Deactivate one garage (confirm with Deactivate, as in E2E-TEN-006)
   await page.goto('/garages')
   const garageRowB = garages.garageRow('QA Gara LIC003 B')
-  await garageRowB.getByRole('button', { name: 'Settings' }).click()
+  await garageRowB.getByRole('button', { name: /garage settings/i }).click()
   await page.getByRole('button', { name: 'Deactivate' }).click()
-  await page.getByRole('button', { name: 'Confirm' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Deactivate', exact: true }).click()
+  await expect(page.getByText('Inactive', { exact: true }).first()).toBeVisible()
 
   // Now downgrade to Starter should succeed (quote in UI, pay over the API).
   await subscription.goto()
@@ -68,10 +69,14 @@ test('E2E-LIC-003 downgrade is refused while usage exceeds the new plan', async 
     await expect(page.getByText('Your payment for the Starter plan was approved')).toBeVisible()
   }
 
-  // Verify cannot reactivate garage B while on Starter
+  // Verify cannot reactivate garage B while on Starter: reactivating
+  // beyond the plan limit is refused with the limit message.
   await page.goto('/garages')
-  await garageRowB.getByRole('button', { name: 'Settings' }).click()
+  await garages
+    .garageRow('QA Gara LIC003 B')
+    .getByRole('button', { name: /garage settings/i })
+    .click()
   await page.getByRole('button', { name: 'Reactivate' }).click()
-  await page.getByRole('button', { name: 'Confirm' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Reactivate', exact: true }).click()
   await expect(page.getByText(/plan limit is reached|upgrade to add more/i)).toBeVisible()
 })

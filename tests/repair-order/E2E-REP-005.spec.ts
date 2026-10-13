@@ -40,9 +40,12 @@ test('E2E-REP-005 assign technicians to a line', async ({ page, freshOwner, sign
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!
 
-  // Assign both technicians to the line
+  // Assign both technicians to the line (the boxes prove the invite +
+  // accept setup worked; Save proves the assignment sticks)
   const detail = new RepairOrderDetailPage(page)
   await detail.goto(orderId)
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeVisible()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).toBeVisible()
   await detail.assignTechnician(0, 'QA Tech REP005-1')
   await detail.assignTechnician(0, 'QA Tech REP005-2')
   await detail.saveLine(0)

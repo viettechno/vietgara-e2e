@@ -44,9 +44,9 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   await expect(page.getByText('Changes saved.').first()).toBeVisible()
   await expect(plansPage.row(yearlyCode)).toBeVisible()
 
-  // Try to create duplicate code qa-small (assuming it exists in baseline)
+  // Duplicate codes are refused: re-create the hidden plan's code.
   await plansPage.newPlanButton.click()
-  await page.getByLabel('Code').fill('qa-small')
+  await page.getByLabel('Code').fill(hiddenCode)
   await page.getByLabel('Name').fill('QA Duplicate')
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByText(/plan with this code exists/i)).toBeVisible()

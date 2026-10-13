@@ -54,6 +54,12 @@ export const test = base.extend<Fixtures>({
   // Seeds the session before the app's first script runs, so no login
   // form round-trip is needed for tests that aren't about login itself.
   // Call it, then page.goto() wherever the test actually wants to land.
+  // NOTE: the seed re-runs on EVERY full page load (addInitScript). After
+  // the test changes auth state in the UI — signing out, switching the
+  // active garage — re-pin with signIn (new garage) or stop using it:
+  // otherwise the next goto reloads the old session/garage (E2E-IAM-009,
+  // E2E-TEN-005, E2E-BIL-004). Tests about login itself sign in through
+  // the real form instead.
   signIn: async ({ page }, use) => {
     await use(async (session: Session, garageId?: string) => {
       await page.addInitScript(

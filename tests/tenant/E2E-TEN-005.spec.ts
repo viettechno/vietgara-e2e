@@ -26,6 +26,9 @@ test('E2E-TEN-005 switch the active garage', async ({ page, signIn, freshOwner, 
   await expect(customers.row(chi.fullName ?? '')).toBeHidden()
 
   await switcher.switchTo('QA Gara TEN005 Two')
+  // The signIn fixture re-seeds the original garage on every full page
+  // load, so re-pin it to the switched garage before navigating further.
+  await signIn(owner.session, gara2.id)
   // Re-navigate so the customers list fetches for the new active garage
   // (the list keeps the previous garage's rows while refetching).
   await customers.goto()

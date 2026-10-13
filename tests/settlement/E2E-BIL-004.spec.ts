@@ -77,6 +77,9 @@ test('E2E-BIL-004 each payment gets a numbered payment voucher', async ({ page, 
   // second garage appears before switching.
   await page.reload()
   await new GarageSwitcher(page).switchTo('QA Gara BIL004 A2')
+  // Re-pin the fixture to the switched garage: its seed re-runs on every
+  // full page load and would otherwise reset the active garage to A1.
+  await signIn(owner.session, garageTwo.id)
   await detail.goto(settlementTwo.id ?? '')
   await expect(detail.paymentRow(otherNumber)).toBeVisible()
 })
