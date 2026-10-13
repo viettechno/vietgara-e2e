@@ -47,6 +47,7 @@ test('E2E-IAM-018 interface and e-mail language', async ({ page, api, mailpit })
   await login.forgotPassword.click()
   await page.getByLabel('Email').fill(email)
   await page.getByRole('button', { name: 'Send code' }).click()
+  await expect(page.getByRole('heading', { name: 'Enter the code' })).toBeVisible()
   await expect(page.getByText(/code was sent/)).toBeVisible()
 
   const resetMessage = await mailpit.waitForMessage(email, { subjectContains: 'VietGara' })

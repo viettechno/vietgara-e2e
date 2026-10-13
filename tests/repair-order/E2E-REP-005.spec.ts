@@ -40,12 +40,24 @@ test('E2E-REP-005 assign technicians to a line', async ({ page, freshOwner, sign
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!
 
+  // Start from a known state: clear any assignment over the API (setup,
+  // not the subject), so the UI toggles below always flip unchecked boxes.
+  const created = await owner.api.getRepairOrder(garage.id ?? '', orderId)
+  for (const line of created.lines ?? []) {
+    await owner.api.updateRepairOrderLine(garage.id ?? '', orderId, line.id ?? '', {
+      status: 'REPAIR_ORDER_LINE_STATUS_NOT_STARTED',
+      assignedTechnicianIds: [],
+    })
+  }
+
   // Assign both technicians to the line (the boxes prove the invite +
   // accept setup worked; Save proves the assignment sticks)
   const detail = new RepairOrderDetailPage(page)
   await detail.goto(orderId)
   await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeVisible()
   await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).toBeVisible()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).not.toBeChecked()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).not.toBeChecked()
   await detail.assignTechnician(0, 'QA Tech REP005-1')
   await detail.assignTechnician(0, 'QA Tech REP005-2')
   await detail.saveLine(0)

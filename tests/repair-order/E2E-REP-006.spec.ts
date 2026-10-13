@@ -28,6 +28,9 @@ test('E2E-REP-006 update line progress; order status derived', async ({ page, fr
   const detail = new RepairOrderDetailPage(page)
 
   // Step 1: Both Not started -> To Do (Kanban regions, cards show the plate)
+  // (wait for the lines to load first so slow runners don't race the board)
+  await detail.goto(orderId)
+  await expect(detail.lineRow(0).getByText('Line A')).toBeVisible()
   await page.goto('/repair-orders')
   await expect(page.getByRole('region', { name: 'To Do' }).getByText('51A-666.66')).toBeVisible()
 
