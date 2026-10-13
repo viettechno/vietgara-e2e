@@ -1,22 +1,15 @@
 // E2E-REP-012 · Permissions: no access, view-only, and full access
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
-import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { RepairOrderCreateForm, RepairOrderDetailPage } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 
 test('E2E-REP-012 permissions: no access, view-only, and full access', async ({ page, api, freshOwner, signIn }) => {
-  // Create owner with garage
+  // Create owner with garage (over the API: setup, not the subject)
   const owner = await freshOwner('rep012-owner')
-  await signIn(owner.session)
-  const garages = new GaragesPage(page)
-  await garages.goto()
-  await garages.createGarage({ name: 'QA Gara REP012', address: '1 Test St, Quan 1, TP.HCM' })
-
-  // Get garage ID
-  const listed = await api.withToken(owner.session.accessToken).listGarages()
-  const garage = listed.data?.find(g => g.name === 'QA Gara REP012')
-  const garageId = garage?.id
+  const garage = await owner.api.createGarage({ name: 'QA Gara REP012' })
+  const garageId = garage.id ?? ''
   if (!garageId) throw new Error('Garage not found')
+  await signIn(owner.session, garageId)
 
   // Create customer and vehicle
   const customer = await api.withToken(owner.session.accessToken).createCustomer(garageId, {
@@ -36,6 +29,9 @@ test('E2E-REP-012 permissions: no access, view-only, and full access', async ({ 
   await createForm.pickVehicle(vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
   await createForm.fillLine(0, { itemType: 'Labor', description: 'Brake repair', quantity: '1', unitPrice: '200000' })
   await createForm.createButton.click()
+  // Wait for the creation to land: without this the URL below is still
+  // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
+  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
 
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!
@@ -45,14 +41,14 @@ test('E2E-REP-012 permissions: no access, view-only, and full access', async ({ 
   await detail.goto(orderId)
   await detail.setLineStatus(0, 'In progress')
   await detail.saveLine(0)
-  await expect(page.getByText('In progress')).toBeVisible()
+  // The status badge plus the line's own status select share the text.
+  await expect(page.getByText('In progress').first()).toBeVisible()
 
-  // Complete and close
+  // Complete and close (closing applies at once: no Confirm dialog)
   await detail.setLineStatus(0, 'Completed')
   await detail.saveLine(0)
   await expect(detail.closeButton).toBeEnabled()
   await detail.closeButton.click()
-  await page.getByRole('button', { name: 'Confirm' }).click()
   await expect(page.getByText('Closed')).toBeVisible()
 
   // Test VIEWER (view-only) and TECHNICIAN (read/write) require separate contexts

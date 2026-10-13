@@ -15,7 +15,7 @@ test('E2E-TEN-022 one owner cannot reach another owner garage', async ({ page, a
 
   // Get garage A ID and customer
   const listedA = await api.withToken(ownerA.session.accessToken).listGarages()
-  const garageA = listedA.data?.find(g => g.name === 'QA Gara TEN022 A')
+  const garageA = listedA.data?.find((g) => g.name === 'QA Gara TEN022 A')
   const garageAId = garageA?.id
   if (!garageAId) throw new Error('Garage A not found')
 
@@ -31,11 +31,14 @@ test('E2E-TEN-022 one owner cannot reach another owner garage', async ({ page, a
   await garages.goto()
   await garages.createGarage({ name: 'QA Gara TEN022 B', address: '2 Test St, Ba Dinh, HN' })
 
-  // Step 1: Owner B's garage selector only shows garage B
+  // Step 1: Owner B's garage selector only shows garage B (scope to the
+  // popover: the page behind also renders the garage name)
   const switcher = new GarageSwitcher(page)
   await switcher.switcherButton.click()
-  await expect(page.getByRole('button', { name: 'QA Gara TEN022 B' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'QA Gara TEN022 A' })).toBeHidden()
+  const popover = page.getByRole('dialog')
+  await expect(popover.getByText('QA Gara TEN022 B')).toBeVisible()
+  await expect(popover.getByText('QA Gara TEN022 A')).toBeHidden()
+  await page.keyboard.press('Escape')
 
   // Step 2: Owner B tries to access garage A settings directly
   await page.goto(`/garages/${garageAId}/settings`)

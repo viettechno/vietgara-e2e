@@ -4,6 +4,109 @@
  */
 
 export interface paths {
+    "/api/v1/admin/payment-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LicenseAdminService_GetPlatformPaymentSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["LicenseAdminService_UpdatePlatformPaymentSettings"];
+        trace?: never;
+    };
+    "/api/v1/admin/payment-settings/qr": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Uploads or replaces the QR code image. */
+        post: operations["LicenseAdminService_UploadPaymentQr"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/plan-payment-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The review queue (FR-LIC-08). */
+        get: operations["LicenseAdminService_ListPlanPaymentRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/plan-payment-requests/{requestId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LicenseAdminService_GetPlanPaymentRequest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/plan-payment-requests/{requestId}:approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approves the payment: the plan applies at once and a new period starts;
+         *     the limits are validated again (PLAN_LIMIT_REACHED).
+         *     REQUEST_NOT_OPEN unless SUBMITTED.
+         */
+        post: operations["LicenseAdminService_ApprovePlanPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/plan-payment-requests/{requestId}:reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["LicenseAdminService_RejectPlanPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/plans": {
         parameters: {
             query?: never;
@@ -53,6 +156,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/subscriptions/{subscriptionId}/credit-adjustments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["LicenseAdminService_AdjustCredit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/subscriptions/{subscriptionId}/extensions": {
         parameters: {
             query?: never;
@@ -62,7 +181,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Manual renewal until online payment exists (Phase 2). */
+        /** A correction: renewals and plan changes go through payment requests. */
         post: operations["LicenseAdminService_ExtendSubscription"];
         delete?: never;
         options?: never;
@@ -350,6 +469,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/garages/{garageId}/customers/lookup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * FR-CUS-06: finds the garage's customers by phone or e-mail while a quote
+         *     is being prepared, and tells whether a user exists. Declared last so
+         *     that the gateway matches /customers/lookup before /customers/{id}.
+         */
+        get: operations["CustomerService_LookupCustomers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/garages/{garageId}/customers/{customerId}": {
         parameters: {
             query?: never;
@@ -360,11 +500,143 @@ export interface paths {
         get: operations["CustomerService_GetCustomer"];
         put?: never;
         post?: never;
-        /** Soft-deletes the customer and their vehicles; history is kept. */
+        /**
+         * Follows the delete-or-deactivate rule (FR-CAT-07): a customer that
+         *     quotes, repair orders or settlements refer to is deactivated, otherwise
+         *     the customer and their vehicles are soft-deleted.
+         */
         delete: operations["CustomerService_DeleteCustomer"];
         options?: never;
         head?: never;
         patch: operations["CustomerService_UpdateCustomer"];
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CustomerTaxProfileService_ListCustomerTaxProfiles"];
+        put?: never;
+        /**
+         * Fails VALIDATION_ERROR on a malformed tax id, and when the customer
+         *     already has a personal profile.
+         */
+        post: operations["CustomerTaxProfileService_CreateCustomerTaxProfile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles/{taxProfileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CustomerTaxProfileService_GetCustomerTaxProfile"];
+        put?: never;
+        post?: never;
+        /**
+         * Follows the delete-or-deactivate rule (FR-CAT-07): a profile that a
+         *     document was billed to is deactivated.
+         */
+        delete: operations["CustomerTaxProfileService_DeleteCustomerTaxProfile"];
+        options?: never;
+        head?: never;
+        patch: operations["CustomerTaxProfileService_UpdateCustomerTaxProfile"];
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles/{taxProfileId}:activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CustomerTaxProfileService_ActivateCustomerTaxProfile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}/user-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Asks the user that owns the profile's verified phone or e-mail to
+         *     confirm; sends them a one-time code and a request in the app. Fails
+         *     FAILED_PRECONDITION when no user matches.
+         */
+        post: operations["CustomerLinkService_RequestCustomerUserLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}/user-links/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Ends the link from the garage's side; the profile stays. */
+        delete: operations["CustomerLinkService_UnlinkCustomerUser"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}/user-links/current:confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirms the pending request with the code the user read out. */
+        post: operations["CustomerLinkService_ConfirmCustomerUserLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/customers/{customerId}:activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivates a deactivated customer. */
+        post: operations["CustomerService_ActivateCustomer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/garages/{garageId}/entitlements": {
@@ -376,6 +648,57 @@ export interface paths {
         };
         /** What the garage may use; any active member may read it. */
         get: operations["LicenseService_GetGarageEntitlements"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Registers and stores a file; answers 201. */
+        post: operations["FileService_UploadFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/files/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Follows the delete-or-deactivate rule (FR-CAT-07). */
+        delete: operations["FileService_DeleteFile"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/files/{fileId}/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A short-lived signed URL for a private file. */
+        get: operations["FileService_GetFileUrl"];
         put?: never;
         post?: never;
         delete?: never;
@@ -472,38 +795,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/partners": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["PartnerService_ListPartners"];
-        put?: never;
-        post: operations["PartnerService_CreatePartner"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/partners/{partnerId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["PartnerService_GetPartner"];
-        put?: never;
-        post?: never;
-        delete: operations["PartnerService_DeletePartner"];
-        options?: never;
-        head?: never;
-        patch: operations["PartnerService_UpdatePartner"];
         trace?: never;
     };
     "/api/v1/garages/{garageId}/quotes": {
@@ -813,11 +1104,11 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * Splits the settlement between what the customer pays directly and
-         *     what insurance covers (FR-BIL-02); customer_amount + insurer_amount
-         *     must equal the total.
+         * Changes the billing party and the invoice request of a settlement
+         *     (FR-CUS-07). Fails INVOICE_DATA_INCOMPLETE when an invoice is requested
+         *     and the billing party's profile lacks required fields.
          */
-        patch: operations["SettlementService_AllocateSettlement"];
+        patch: operations["SettlementService_UpdateSettlement"];
         trace?: never;
     };
     "/api/v1/garages/{garageId}/settlements/{settlementId}/payments": {
@@ -831,10 +1122,51 @@ export interface paths {
         put?: never;
         /**
          * Records a payment actually collected (FR-BIL-03); a settlement may
-         *     receive several, from either payer, until each payer's allocated
-         *     amount is fully collected.
+         *     receive several until the total is fully collected.
          */
         post: operations["SettlementService_RecordSettlementPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}/voucher-pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * FR-BIL-05: one payment voucher (phiếu thu) as a PDF in the 01-TT
+         *     layout: the garage's legal header, amount in figures and words, and
+         *     signature blocks.
+         */
+        get: operations["DocumentService_ExportPaymentVoucherPdf"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}:void": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * FR-BIL-06: voids a payment voucher with a reason. The voucher stays on
+         *     file marked void, the settlement's paid amount and status are
+         *     recalculated, and the audit log records who voided it.
+         */
+        post: operations["SettlementService_VoidSettlementPayment"];
         delete?: never;
         options?: never;
         head?: never;
@@ -962,6 +1294,56 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/garages/{garageId}/suppliers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SupplierService_ListSuppliers"];
+        put?: never;
+        post: operations["SupplierService_CreateSupplier"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/suppliers/{supplierId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SupplierService_GetSupplier"];
+        put?: never;
+        post?: never;
+        /** Follows the delete-or-deactivate rule (FR-CAT-07). */
+        delete: operations["SupplierService_DeleteSupplier"];
+        options?: never;
+        head?: never;
+        patch: operations["SupplierService_UpdateSupplier"];
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/suppliers/{supplierId}:activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivates a deactivated supplier. */
+        post: operations["SupplierService_ActivateSupplier"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/garages/{garageId}/vehicles": {
         parameters: {
             query?: never;
@@ -988,6 +1370,10 @@ export interface paths {
         get: operations["VehicleService_GetVehicle"];
         put?: never;
         post?: never;
+        /**
+         * Follows the delete-or-deactivate rule (FR-CAT-07): a vehicle that
+         *     documents refer to is deactivated, otherwise soft-deleted.
+         */
         delete: operations["VehicleService_DeleteVehicle"];
         options?: never;
         head?: never;
@@ -1011,6 +1397,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/garages/{garageId}/vehicles/{vehicleId}:activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivates a deactivated vehicle. */
+        post: operations["VehicleService_ActivateVehicle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/vehicles/{vehicleId}:change-owner": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * FR-CUS-09: moves a sold vehicle to another customer, keeping its
+         *     history. Needs PERMISSION_CUSTOMER_CORRECT.
+         */
+        post: operations["VehicleService_ChangeVehicleOwner"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/garages/{garageId}/vehicles/{vehicleId}:correct": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * FR-CUS-09: corrects a locked identity field with a mandatory reason.
+         *     Audited; documents keep the value they snapshotted. Needs
+         *     PERMISSION_CUSTOMER_CORRECT.
+         */
+        post: operations["VehicleService_CorrectVehicle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me": {
         parameters: {
             query?: never;
@@ -1027,6 +1471,73 @@ export interface paths {
         head?: never;
         /** Updates the signed-in user's profile and language. */
         patch: operations["UserService_UpdateMe"];
+        trace?: never;
+    };
+    "/api/v1/me/garage-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** FR-CAPP-05: link requests from garages and the garages already linked. */
+        get: operations["CustomerPortalService_ListMyGarageLinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/garage-links/{linkId}:accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accepts a garage's request to link the user with its customer profile. */
+        post: operations["CustomerPortalService_AcceptGarageLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/garage-links/{linkId}:decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CustomerPortalService_DeclineGarageLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/garage-links/{linkId}:unlink": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ends a link from the user's side. */
+        post: operations["CustomerPortalService_UnlinkGarageLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/me/invitations": {
@@ -1111,7 +1622,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/me/subscription/plan-changes": {
+    "/api/v1/me/subscription/credit-ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LicenseService_ListMyCreditLedger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscription/payment-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LicenseService_ListMyPlanPaymentRequests"];
+        put?: never;
+        /**
+         * Starts a plan change or a renewal (FR-LIC-07): validates the owner's
+         *     usage against the plan's limits (PLAN_LIMIT_REACHED), quotes the amount
+         *     with the account credit applied (FR-LIC-09) and returns the transfer
+         *     reference and the platform's payment details. TRIAL_NOT_AVAILABLE for
+         *     the trial plan, PLAN_NOT_AVAILABLE for a plan that cannot be chosen,
+         *     REQUEST_ALREADY_OPEN while a request is SUBMITTED; a request still
+         *     AWAITING_PAYMENT is replaced.
+         */
+        post: operations["LicenseService_CreatePlanPaymentRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscription/payment-requests/{requestId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LicenseService_GetMyPlanPaymentRequest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscription/payment-requests/{requestId}:cancel": {
         parameters: {
             query?: never;
             header?: never;
@@ -1121,11 +1689,47 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Switches the owner to another plan (FR-LIC-02). Takes effect at once
-         *     and starts a new period; online payment arrives in Phase 2. Fails with
-         *     PLAN_LIMIT_REACHED when current usage exceeds the new plan.
+         * Cancels a request that is AWAITING_PAYMENT or SUBMITTED;
+         *     REQUEST_NOT_OPEN once reviewed.
          */
-        post: operations["LicenseService_ChangeMyPlan"];
+        post: operations["LicenseService_CancelPlanPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/subscription/payment-requests/{requestId}:submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Declares the transfer with its evidence (EVIDENCE_REQUIRED when the
+         *     amount due is not 0); the platform admins are notified.
+         */
+        post: operations["LicenseService_SubmitPlanPayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/payment-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The platform's payment details (FR-LIC-10). */
+        get: operations["LicenseService_GetPaymentInstructions"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1254,6 +1858,27 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CustomerLinkServiceConfirmCustomerUserLinkBody: {
+            /** @description The one-time code the user read out. */
+            otp: string;
+        };
+        CustomerLinkServiceRequestCustomerUserLinkBody: Record<string, never>;
+        CustomerPortalServiceAcceptGarageLinkBody: Record<string, never>;
+        CustomerPortalServiceDeclineGarageLinkBody: Record<string, never>;
+        CustomerPortalServiceUnlinkGarageLinkBody: Record<string, never>;
+        CustomerServiceActivateCustomerBody: Record<string, never>;
+        CustomerTaxProfileServiceActivateCustomerTaxProfileBody: Record<string, never>;
+        FileServiceUploadFileBody: {
+            kind: components["schemas"]["v1FileKind"];
+            entityType: string;
+            entityId: string;
+            /**
+             * Format: byte
+             * @description The file content (base64 in JSON); the size limit depends on the kind.
+             */
+            content: string;
+            contentType: string;
+        };
         GarageServiceUploadGarageLogoBody: {
             /**
              * Format: byte
@@ -1277,6 +1902,21 @@ export interface components {
         };
         InvitationServiceDeclineInvitationBody: Record<string, never>;
         InvitationServiceRevokeInvitationBody: Record<string, never>;
+        LicenseAdminServiceAdjustCreditBody: {
+            /**
+             * Format: int64
+             * @description Signed VND; the balance never goes below 0.
+             */
+            amount: string;
+            note: string;
+        };
+        LicenseAdminServiceApprovePlanPaymentBody: {
+            /**
+             * @description Required when the amount transferred differs from the amount due
+             *     (AMOUNT_MISMATCH_NOTE_REQUIRED).
+             */
+            note?: string;
+        };
         LicenseAdminServiceExtendSubscriptionBody: {
             /**
              * Format: int32
@@ -1284,6 +1924,21 @@ export interface components {
              *     already expired); reactivates past-due and suspended subscriptions.
              */
             days: number;
+        };
+        LicenseAdminServiceRejectPlanPaymentBody: {
+            reason: string;
+        };
+        LicenseServiceCancelPlanPaymentBody: Record<string, never>;
+        LicenseServiceSubmitPlanPaymentBody: {
+            payerName: string;
+            payerBank?: string;
+            payerAccount?: string;
+            /** Format: int64 */
+            transferredAmount: string;
+            bankTransactionRef?: string;
+            /** Format: date-time */
+            paidAt?: string;
+            evidence?: components["schemas"]["v1PaymentEvidence"];
         };
         PublicQuoteServiceDecidePublicQuoteBody: {
             decisions: components["schemas"]["v1QuoteLineDecisionInput"][];
@@ -1295,23 +1950,40 @@ export interface components {
         };
         QuoteServiceSendQuoteBody: Record<string, never>;
         RepairOrderServiceCloseRepairOrderBody: Record<string, never>;
-        SettlementServiceAllocateSettlementBody: {
-            /** Format: int64 */
-            customerAmount: string;
-            /** Format: int64 */
-            insurerAmount: string;
-            /** @description Required when insurer_amount > 0. */
-            insurerPartnerId?: string;
-        };
         SettlementServiceCreateSettlementBody: {
             repairOrderId: string;
+            billingParty?: components["schemas"]["v1BillingParty"];
+            invoiceRequested?: boolean;
         };
         SettlementServiceRecordSettlementPaymentBody: {
-            payerType: components["schemas"]["v1PayerType"];
             /** Format: int64 */
             amount: string;
             method: components["schemas"]["v1PaymentMethod"];
             note?: string;
+            /**
+             * @description Voucher details; each defaults to the billing party's (or customer's)
+             *     name and address and to a standard reason naming the settlement.
+             */
+            payerName?: string;
+            payerAddress?: string;
+            reason?: string;
+        };
+        SettlementServiceVoidSettlementPaymentBody: {
+            reason: string;
+        };
+        SupplierServiceActivateSupplierBody: Record<string, never>;
+        VehicleServiceActivateVehicleBody: Record<string, never>;
+        VehicleServiceChangeVehicleOwnerBody: {
+            /** @description The customer the vehicle moves to; must belong to the same garage. */
+            customerId: string;
+            reason?: string;
+        };
+        VehicleServiceCorrectVehicleBody: {
+            field: components["schemas"]["v1VehicleIdentityField"];
+            /** @description The corrected value (the year as digits). */
+            value: string;
+            /** @description Why the correction is needed; kept in the audit log. */
+            reason: string;
         };
         /**
          * @description Message that represents an arbitrary HTTP body. It should only be used for
@@ -1507,32 +2179,89 @@ export interface components {
          * @enum {string}
          */
         typeDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
+        v1AcceptGarageLinkResponse: {
+            link?: components["schemas"]["v1GarageLink"];
+        };
         v1AcceptInvitationResponse: {
             invitation?: components["schemas"]["v1Invitation"];
         };
-        v1AllocateSettlementResponse: {
-            settlement?: components["schemas"]["v1Settlement"];
+        v1ActivateCustomerResponse: {
+            customer?: components["schemas"]["v1Customer"];
+        };
+        v1ActivateCustomerTaxProfileResponse: {
+            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
+        };
+        v1ActivateSupplierResponse: {
+            supplier?: components["schemas"]["v1Supplier"];
+        };
+        v1ActivateVehicleResponse: {
+            vehicle?: components["schemas"]["v1Vehicle"];
+        };
+        v1AdjustCreditResponse: {
+            entry?: components["schemas"]["v1CreditLedgerEntry"];
+        };
+        /** @description AdminPlanPaymentRequest is one row of the platform admin's review queue. */
+        v1AdminPlanPaymentRequest: {
+            request?: components["schemas"]["v1PlanPaymentRequest"];
+            subscriptionId?: string;
+            userEmail?: string;
+            userName?: string;
+            currentPlan?: components["schemas"]["v1Plan"];
+            usage?: components["schemas"]["v1Usage"];
+        };
+        v1ApprovePlanPaymentResponse: {
+            subscription?: components["schemas"]["v1Subscription"];
         };
         /**
          * @description AuthProvider is how the user signed up (FR-IAM-01).
          * @enum {string}
          */
         v1AuthProvider: "AUTH_PROVIDER_EMAIL" | "AUTH_PROVIDER_GOOGLE";
+        /**
+         * @description BankDetails is a bank account that money is paid into. Shared by every
+         *     record that carries one (suppliers today; the garage's legal profile and
+         *     customers' tax profiles later).
+         */
+        v1BankDetails: {
+            bankName?: string;
+            accountNumber?: string;
+            /** @description Name the account is registered under. */
+            accountHolder?: string;
+        };
         /** @enum {string} */
         v1BillingCycle: "BILLING_CYCLE_MONTHLY" | "BILLING_CYCLE_YEARLY";
+        /**
+         * @description BillingParty is who a quote or settlement is billed to (FR-CUS-07). A
+         *     client sends only tax_profile_id; the other fields are the snapshot kept
+         *     on the document, so later edits of the profile never change a document
+         *     already issued. Without a tax_profile_id the customer is billed under
+         *     their own name as a retail receipt.
+         */
+        v1BillingParty: {
+            taxProfileId?: string;
+            kind?: components["schemas"]["v1TaxProfileKind"];
+            readonly legalName?: string;
+            readonly taxId?: string;
+            readonly address?: string;
+            /** @description Where an e-invoice is sent. */
+            readonly invoiceEmail?: string;
+        };
+        v1CancelPlanPaymentResponse: {
+            request?: components["schemas"]["v1PlanPaymentRequest"];
+        };
         /**
          * @description CandidateMembership is where a looked-up user stands with the garage.
          * @enum {string}
          */
         v1CandidateMembership: "CANDIDATE_MEMBERSHIP_NONE" | "CANDIDATE_MEMBERSHIP_MEMBER" | "CANDIDATE_MEMBERSHIP_INVITED";
-        v1ChangeMyPlanRequest: {
-            planId: string;
-        };
-        v1ChangeMyPlanResponse: {
-            subscription?: components["schemas"]["v1Subscription"];
+        v1ChangeVehicleOwnerResponse: {
+            vehicle?: components["schemas"]["v1Vehicle"];
         };
         v1CloseRepairOrderResponse: {
             repairOrder?: components["schemas"]["v1RepairOrder"];
+        };
+        v1ConfirmCustomerUserLinkResponse: {
+            link?: components["schemas"]["v1CustomerUserLink"];
         };
         v1ConvertQuoteResponse: {
             quote?: components["schemas"]["v1Quote"];
@@ -1542,8 +2271,14 @@ export interface components {
              */
             repairOrderId?: string;
         };
+        v1CorrectVehicleResponse: {
+            vehicle?: components["schemas"]["v1Vehicle"];
+        };
         v1CreateCustomerResponse: {
             customer?: components["schemas"]["v1Customer"];
+        };
+        v1CreateCustomerTaxProfileResponse: {
+            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
         };
         v1CreateGarageResponse: {
             garage?: components["schemas"]["v1Garage"];
@@ -1554,8 +2289,12 @@ export interface components {
         v1CreateItemResponse: {
             item?: components["schemas"]["v1Item"];
         };
-        v1CreatePartnerResponse: {
-            partner?: components["schemas"]["v1Partner"];
+        v1CreatePlanPaymentRequestRequest: {
+            planId: string;
+            kind: components["schemas"]["v1PlanPaymentKind"];
+        };
+        v1CreatePlanPaymentRequestResponse: {
+            request?: components["schemas"]["v1PlanPaymentRequest"];
         };
         v1CreatePlanResponse: {
             plan?: components["schemas"]["v1Plan"];
@@ -1579,10 +2318,40 @@ export interface components {
             transaction?: components["schemas"]["v1StockTransaction"];
             item?: components["schemas"]["v1Item"];
         };
+        v1CreateSupplierResponse: {
+            supplier?: components["schemas"]["v1Supplier"];
+        };
         v1CreateVehicleResponse: {
             vehicle?: components["schemas"]["v1Vehicle"];
         };
-        /** @description Customer is a vehicle owner served by one garage (FR-CUS-01). */
+        /**
+         * @description CreditEntryKind is why the account credit changed (FR-LIC-09).
+         *
+         *      - CREDIT_ENTRY_KIND_EARNED: A downgrade's surplus.
+         *      - CREDIT_ENTRY_KIND_APPLIED: Credit used by a payment.
+         *      - CREDIT_ENTRY_KIND_ADJUSTMENT: A correction by a platform admin.
+         * @enum {string}
+         */
+        v1CreditEntryKind: "CREDIT_ENTRY_KIND_EARNED" | "CREDIT_ENTRY_KIND_APPLIED" | "CREDIT_ENTRY_KIND_ADJUSTMENT";
+        /** @description CreditLedgerEntry is one change of the owner's account credit. */
+        v1CreditLedgerEntry: {
+            kind?: components["schemas"]["v1CreditEntryKind"];
+            /**
+             * Format: int64
+             * @description Signed VND: positive adds credit, negative uses it.
+             */
+            amount?: string;
+            /** Format: int64 */
+            balanceAfter?: string;
+            planPaymentRequestId?: string;
+            note?: string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        /**
+         * @description Customer is a vehicle owner served by one garage (FR-CUS-01). It needs no
+         *     VietGara user: a walk-in customer is just a profile the garage keeps.
+         */
         v1Customer: {
             readonly id?: string;
             readonly garageId?: string;
@@ -1601,7 +2370,73 @@ export interface components {
             readonly createdAt?: string;
             /** Format: date-time */
             readonly updatedAt?: string;
+            /**
+             * @description False once the customer was deactivated instead of deleted (FR-CAT-07);
+             *     an inactive customer is left out of pickers.
+             */
+            readonly isActive?: boolean;
+            linkStatus?: components["schemas"]["v1CustomerUserLinkStatus"];
         };
+        /**
+         * @description CustomerTaxProfile is a legal identity a customer can be billed under
+         *     (FR-CUS-07): at most one personal profile and any number of company
+         *     profiles.
+         */
+        v1CustomerTaxProfile: {
+            readonly id?: string;
+            readonly garageId?: string;
+            readonly customerId?: string;
+            kind: components["schemas"]["v1TaxProfileKind"];
+            /** @description The company's legal name, or the person's name. */
+            legalName: string;
+            /** @description 10 digits, or 13 with the branch suffix. */
+            taxId?: string;
+            address?: string;
+            /** @description Where an e-invoice is sent. */
+            invoiceEmail?: string;
+            /** @description The profile a document is billed to when none is chosen. */
+            isDefault?: boolean;
+            /** @description False once deactivated instead of deleted (FR-CAT-07). */
+            readonly isActive?: boolean;
+            /** Format: date-time */
+            readonly createdAt?: string;
+            /** Format: date-time */
+            readonly updatedAt?: string;
+        };
+        /**
+         * @description CustomerUserLink is the link between one customer profile and a user.
+         *     The garage never sees which user it is, only the state of the link.
+         */
+        v1CustomerUserLink: {
+            readonly id?: string;
+            readonly garageId?: string;
+            readonly customerId?: string;
+            status?: components["schemas"]["v1CustomerUserLinkStatus"];
+            channel?: components["schemas"]["v1CustomerUserLinkChannel"];
+            /** Format: date-time */
+            readonly requestedAt?: string;
+            /** Format: date-time */
+            readonly linkedAt?: string;
+        };
+        /**
+         * @description CustomerUserLinkChannel is how a link was confirmed (FR-CUS-06).
+         *
+         *      - CUSTOMER_USER_LINK_CHANNEL_OTP: The user told the garage a one-time code.
+         *      - CUSTOMER_USER_LINK_CHANNEL_APP: The user accepted in the Customer App.
+         *      - CUSTOMER_USER_LINK_CHANNEL_AUTO_EMAIL: A verified user e-mail matched the profile at sign-in.
+         * @enum {string}
+         */
+        v1CustomerUserLinkChannel: "CUSTOMER_USER_LINK_CHANNEL_OTP" | "CUSTOMER_USER_LINK_CHANNEL_APP" | "CUSTOMER_USER_LINK_CHANNEL_AUTO_EMAIL";
+        /**
+         * @description CustomerUserLinkStatus is the state of the link between a garage's
+         *     customer profile and a VietGara user (FR-CUS-06). A customer needs no
+         *     user; UNSPECIFIED means the profile has never been linked.
+         *
+         *      - CUSTOMER_USER_LINK_STATUS_REQUESTED: The garage asked; the user has not answered yet.
+         *      - CUSTOMER_USER_LINK_STATUS_UNLINKED: Ended by either side.
+         * @enum {string}
+         */
+        v1CustomerUserLinkStatus: "CUSTOMER_USER_LINK_STATUS_REQUESTED" | "CUSTOMER_USER_LINK_STATUS_LINKED" | "CUSTOMER_USER_LINK_STATUS_DECLINED" | "CUSTOMER_USER_LINK_STATUS_UNLINKED";
         /** @description DailyHours is the opening time of one weekday (FR-TEN-05). */
         v1DailyHours: {
             day?: components["schemas"]["typeDayOfWeek"];
@@ -1614,20 +2449,47 @@ export interface components {
         v1DecidePublicQuoteResponse: {
             quote?: components["schemas"]["v1PublicQuote"];
         };
+        v1DeclineGarageLinkResponse: {
+            link?: components["schemas"]["v1GarageLink"];
+        };
         v1DeclineInvitationResponse: {
             invitation?: components["schemas"]["v1Invitation"];
         };
-        v1DeleteCustomerResponse: Record<string, never>;
+        v1DeleteCustomerResponse: {
+            outcome?: components["schemas"]["v1DeleteOutcome"];
+        };
+        v1DeleteCustomerTaxProfileResponse: {
+            outcome?: components["schemas"]["v1DeleteOutcome"];
+        };
+        v1DeleteFileResponse: {
+            outcome?: components["schemas"]["v1DeleteOutcome"];
+        };
         v1DeleteGarageLogoResponse: {
             garage?: components["schemas"]["v1Garage"];
         };
         v1DeleteItemResponse: Record<string, never>;
-        v1DeletePartnerResponse: Record<string, never>;
+        /**
+         * @description DeleteOutcome is what a DELETE did (FR-CAT-07, the delete-or-deactivate
+         *     rule). An object that nothing references is soft-deleted; one that is
+         *     still in use is only deactivated: it disappears from pickers, stays on
+         *     the documents that use it, and staff can reactivate it.
+         *
+         *     Every deletable resource takes a `dry_run` flag (`?dryRun=true`) that
+         *     answers with the outcome without changing anything, so a confirmation
+         *     dialog can tell the user which one will happen.
+         * @enum {string}
+         */
+        v1DeleteOutcome: "DELETE_OUTCOME_DELETED" | "DELETE_OUTCOME_DEACTIVATED";
         v1DeleteQuoteResponse: Record<string, never>;
         v1DeleteRoleResponse: Record<string, never>;
         v1DeleteStaffGroupResponse: Record<string, never>;
         v1DeleteStaffResponse: Record<string, never>;
-        v1DeleteVehicleResponse: Record<string, never>;
+        v1DeleteSupplierResponse: {
+            outcome?: components["schemas"]["v1DeleteOutcome"];
+        };
+        v1DeleteVehicleResponse: {
+            outcome?: components["schemas"]["v1DeleteOutcome"];
+        };
         /**
          * @description Entitlements is what a garage may currently use, derived from its
          *     owner's subscription; the web admin uses it to lock UI.
@@ -1679,6 +2541,39 @@ export interface components {
          * @enum {string}
          */
         v1Feature: "FEATURE_CUSTOMERS" | "FEATURE_QUOTES" | "FEATURE_REPAIR_ORDERS" | "FEATURE_INVENTORY" | "FEATURE_BILLING" | "FEATURE_DOCUMENTS" | "FEATURE_REPORTS";
+        /**
+         * @description File is one uploaded object registered in the garage's file registry.
+         *     Business records refer to a file by id, never by URL, so a CDN or bucket
+         *     change breaks nothing.
+         */
+        v1File: {
+            readonly id?: string;
+            readonly garageId?: string;
+            kind: components["schemas"]["v1FileKind"];
+            /** @description What the file belongs to, e.g. "garage" or "part". */
+            entityType: string;
+            entityId: string;
+            readonly contentType?: string;
+            /** Format: int64 */
+            readonly size?: string;
+            /** @description Hex-encoded SHA-256 of the content. */
+            readonly sha256?: string;
+            /** @description Set for public kinds only; private files use GetFileUrl. */
+            readonly url?: string;
+            /** Format: date-time */
+            readonly createdAt?: string;
+        };
+        /**
+         * @description FileKind says what a file is for, and so whether it is public. Every kind
+         *     added later (repair photo, customer document, claim document, export) is
+         *     private and served through short-lived signed URLs.
+         *
+         *      - FILE_KIND_LOGO: A garage logo (public).
+         *      - FILE_KIND_PAYMENT_EVIDENCE: The screenshot of a subscription transfer (private).
+         *      - FILE_KIND_PLATFORM_QR: The platform's bank QR code (private, read through a signed URL).
+         * @enum {string}
+         */
+        v1FileKind: "FILE_KIND_LOGO" | "FILE_KIND_PAYMENT_EVIDENCE" | "FILE_KIND_PLATFORM_QR";
         /** @description Garage is one tenant (branch) owned by a user (FR-TEN-01/02). */
         v1Garage: {
             readonly id?: string;
@@ -1688,7 +2583,7 @@ export interface components {
             address?: string;
             phone?: string;
             email?: string;
-            /** @description Set through UploadGarageLogo. */
+            /** @description Set through UploadGarageLogo; the logo is a file of the file registry. */
             readonly logoUrl?: string;
             /** @description IANA timezone, default Asia/Ho_Chi_Minh. */
             timezone?: string;
@@ -1703,11 +2598,40 @@ export interface components {
             /** Format: date-time */
             readonly updatedAt?: string;
             defaultQuoteApprovalMode?: components["schemas"]["v1QuoteApprovalMode"];
+            /**
+             * @description The garage's legal identity, printed in the header of every document
+             *     with the logo and tax_code (FR-TEN-06). Changing it never rewrites a
+             *     document already issued: each document keeps a snapshot.
+             */
+            legalName?: string;
+            legalAddress?: string;
+            /** @description The legal representative. */
+            representative?: string;
+            bank?: components["schemas"]["v1BankDetails"];
         };
         /** @description GarageAccess is what the signed-in user may do in the garage. */
         v1GarageAccess: {
             owner?: boolean;
             permissions?: components["schemas"]["v1Permission"][];
+        };
+        /**
+         * @description GarageLink is a garage's customer profile that is linked, or is waiting to
+         *     be linked, to the signed-in user (FR-CUS-06, FR-CAPP-05). Suppliers never
+         *     appear here.
+         */
+        v1GarageLink: {
+            readonly id?: string;
+            readonly garageId?: string;
+            readonly garageName?: string;
+            readonly garageAddress?: string;
+            readonly garagePhone?: string;
+            readonly customerId?: string;
+            readonly customerName?: string;
+            status?: components["schemas"]["v1CustomerUserLinkStatus"];
+            /** Format: date-time */
+            readonly requestedAt?: string;
+            /** Format: date-time */
+            readonly linkedAt?: string;
         };
         /**
          * @description GarageStatus: an inactive garage is hidden from staff and read-only for
@@ -1717,6 +2641,15 @@ export interface components {
         v1GarageStatus: "GARAGE_STATUS_ACTIVE" | "GARAGE_STATUS_INACTIVE";
         v1GetCustomerResponse: {
             customer?: components["schemas"]["v1Customer"];
+        };
+        v1GetCustomerTaxProfileResponse: {
+            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
+        };
+        v1GetFileUrlResponse: {
+            /** @description A short-lived signed URL for a private file, or the public URL. */
+            url?: string;
+            /** Format: date-time */
+            expiresAt?: string;
         };
         v1GetGarageEntitlementsResponse: {
             entitlements?: components["schemas"]["v1Entitlements"];
@@ -1733,6 +2666,9 @@ export interface components {
         v1GetMyInvitationResponse: {
             invitation?: components["schemas"]["v1Invitation"];
         };
+        v1GetMyPlanPaymentRequestResponse: {
+            request?: components["schemas"]["v1PlanPaymentRequest"];
+        };
         v1GetMySubscriptionResponse: {
             subscription?: components["schemas"]["v1Subscription"];
         };
@@ -1740,8 +2676,14 @@ export interface components {
             /** @description Quotes, repair orders and settlements of the vehicle, newest first. */
             data?: components["schemas"]["v1VehicleHistoryEntry"][];
         };
-        v1GetPartnerResponse: {
-            partner?: components["schemas"]["v1Partner"];
+        v1GetPaymentInstructionsResponse: {
+            instructions?: components["schemas"]["v1PaymentInstructions"];
+        };
+        v1GetPlanPaymentRequestResponse: {
+            request?: components["schemas"]["v1AdminPlanPaymentRequest"];
+        };
+        v1GetPlatformPaymentSettingsResponse: {
+            settings?: components["schemas"]["v1PlatformPaymentSettings"];
         };
         v1GetPublicQuoteResponse: {
             quote?: components["schemas"]["v1PublicQuote"];
@@ -1765,6 +2707,9 @@ export interface components {
         };
         v1GetSettlementResponse: {
             settlement?: components["schemas"]["v1Settlement"];
+        };
+        v1GetSupplierResponse: {
+            supplier?: components["schemas"]["v1Supplier"];
         };
         v1GetVehicleHistoryResponse: {
             data?: components["schemas"]["v1VehicleHistoryEntry"][];
@@ -1823,6 +2768,9 @@ export interface components {
         v1ListAllPlansResponse: {
             data?: components["schemas"]["v1Plan"][];
         };
+        v1ListCustomerTaxProfilesResponse: {
+            data?: components["schemas"]["v1CustomerTaxProfile"][];
+        };
         v1ListCustomersResponse: {
             data?: components["schemas"]["v1Customer"][];
             pagination?: components["schemas"]["v1Pagination"];
@@ -1841,8 +2789,18 @@ export interface components {
             data?: components["schemas"]["v1Item"][];
             pagination?: components["schemas"]["v1Pagination"];
         };
+        v1ListMyCreditLedgerResponse: {
+            data?: components["schemas"]["v1CreditLedgerEntry"][];
+        };
+        v1ListMyGarageLinksResponse: {
+            /** @description Link requests waiting for an answer and the garages already linked. */
+            data?: components["schemas"]["v1GarageLink"][];
+        };
         v1ListMyInvitationsResponse: {
             data?: components["schemas"]["v1Invitation"][];
+        };
+        v1ListMyPlanPaymentRequestsResponse: {
+            data?: components["schemas"]["v1PlanPaymentRequest"][];
         };
         v1ListMyVehiclesResponse: {
             /**
@@ -1859,12 +2817,12 @@ export interface components {
              */
             data?: components["schemas"]["v1WorkOrder"][];
         };
-        v1ListPartnersResponse: {
-            data?: components["schemas"]["v1Partner"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
         v1ListPermissionsResponse: {
             data?: components["schemas"]["v1PermissionInfo"][];
+        };
+        v1ListPlanPaymentRequestsResponse: {
+            data?: components["schemas"]["v1AdminPlanPaymentRequest"][];
+            pagination?: components["schemas"]["v1Pagination"];
         };
         v1ListPlansResponse: {
             /** @description Public, active plans, cheapest first. */
@@ -1899,6 +2857,10 @@ export interface components {
             data?: components["schemas"]["v1SubscriptionSummary"][];
             pagination?: components["schemas"]["v1Pagination"];
         };
+        v1ListSuppliersResponse: {
+            data?: components["schemas"]["v1Supplier"][];
+            pagination?: components["schemas"]["v1Pagination"];
+        };
         v1ListVehiclesResponse: {
             data?: components["schemas"]["v1Vehicle"][];
             pagination?: components["schemas"]["v1Pagination"];
@@ -1920,6 +2882,15 @@ export interface components {
             refreshToken: string;
         };
         v1LogoutResponse: Record<string, never>;
+        v1LookupCustomersResponse: {
+            /** @description The garage's own customers matching the contact. */
+            data?: components["schemas"]["v1Customer"][];
+            /**
+             * @description Whether a VietGara user has this verified phone or e-mail. Nothing else
+             *     about the user is ever returned.
+             */
+            userExists?: boolean;
+        };
         v1LookupStaffCandidateResponse: {
             candidate?: components["schemas"]["v1StaffCandidate"];
         };
@@ -1945,6 +2916,8 @@ export interface components {
             repairOrder?: string;
             /** @description Settlement document numbers (Release 1.4). */
             settlement?: string;
+            /** @description Payment voucher (phiếu thu) numbers (FR-BIL-05, Release 5.0). */
+            paymentVoucher?: string;
         };
         /** @description OtpChallenge tells the client how long the e-mailed OTP is valid. */
         v1OtpChallenge: {
@@ -1978,38 +2951,26 @@ export interface components {
              */
             pageSize?: number;
         };
-        /**
-         * @description Partner is a parts supplier or insurer in the garage's directory
-         *     (FR-CUS-04).
-         */
-        v1Partner: {
-            readonly id?: string;
-            readonly garageId?: string;
-            type: components["schemas"]["v1PartnerType"];
-            /** @description Unique per garage and type (case-insensitive). */
-            name: string;
-            taxCode?: string;
-            contact?: components["schemas"]["v1PartnerContact"];
-            note?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
+        /** @description PaymentEvidence is the screenshot of the transfer. */
+        v1PaymentEvidence: {
+            /** Format: byte */
+            content: string;
+            /** @description image/png, image/jpeg, image/webp or application/pdf, at most 5 MB. */
+            contentType: string;
         };
-        v1PartnerContact: {
-            contactPerson?: string;
-            phone?: string;
-            email?: string;
-            address?: string;
-        };
-        /** @enum {string} */
-        v1PartnerType: "PARTNER_TYPE_SUPPLIER" | "PARTNER_TYPE_INSURER";
         /**
-         * @description PayerType: who a settlement amount, or a payment against it, is
-         *     attributed to.
-         * @enum {string}
+         * @description PaymentInstructions are the platform's payment details shown with a
+         *     payment request (FR-LIC-10).
          */
-        v1PayerType: "PAYER_TYPE_CUSTOMER" | "PAYER_TYPE_INSURER";
+        v1PaymentInstructions: {
+            bankName?: string;
+            accountNumber?: string;
+            accountHolder?: string;
+            branch?: string;
+            transferInstructions?: string;
+            /** @description The QR code image, a signed URL valid for 5 minutes; empty when none. */
+            readonly qrUrl?: string;
+        };
         /**
          * @description PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE
          *     is recorded manually in Release 1.4 (staff sees a bank app or gateway
@@ -2029,10 +2990,12 @@ export interface components {
          *      - PERMISSION_GARAGE_WRITE: Edit the garage profile, configuration and logo.
          *      - PERMISSION_STAFF_WRITE: Invite, activate/deactivate and remove staff, and change their groups.
          *      - PERMISSION_CUSTOMER_READ: Customers and their vehicles.
-         *      - PERMISSION_PARTNER_READ: Suppliers and insurers.
+         *      - PERMISSION_SUPPLIER_READ: The garage's suppliers (FR-SUP-01).
+         *      - PERMISSION_CUSTOMER_CORRECT: Correct a locked vehicle identity field and move a vehicle to another
+         *     customer (FR-CUS-09). Held by the manager role by default.
          * @enum {string}
          */
-        v1Permission: "PERMISSION_GARAGE_WRITE" | "PERMISSION_STAFF_READ" | "PERMISSION_STAFF_WRITE" | "PERMISSION_CUSTOMER_READ" | "PERMISSION_CUSTOMER_WRITE" | "PERMISSION_PARTNER_READ" | "PERMISSION_PARTNER_WRITE" | "PERMISSION_SUBSCRIPTION_READ" | "PERMISSION_QUOTE_READ" | "PERMISSION_QUOTE_WRITE" | "PERMISSION_REPAIR_ORDER_READ" | "PERMISSION_REPAIR_ORDER_WRITE" | "PERMISSION_INVENTORY_READ" | "PERMISSION_INVENTORY_WRITE" | "PERMISSION_BILLING_READ" | "PERMISSION_BILLING_WRITE" | "PERMISSION_REPORT_READ";
+        v1Permission: "PERMISSION_GARAGE_WRITE" | "PERMISSION_STAFF_READ" | "PERMISSION_STAFF_WRITE" | "PERMISSION_CUSTOMER_READ" | "PERMISSION_CUSTOMER_WRITE" | "PERMISSION_SUPPLIER_READ" | "PERMISSION_SUPPLIER_WRITE" | "PERMISSION_SUBSCRIPTION_READ" | "PERMISSION_QUOTE_READ" | "PERMISSION_QUOTE_WRITE" | "PERMISSION_REPAIR_ORDER_READ" | "PERMISSION_REPAIR_ORDER_WRITE" | "PERMISSION_INVENTORY_READ" | "PERMISSION_INVENTORY_WRITE" | "PERMISSION_BILLING_READ" | "PERMISSION_BILLING_WRITE" | "PERMISSION_REPORT_READ" | "PERMISSION_CUSTOMER_CORRECT";
         /** @description PermissionInfo describes one catalog entry. */
         v1PermissionInfo: {
             permission?: components["schemas"]["v1Permission"];
@@ -2089,6 +3052,91 @@ export interface components {
             maxTransactionsPerDay?: number;
         };
         /**
+         * @description PlanPaymentKind says what a payment request pays for (FR-LIC-07).
+         *
+         *      - PLAN_PAYMENT_KIND_CHANGE: Another plan.
+         *      - PLAN_PAYMENT_KIND_RENEW: The current plan for another period.
+         * @enum {string}
+         */
+        v1PlanPaymentKind: "PLAN_PAYMENT_KIND_CHANGE" | "PLAN_PAYMENT_KIND_RENEW";
+        /**
+         * @description PlanPaymentRequest is an owner's request to switch to a plan, or to renew
+         *     the current one, paid by a manual bank transfer (FR-LIC-07). The amounts
+         *     are fixed when it is quoted and honoured at approval.
+         */
+        v1PlanPaymentRequest: {
+            readonly id?: string;
+            kind?: components["schemas"]["v1PlanPaymentKind"];
+            plan?: components["schemas"]["v1Plan"];
+            status?: components["schemas"]["v1PlanPaymentStatus"];
+            /** @description The code the owner puts in the transfer note, e.g. "VG-7K2M9Q". */
+            reference?: string;
+            /**
+             * Format: int64
+             * @description New plan price, account credit applied, amount to transfer and any
+             *     surplus that becomes credit (VND, FR-LIC-09).
+             */
+            quotedAmount?: string;
+            /** Format: int64 */
+            creditApplied?: string;
+            /** Format: int64 */
+            amountDue?: string;
+            /** Format: int64 */
+            creditSurplus?: string;
+            /**
+             * Format: int32
+             * @description Days of the current period and how many are unused (0 after expiry).
+             */
+            periodDays?: number;
+            /** Format: int32 */
+            unusedDays?: number;
+            instructions?: components["schemas"]["v1PaymentInstructions"];
+            /** @description The owner's declaration, set once submitted. */
+            payerName?: string;
+            payerBank?: string;
+            payerAccount?: string;
+            /** Format: int64 */
+            transferredAmount?: string;
+            bankTransactionRef?: string;
+            /** Format: date-time */
+            paidAt?: string;
+            /** @description The evidence screenshot, a signed URL valid for 5 minutes. */
+            readonly evidenceUrl?: string;
+            /** @description True when the transferred amount differs from amount_due. */
+            amountMismatch?: boolean;
+            /** @description The admin's note on approval (required when amount_mismatch). */
+            reviewNote?: string;
+            rejectionReason?: string;
+            /** Format: date-time */
+            submittedAt?: string;
+            /** Format: date-time */
+            reviewedAt?: string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        /**
+         * @description PlanPaymentStatus is the state of a payment request (LLD 3.3).
+         *
+         *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
+         *     transfer yet. A new request replaces it.
+         *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
+         *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
+         * @enum {string}
+         */
+        v1PlanPaymentStatus: "PLAN_PAYMENT_STATUS_AWAITING_PAYMENT" | "PLAN_PAYMENT_STATUS_SUBMITTED" | "PLAN_PAYMENT_STATUS_APPROVED" | "PLAN_PAYMENT_STATUS_REJECTED" | "PLAN_PAYMENT_STATUS_CANCELLED";
+        /** @description PlatformPaymentSettings are the details owners transfer to (FR-LIC-10). */
+        v1PlatformPaymentSettings: {
+            bankName?: string;
+            accountNumber?: string;
+            accountHolder?: string;
+            branch?: string;
+            transferInstructions?: string;
+            /** @description The QR code, a signed URL valid for 5 minutes; empty when none. */
+            readonly qrUrl?: string;
+            /** Format: date-time */
+            readonly updatedAt?: string;
+        };
+        /**
          * @description PublicQuote is what an unauthenticated customer sees through the
          *     approval link: no internal identifiers, only what they need to decide.
          */
@@ -2137,6 +3185,7 @@ export interface components {
             readonly createdAt?: string;
             /** Format: date-time */
             readonly updatedAt?: string;
+            billingParty?: components["schemas"]["v1BillingParty"];
         };
         /**
          * @description QuoteApprovalMode selects how a quote is approved by the customer
@@ -2225,6 +3274,9 @@ export interface components {
         v1RegisterResponse: {
             session?: components["schemas"]["v1Session"];
         };
+        v1RejectPlanPaymentResponse: {
+            request?: components["schemas"]["v1PlanPaymentRequest"];
+        };
         /**
          * @description RepairOrder is a repair job for one vehicle (FR-REP-01), either
          *     converted from an approved quote (Release 1.2's ConvertQuote) or
@@ -2301,6 +3353,9 @@ export interface components {
          * @enum {string}
          */
         v1RepairOrderStatus: "REPAIR_ORDER_STATUS_OPEN" | "REPAIR_ORDER_STATUS_IN_PROGRESS" | "REPAIR_ORDER_STATUS_WAITING_ON_PARTS" | "REPAIR_ORDER_STATUS_COMPLETED" | "REPAIR_ORDER_STATUS_CLOSED";
+        v1RequestCustomerUserLinkResponse: {
+            link?: components["schemas"]["v1CustomerUserLink"];
+        };
         v1RequestPasswordResetRequest: {
             email: string;
         };
@@ -2394,8 +3449,7 @@ export interface components {
         };
         /**
          * @description Settlement is the final bill of a closed repair order (FR-BIL-01),
-         *     split between what the customer pays directly and what insurance
-         *     covers (FR-BIL-02). FR-REC-01's receivables view is this same list
+         *     paid by the customer. FR-REC-01's receivables view is this same list
          *     filtered to not yet fully paid (ListSettlementsRequest.outstanding_only)
          *     -- Release 1.4 has no separate receivables table; one arrives with
          *     Release 2.2's reminders and reconciliation, which need their own
@@ -2420,37 +3474,31 @@ export interface components {
             readonly totalAmount?: string;
             /**
              * Format: int64
-             * @description How much of total_amount is allocated to each payer (FR-BIL-02);
-             *     always sums to total_amount. Starts entirely allocated to the
-             *     customer until AllocateSettlement says otherwise.
+             * @description Running total of the payments that are not voided (FR-BIL-03). Integer
+             *     VND.
              */
-            readonly customerAmount?: string;
-            /** Format: int64 */
-            readonly insurerAmount?: string;
-            /** @description Set once insurer_amount > 0; a partner of type INSURER. */
-            readonly insurerPartnerId?: string;
-            readonly insurerPartnerName?: string;
-            /**
-             * Format: int64
-             * @description Running totals from settlement_payments (FR-BIL-03).
-             */
-            readonly customerPaidAmount?: string;
-            /** Format: int64 */
-            readonly insurerPaidAmount?: string;
+            readonly paidAmount?: string;
             status?: components["schemas"]["v1SettlementStatus"];
             readonly payments?: components["schemas"]["v1SettlementPayment"][];
             /** Format: date-time */
             readonly createdAt?: string;
             /** Format: date-time */
             readonly updatedAt?: string;
+            billingParty?: components["schemas"]["v1BillingParty"];
+            /**
+             * @description The customer asked for a VAT invoice; only possible while the billing
+             *     party's profile is complete, otherwise INVOICE_DATA_INCOMPLETE. When
+             *     false the document is a retail receipt.
+             */
+            invoiceRequested?: boolean;
         };
         /**
          * @description SettlementPayment is one payment recorded against a settlement
-         *     (FR-BIL-03); a settlement may receive several, from either payer.
+         *     (FR-BIL-03); a settlement may receive several. The customer is the only
+         *     payer. Every payment is a payment voucher (phiếu thu, FR-BIL-05).
          */
         v1SettlementPayment: {
             readonly id?: string;
-            payerType?: components["schemas"]["v1PayerType"];
             /**
              * Format: int64
              * @description Integer VND.
@@ -2460,14 +3508,31 @@ export interface components {
             readonly note?: string;
             /** Format: date-time */
             readonly createdAt?: string;
+            /** @description Numbered from the garage's payment voucher template (FR-BIL-05). */
+            readonly voucherNumber?: string;
+            /** @description Who paid: the billing party's name, or the customer's. */
+            readonly payerName?: string;
+            readonly payerAddress?: string;
+            /** @description Reason for payment printed on the voucher. */
+            readonly reason?: string;
+            /** @description The staff member who collected the money. */
+            readonly collectorName?: string;
+            /**
+             * @description A voided voucher stays on file and no longer counts towards paid_amount
+             *     (FR-BIL-06).
+             */
+            readonly voided?: boolean;
+            readonly voidReason?: string;
+            /** Format: date-time */
+            readonly voidedAt?: string;
         };
         /**
          * @description SettlementStatus is a settlement's collection status, derived from the
-         *     amounts actually paid against what was allocated (FR-BIL-01..03).
+         *     amounts actually paid against the total (FR-BIL-01..03).
          *
          *      - SETTLEMENT_STATUS_PENDING: Nothing collected yet.
-         *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the allocated amount collected.
-         *      - SETTLEMENT_STATUS_PAID: The full allocated amount collected from both payers.
+         *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the total collected.
+         *      - SETTLEMENT_STATUS_PAID: The full total collected.
          * @enum {string}
          */
         v1SettlementStatus: "SETTLEMENT_STATUS_PENDING" | "SETTLEMENT_STATUS_PARTIALLY_PAID" | "SETTLEMENT_STATUS_PAID";
@@ -2564,6 +3629,9 @@ export interface components {
          * @enum {string}
          */
         v1StockTransactionType: "STOCK_TRANSACTION_TYPE_IN" | "STOCK_TRANSACTION_TYPE_OUT";
+        v1SubmitPlanPaymentResponse: {
+            request?: components["schemas"]["v1PlanPaymentRequest"];
+        };
         /**
          * @description Subscription belongs to an owner user and covers all their garages
          *     (FR-LIC-01..04).
@@ -2587,6 +3655,18 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+            /**
+             * Format: int64
+             * @description Account credit in VND (FR-LIC-09), applied to the next payment.
+             */
+            creditBalance?: string;
+            /**
+             * Format: int64
+             * @description What was paid for the current period (0 for a trial); the basis of the
+             *     credit when the plan is changed.
+             */
+            periodPaidAmount?: string;
+            openRequest?: components["schemas"]["v1PlanPaymentRequest"];
         };
         /**
          * @description SubscriptionStatus (LLD 3.1): past_due is read-only during the grace
@@ -2600,8 +3680,50 @@ export interface components {
             userEmail?: string;
             userName?: string;
         };
+        /**
+         * @description Supplier is a business that sells parts to the garage, kept in the
+         *     garage's directory (FR-SUP-01). It is not a customer; insurers are not
+         *     suppliers either and come back in their own record in Phase 17.
+         */
+        v1Supplier: {
+            readonly id?: string;
+            readonly garageId?: string;
+            /** @description Unique per garage (case-insensitive). */
+            name: string;
+            taxCode?: string;
+            contact?: components["schemas"]["v1SupplierContact"];
+            bank?: components["schemas"]["v1BankDetails"];
+            note?: string;
+            /** Format: date-time */
+            readonly createdAt?: string;
+            /** Format: date-time */
+            readonly updatedAt?: string;
+            /** @description False once the supplier was deactivated instead of deleted (FR-CAT-07). */
+            readonly isActive?: boolean;
+        };
+        v1SupplierContact: {
+            contactPerson?: string;
+            phone?: string;
+            email?: string;
+            address?: string;
+        };
+        /**
+         * @description TaxProfileKind: a customer has at most one personal tax profile and any
+         *     number of company tax profiles (FR-CUS-07).
+         * @enum {string}
+         */
+        v1TaxProfileKind: "TAX_PROFILE_KIND_PERSONAL" | "TAX_PROFILE_KIND_COMPANY";
+        v1UnlinkCustomerUserResponse: {
+            link?: components["schemas"]["v1CustomerUserLink"];
+        };
+        v1UnlinkGarageLinkResponse: {
+            link?: components["schemas"]["v1GarageLink"];
+        };
         v1UpdateCustomerResponse: {
             customer?: components["schemas"]["v1Customer"];
+        };
+        v1UpdateCustomerTaxProfileResponse: {
+            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
         };
         v1UpdateGarageResponse: {
             garage?: components["schemas"]["v1Garage"];
@@ -2612,11 +3734,11 @@ export interface components {
         v1UpdateMeResponse: {
             user?: components["schemas"]["v1User"];
         };
-        v1UpdatePartnerResponse: {
-            partner?: components["schemas"]["v1Partner"];
-        };
         v1UpdatePlanResponse: {
             plan?: components["schemas"]["v1Plan"];
+        };
+        v1UpdatePlatformPaymentSettingsResponse: {
+            settings?: components["schemas"]["v1PlatformPaymentSettings"];
         };
         v1UpdateQuoteResponse: {
             quote?: components["schemas"]["v1Quote"];
@@ -2627,17 +3749,35 @@ export interface components {
         v1UpdateRoleResponse: {
             role?: components["schemas"]["v1Role"];
         };
+        v1UpdateSettlementResponse: {
+            settlement?: components["schemas"]["v1Settlement"];
+        };
         v1UpdateStaffGroupResponse: {
             group?: components["schemas"]["v1StaffGroup"];
         };
         v1UpdateStaffResponse: {
             staff?: components["schemas"]["v1Staff"];
         };
+        v1UpdateSupplierResponse: {
+            supplier?: components["schemas"]["v1Supplier"];
+        };
         v1UpdateVehicleResponse: {
             vehicle?: components["schemas"]["v1Vehicle"];
         };
+        v1UploadFileResponse: {
+            file?: components["schemas"]["v1File"];
+        };
         v1UploadGarageLogoResponse: {
             garage?: components["schemas"]["v1Garage"];
+        };
+        v1UploadPaymentQrRequest: {
+            /** Format: byte */
+            content: string;
+            /** @description image/png, image/jpeg or image/webp, at most 1 MB. */
+            contentType: string;
+        };
+        v1UploadPaymentQrResponse: {
+            settings?: components["schemas"]["v1PlatformPaymentSettings"];
         };
         /** @description Usage is the owner's current consumption of the plan limits. */
         v1Usage: {
@@ -2693,6 +3833,18 @@ export interface components {
             readonly createdAt?: string;
             /** Format: date-time */
             readonly updatedAt?: string;
+            /** @description False once the vehicle was deactivated instead of deleted (FR-CAT-07). */
+            readonly isActive?: boolean;
+            /**
+             * @description False while a live quote, repair order, settlement, booking or claim
+             *     refers to the vehicle: its identity fields are then locked.
+             */
+            readonly editable?: boolean;
+            /**
+             * @description The identity fields that cannot be edited now (empty when editable).
+             *     Colour, notes and odometer are never locked.
+             */
+            readonly lockedFields?: components["schemas"]["v1VehicleIdentityField"][];
         };
         /**
          * @description VehicleHistoryEntry is one quote, repair order or settlement of a
@@ -2717,6 +3869,15 @@ export interface components {
          * @enum {string}
          */
         v1VehicleHistoryEntryType: "VEHICLE_HISTORY_ENTRY_TYPE_QUOTE" | "VEHICLE_HISTORY_ENTRY_TYPE_REPAIR_ORDER" | "VEHICLE_HISTORY_ENTRY_TYPE_SETTLEMENT";
+        /**
+         * @description VehicleIdentityField names a field that identifies a vehicle (FR-CUS-02).
+         *     These fields are locked while a live document refers to the vehicle; a
+         *     locked field is changed by a correction (FR-CUS-09).
+         *
+         *      - VEHICLE_IDENTITY_FIELD_VIN: The chassis number.
+         * @enum {string}
+         */
+        v1VehicleIdentityField: "VEHICLE_IDENTITY_FIELD_LICENSE_PLATE" | "VEHICLE_IDENTITY_FIELD_VIN" | "VEHICLE_IDENTITY_FIELD_ENGINE_NUMBER" | "VEHICLE_IDENTITY_FIELD_MAKE" | "VEHICLE_IDENTITY_FIELD_MODEL" | "VEHICLE_IDENTITY_FIELD_YEAR";
         v1VerifyEmailRequest: {
             otpCode: string;
             /**
@@ -2737,6 +3898,9 @@ export interface components {
             resetToken?: string;
             /** Format: date-time */
             expiresAt?: string;
+        };
+        v1VoidSettlementPaymentResponse: {
+            settlement?: components["schemas"]["v1Settlement"];
         };
         /**
          * @description WorkOrder is a repair order with the lines assigned to the signed-in
@@ -2765,11 +3929,6 @@ export interface components {
                 "application/json": components["schemas"]["v1Item"];
             };
         };
-        v1Partner: {
-            content: {
-                "application/json": components["schemas"]["v1Partner"];
-            };
-        };
         v1Plan: {
             content: {
                 "application/json": components["schemas"]["v1Plan"];
@@ -2790,6 +3949,11 @@ export interface components {
                 "application/json": components["schemas"]["v1StaffGroup"];
             };
         };
+        v1Supplier: {
+            content: {
+                "application/json": components["schemas"]["v1Supplier"];
+            };
+        };
         v1Role: {
             content: {
                 "application/json": components["schemas"]["v1Role"];
@@ -2801,6 +3965,240 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    LicenseAdminService_GetPlatformPaymentSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlatformPaymentSettings"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_UpdatePlatformPaymentSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["v1PlatformPaymentSettings"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlatformPaymentSettings"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_UploadPaymentQr: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["v1UploadPaymentQrRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlatformPaymentSettings"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_ListPlanPaymentRequests: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Defaults to SUBMITTED, oldest first.
+                 *
+                 *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
+                 *     transfer yet. A new request replaces it.
+                 *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
+                 *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
+                 */
+                status?: "PLAN_PAYMENT_STATUS_AWAITING_PAYMENT" | "PLAN_PAYMENT_STATUS_SUBMITTED" | "PLAN_PAYMENT_STATUS_APPROVED" | "PLAN_PAYMENT_STATUS_REJECTED" | "PLAN_PAYMENT_STATUS_CANCELLED";
+                /** @description Matches the owner's e-mail or name, or the transfer reference. */
+                query?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ListPlanPaymentRequestsResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_GetPlanPaymentRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1AdminPlanPaymentRequest"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_ApprovePlanPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LicenseAdminServiceApprovePlanPaymentBody"];
+            };
+        };
+        responses: {
+            /** @description The owner's subscription with the new plan and period. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Subscription"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_RejectPlanPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LicenseAdminServiceRejectPlanPaymentBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
     LicenseAdminService_ListAllPlans: {
         parameters: {
             query?: never;
@@ -2910,6 +4308,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["v1ListSubscriptionsResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseAdminService_AdjustCredit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                subscriptionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LicenseAdminServiceAdjustCreditBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CreditLedgerEntry"];
                 };
             };
             /** @description Error (API Specification Section 1.1). */
@@ -3465,6 +4897,8 @@ export interface operations {
                 query?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Also list deactivated customers (staff screens); pickers leave it off. */
+                includeInactive?: boolean;
             };
             header?: never;
             path: {
@@ -3524,6 +4958,41 @@ export interface operations {
             };
         };
     };
+    CustomerService_LookupCustomers: {
+        parameters: {
+            query?: {
+                /** @description Either or both; the garage's customers matching any of them are listed. */
+                phone?: string;
+                email?: string;
+            };
+            header?: never;
+            path: {
+                garageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1LookupCustomersResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
     CustomerService_GetCustomer: {
         parameters: {
             query?: never;
@@ -3557,7 +5026,10 @@ export interface operations {
     };
     CustomerService_DeleteCustomer: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+                dryRun?: boolean;
+            };
             header?: never;
             path: {
                 garageId: string;
@@ -3618,6 +5090,352 @@ export interface operations {
             };
         };
     };
+    CustomerTaxProfileService_ListCustomerTaxProfiles: {
+        parameters: {
+            query?: {
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ListCustomerTaxProfilesResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerTaxProfileService_CreateCustomerTaxProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["v1CustomerTaxProfile"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerTaxProfileService_GetCustomerTaxProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+                taxProfileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerTaxProfileService_DeleteCustomerTaxProfile: {
+        parameters: {
+            query?: {
+                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+                dryRun?: boolean;
+            };
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+                taxProfileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1DeleteCustomerTaxProfileResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerTaxProfileService_UpdateCustomerTaxProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+                taxProfileId: string;
+            };
+            cookie?: never;
+        };
+        /** @description The kind cannot change. */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["v1CustomerTaxProfile"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerTaxProfileService_ActivateCustomerTaxProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+                taxProfileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerTaxProfileServiceActivateCustomerTaxProfileBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerLinkService_RequestCustomerUserLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerLinkServiceRequestCustomerUserLinkBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerUserLink"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerLinkService_UnlinkCustomerUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerUserLink"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerLinkService_ConfirmCustomerUserLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerLinkServiceConfirmCustomerUserLinkBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1CustomerUserLink"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerService_ActivateCustomer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                customerId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerServiceActivateCustomerBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Customer"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
     LicenseService_GetGarageEntitlements: {
         parameters: {
             query?: never;
@@ -3635,6 +5453,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["v1Entitlements"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    FileService_UploadFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FileServiceUploadFileBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1File"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    FileService_DeleteFile: {
+        parameters: {
+            query?: {
+                /** @description Answer the outcome without changing anything. */
+                dryRun?: boolean;
+            };
+            header?: never;
+            path: {
+                garageId: string;
+                fileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1DeleteFileResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    FileService_GetFileUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                fileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1GetFileUrlResponse"];
                 };
             };
             /** @description Error (API Specification Section 1.1). */
@@ -3962,167 +5881,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["v1Garage"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PartnerService_ListPartners: {
-        parameters: {
-            query?: {
-                type?: "PARTNER_TYPE_SUPPLIER" | "PARTNER_TYPE_INSURER";
-                /** @description Matches name, tax code or contact. */
-                query?: string;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListPartnersResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PartnerService_CreatePartner: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Partner"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Partner"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PartnerService_GetPartner: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                partnerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Partner"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PartnerService_DeletePartner: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                partnerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeletePartnerResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PartnerService_UpdatePartner: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                partnerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Partner"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Partner"];
                 };
             };
             /** @description Error (API Specification Section 1.1). */
@@ -4781,8 +6539,8 @@ export interface operations {
             query?: {
                 /**
                  * @description - SETTLEMENT_STATUS_PENDING: Nothing collected yet.
-                 *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the allocated amount collected.
-                 *      - SETTLEMENT_STATUS_PAID: The full allocated amount collected from both payers.
+                 *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the total collected.
+                 *      - SETTLEMENT_STATUS_PAID: The full total collected.
                  */
                 status?: "SETTLEMENT_STATUS_PENDING" | "SETTLEMENT_STATUS_PARTIALLY_PAID" | "SETTLEMENT_STATUS_PAID";
                 /**
@@ -4888,7 +6646,7 @@ export interface operations {
             };
         };
     };
-    SettlementService_AllocateSettlement: {
+    SettlementService_UpdateSettlement: {
         parameters: {
             query?: never;
             header?: never;
@@ -4898,9 +6656,10 @@ export interface operations {
             };
             cookie?: never;
         };
+        /** @description Only billing_party and invoice_requested can change. */
         requestBody: {
             content: {
-                "application/json": components["schemas"]["SettlementServiceAllocateSettlementBody"];
+                "application/json": components["schemas"]["v1Settlement"];
             };
         };
         responses: {
@@ -4936,6 +6695,75 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SettlementServiceRecordSettlementPaymentBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Settlement"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    DocumentService_ExportPaymentVoucherPdf: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                settlementId: string;
+                paymentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["apiHttpBody"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    SettlementService_VoidSettlementPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                settlementId: string;
+                paymentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettlementServiceVoidSettlementPaymentBody"];
             };
         };
         responses: {
@@ -5281,6 +7109,206 @@ export interface operations {
             };
         };
     };
+    SupplierService_ListSuppliers: {
+        parameters: {
+            query?: {
+                /** @description Matches name, tax code or contact. */
+                query?: string;
+                page?: number;
+                pageSize?: number;
+                /** @description Also list deactivated suppliers (staff screens); pickers leave it off. */
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path: {
+                garageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ListSuppliersResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    SupplierService_CreateSupplier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["v1Supplier"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Supplier"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    SupplierService_GetSupplier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                supplierId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Supplier"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    SupplierService_DeleteSupplier: {
+        parameters: {
+            query?: {
+                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+                dryRun?: boolean;
+            };
+            header?: never;
+            path: {
+                garageId: string;
+                supplierId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1DeleteSupplierResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    SupplierService_UpdateSupplier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                supplierId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["v1Supplier"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Supplier"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    SupplierService_ActivateSupplier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                supplierId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SupplierServiceActivateSupplierBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Supplier"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
     VehicleService_ListVehicles: {
         parameters: {
             query?: {
@@ -5290,6 +7318,8 @@ export interface operations {
                 query?: string;
                 page?: number;
                 pageSize?: number;
+                /** @description Also list deactivated vehicles (staff screens); pickers leave it off. */
+                includeInactive?: boolean;
             };
             header?: never;
             path: {
@@ -5386,7 +7416,10 @@ export interface operations {
     };
     VehicleService_DeleteVehicle: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+                dryRun?: boolean;
+            };
             header?: never;
             path: {
                 garageId: string;
@@ -5426,7 +7459,10 @@ export interface operations {
             };
             cookie?: never;
         };
-        /** @description customer_id may move the vehicle to another customer of the garage. */
+        /**
+         * @description Changing a locked identity field fails with VEHICLE_FIELD_LOCKED, and
+         *     the owner (customer_id) is never changed here: use ChangeVehicleOwner.
+         */
         requestBody: {
             content: {
                 "application/json": components["schemas"]["v1Vehicle"];
@@ -5471,6 +7507,111 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["v1GetVehicleHistoryResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    VehicleService_ActivateVehicle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                vehicleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VehicleServiceActivateVehicleBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Vehicle"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    VehicleService_ChangeVehicleOwner: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                vehicleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VehicleServiceChangeVehicleOwnerBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Vehicle"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    VehicleService_CorrectVehicle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                garageId: string;
+                vehicleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VehicleServiceCorrectVehicleBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1Vehicle"];
                 };
             };
             /** @description Error (API Specification Section 1.1). */
@@ -5532,6 +7673,137 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["v1User"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerPortalService_ListMyGarageLinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ListMyGarageLinksResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerPortalService_AcceptGarageLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerPortalServiceAcceptGarageLinkBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1GarageLink"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerPortalService_DeclineGarageLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerPortalServiceDeclineGarageLinkBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1GarageLink"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    CustomerPortalService_UnlinkGarageLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerPortalServiceUnlinkGarageLinkBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1GarageLink"];
                 };
             };
             /** @description Error (API Specification Section 1.1). */
@@ -5703,7 +7975,75 @@ export interface operations {
             };
         };
     };
-    LicenseService_ChangeMyPlan: {
+    LicenseService_ListMyCreditLedger: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ListMyCreditLedgerResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseService_ListMyPlanPaymentRequests: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Optional filter.
+                 *
+                 *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
+                 *     transfer yet. A new request replaces it.
+                 *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
+                 *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
+                 */
+                status?: "PLAN_PAYMENT_STATUS_AWAITING_PAYMENT" | "PLAN_PAYMENT_STATUS_SUBMITTED" | "PLAN_PAYMENT_STATUS_APPROVED" | "PLAN_PAYMENT_STATUS_REJECTED" | "PLAN_PAYMENT_STATUS_CANCELLED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ListMyPlanPaymentRequestsResponse"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseService_CreatePlanPaymentRequest: {
         parameters: {
             query?: never;
             header?: never;
@@ -5712,7 +8052,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["v1ChangeMyPlanRequest"];
+                "application/json": components["schemas"]["v1CreatePlanPaymentRequestRequest"];
             };
         };
         responses: {
@@ -5721,7 +8061,133 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["v1Subscription"];
+                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseService_GetMyPlanPaymentRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseService_CancelPlanPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LicenseServiceCancelPlanPaymentBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseService_SubmitPlanPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LicenseServiceSubmitPlanPaymentBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
+                };
+            };
+            /** @description Error (API Specification Section 1.1). */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1ErrorResponse"];
+                };
+            };
+        };
+    };
+    LicenseService_GetPaymentInstructions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["v1PaymentInstructions"];
                 };
             };
             /** @description Error (API Specification Section 1.1). */

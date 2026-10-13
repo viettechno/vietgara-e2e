@@ -13,7 +13,12 @@ export const env = {
   apiBaseUrl: ensureTrailingSlash(process.env.API_BASE_URL ?? 'http://localhost:8000/api'),
   mailpitUrl: process.env.MAILPIT_URL ?? 'http://localhost:8025',
   platformAdminEmail: process.env.PLATFORM_ADMIN_EMAIL ?? 'admin@vietgara.test',
+  // The baseline platform admin's password on the stubbed stack (dataset environments.stubbed.adminPassword).
+  platformAdminPassword: process.env.PLATFORM_ADMIN_PASSWORD ?? 'Admin#2026-local',
   testUserPassword: process.env.TEST_USER_PASSWORD ?? 'Qa@123456',
+  // Direct database access for the time-shifting helpers (src/fixtures/timeshift.ts).
+  // ci/compose.yml publishes Postgres on 127.0.0.1:${PG_PORT:-15432}; empty means no access.
+  databaseUrl: process.env.DATABASE_URL ?? '',
   // Which `environments` section of the pinned dataset the seed reads
   // passwords from (`stubbed`). Staging keeps only `passwordRef`s there, so
   // the value comes from the TEST_USER_PASSWORD / ADMIN_PASSWORD secrets.

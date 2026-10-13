@@ -46,4 +46,10 @@ export class SettlementDetailPage {
   paymentRow(voucherOrAmount: string): Locator {
     return this.page.locator('tbody tr', { hasText: voucherOrAmount })
   }
+
+  /** The per-voucher PDF button (label `Voucher PDF: <number>`). Exact match:
+   * the number is a suffix of other rows' text, so a substring match flakes. */
+  voucherButton(voucherNumber: string): Locator {
+    return this.page.getByRole('button', { name: `Voucher PDF: ${voucherNumber}`, exact: true })
+  }
 }

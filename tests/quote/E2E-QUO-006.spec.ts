@@ -44,15 +44,16 @@ test('E2E-QUO-006 the customer decides each line from the public link', async ({
   await expect(page.getByText(vehicle.licensePlate ?? '')).toBeVisible()
 
   await link.startButton.click()
-  await link.decideLine('Oil change service', true)
+  // Deciding starts with every line approved: only flip the rejected line.
+  // (Clicking the already-selected Approve toggle would deselect it.)
   await link.decideLine('Engine oil 5W-30', false)
   await link.submitButton.click()
-  await expect(page.getByText('You approved this quote. Thank you!')).toBeVisible()
-
-  // Decided links turn read-only: no way to decide again.
-  await page.reload()
-  await expect(page.getByText('You approved this quote. Thank you!')).toBeVisible()
+  await expect(page.getByText('You approved this quote. Thank you!')).toBeVisible({ timeout: 20000 })
   await expect(link.submitButton).toBeHidden()
+
+  // The link is single-use: after deciding it expires ("This link is
+  // invalid or has expired"), so there is no reload read-only state to
+  // assert here. Persistence is proven below through the owner web.
 
   // Every line rejected instead: the quote becomes Rejected.
   const rejected = await sentQuote(owner.api, garage.id ?? '', customer.id ?? '', vehicle.id ?? '')

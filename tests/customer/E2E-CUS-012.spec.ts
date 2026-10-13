@@ -14,7 +14,7 @@ test('E2E-CUS-012 permissions: view-only, no access, and full access', async ({ 
 
   // Get garage ID
   const listed = await api.withToken(owner.session.accessToken).listGarages()
-  const garage = listed.data?.find(g => g.name === 'QA Gara CUS012')
+  const garage = listed.data?.find((g) => g.name === 'QA Gara CUS012')
   const garageId = garage?.id
   if (!garageId) throw new Error('Garage not found')
 
@@ -40,7 +40,8 @@ test('E2E-CUS-012 permissions: view-only, no access, and full access', async ({ 
   // Test TECHNICIAN would have no access to customers sidebar
   // These require separate user contexts - placeholder for now
 
-  // Verify Partners and Staff are in sidebar for owner
-  await expect(page.getByRole('link', { name: 'Partners' })).toBeVisible()
+  // Verify Suppliers and Staff are in sidebar for owner (Partners was
+  // renamed to Suppliers in Release 5.0).
+  await expect(page.getByRole('link', { name: 'Suppliers' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Staff' })).toBeVisible()
 })

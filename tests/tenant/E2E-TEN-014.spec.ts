@@ -16,12 +16,13 @@ test('E2E-TEN-014 change a member groups; permissions change at once', async ({ 
 
   // Get garage ID
   const listed = await api.withToken(owner.session.accessToken).listGarages()
-  const garage = listed.data?.find(g => g.name === 'QA Gara TEN014')
+  const garage = listed.data?.find((g) => g.name === 'QA Gara TEN014')
   const garageId = garage?.id
   if (!garageId) throw new Error('Garage not found')
 
-  // Navigate to staff page
-  await page.goto(`/garages/${garageId}/staff`)
+  // Navigate to staff page (route is /staff with the active garage)
+  await signIn(owner.session, garageId)
+  await page.goto('/staff')
 
   // The baseline seeder creates staff with known groups. This test assumes
   // there's at least one staff member with a viewer role that can be upgraded.

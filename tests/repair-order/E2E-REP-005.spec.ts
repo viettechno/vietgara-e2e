@@ -3,19 +3,27 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { RepairOrderCreateForm, RepairOrderDetailPage } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 
-test('E2E-REP-005 assign technicians to a line', async ({ page, api, freshOwner, signIn }) => {
+test('E2E-REP-005 assign technicians to a line', async ({ page, freshOwner, signIn }) => {
   const owner = await freshOwner('rep005')
   const garage = await owner.api.createGarage({ name: 'QA Gara REP005' })
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer REP005' })
   const vehicle = await owner.api.createVehicle(garage.id ?? '', { customerId: customer.id ?? '', licensePlate: '51A-555.55' })
 
-  // Create two technicians and add to garage
-  const tech1Email = `signup.rep005-tech1.${Date.now()}@vietgara.test`
-  const tech2Email = `signup.rep005-tech2.${Date.now()}@vietgara.test`
-  const tech1Initial = await api.register({ email: tech1Email, password: 'Qa@123456', fullName: 'QA Tech REP005-1' })
-  const tech2Initial = await api.register({ email: tech2Email, password: 'Qa@123456', fullName: 'QA Tech REP005-2' })
-  await api.withToken(tech1Initial.accessToken).listGarages()
-  await api.withToken(tech2Initial.accessToken).listGarages()
+  // Two verified technicians, invited to the garage (the backend requires a
+  // verified e-mail for garage calls, and only staff can be assigned).
+  const tech1 = await freshOwner('rep005-tech1', { fullName: 'QA Tech REP005-1' })
+  const tech2 = await freshOwner('rep005-tech2', { fullName: 'QA Tech REP005-2' })
+  const groups = await owner.api.listStaffGroups(garage.id ?? '')
+  const techGroup = (groups.data ?? []).find((g) => g.name === 'Technician')
+  if (!techGroup?.id) throw new Error('garage has no default Technician group')
+  for (const tech of [tech1, tech2]) {
+    const candidate = await owner.api.lookupStaffCandidate(garage.id ?? '', tech.email)
+    await owner.api.inviteStaff(garage.id ?? '', candidate.userId ?? '', [techGroup.id ?? ''])
+    const pending = await tech.api.listMyInvitations()
+    const invitation = (pending.data ?? []).find((i) => i.id !== undefined)
+    if (!invitation?.id) throw new Error('technician has no pending invitation')
+    await tech.api.acceptInvitation(invitation.id ?? '')
+  }
 
   await signIn(owner.session, garage.id)
 
@@ -25,24 +33,32 @@ test('E2E-REP-005 assign technicians to a line', async ({ page, api, freshOwner,
   await form.pickVehicle(vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
   await form.fillLine(0, { itemType: 'Labor', description: 'Brake repair', quantity: '1', unitPrice: '200000' })
   await form.createButton.click()
+  // Wait for the creation to land: without this the URL below is still
+  // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
+  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
 
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!
 
-  // Assign both technicians to the line
+  // Assign both technicians to the line (the boxes prove the invite +
+  // accept setup worked; Save proves the assignment sticks)
   const detail = new RepairOrderDetailPage(page)
   await detail.goto(orderId)
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeVisible()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).toBeVisible()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).not.toBeChecked()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).not.toBeChecked()
   await detail.assignTechnician(0, 'QA Tech REP005-1')
   await detail.assignTechnician(0, 'QA Tech REP005-2')
   await detail.saveLine(0)
 
-  // Verify both assigned
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-1')).toBeVisible()
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-2')).toBeVisible()
+  // Verify both assigned (checkbox states: the labels render regardless)
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeChecked()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).toBeChecked()
 
-  // Unassign one
-  await detail.assignTechnician(0, 'QA Tech REP005-2')
+  // Unassign one (uncheck, not check: the box is already checked)
+  await detail.unassignTechnician(0, 'QA Tech REP005-2')
   await detail.saveLine(0)
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-1')).toBeVisible()
-  await expect(page.locator('tr', { hasText: 'Brake repair' }).getByText('QA Tech REP005-2')).toBeHidden()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-1' })).toBeChecked()
+  await expect(detail.lineRow(0).getByRole('checkbox', { name: 'QA Tech REP005-2' })).not.toBeChecked()
 })

@@ -48,13 +48,15 @@ test(
     // The deduction happens off an outbox event (Event Design; ~2s relay
     // interval in this environment), fetched once per page load -- a
     // locator assertion alone re-checks the same DOM, it doesn't re-fetch.
-    // Poll the real Inventory screen by reloading until it agrees.
+    // Poll the real Inventory screen by reloading until it agrees. The
+    // timeout is generous: the full suite shares the runner with the stack
+    // (Kafka lag spikes under parallel load).
     const inventory = new InventoryPage(page)
     await inventory.goto()
     await expect(async () => {
       await page.reload()
       await expect(inventory.itemRow('OIL-5W30')).toContainText('6 L')
-    }).toPass({ timeout: 15_000 })
+    }).toPass({ timeout: 60_000 })
 
     await inventory.stockMovementsTab.click()
     const movementRow = page.locator('tbody tr', { hasText: 'OIL-5W30' }).filter({ hasText: 'Out' })

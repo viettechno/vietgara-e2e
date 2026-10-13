@@ -16,6 +16,9 @@ export class SubscriptionPage {
   async choosePlan(planName: string): Promise<void> {
     await this.planCard(planName).getByRole('button', { name: 'Choose this plan' }).click()
     const dialog = this.page.getByRole('dialog')
-    await dialog.getByRole('button', { name: 'Confirm', exact: true }).click()
+    // Release 5.2: choosing a plan quotes a manual bank transfer (the plan
+    // applies when a platform admin approves the payment), so the dialog
+    // confirms with "Get the payment details", not "Confirm".
+    await dialog.getByRole('button', { name: 'Get the payment details' }).click()
   }
 }

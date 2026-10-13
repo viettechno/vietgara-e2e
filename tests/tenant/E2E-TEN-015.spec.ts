@@ -13,32 +13,33 @@ test('E2E-TEN-015 deactivate, reactivate and remove a member', async ({ page, ap
 
   // Get garage ID
   const listed = await api.withToken(owner.session.accessToken).listGarages()
-  const garage = listed.data?.find(g => g.name === 'QA Gara TEN015')
+  const garage = listed.data?.find((g) => g.name === 'QA Gara TEN015')
   const garageId = garage?.id
   if (!garageId) throw new Error('Garage not found')
 
-  // Create freelancer user and add to garage with Service Advisor group
-  const freelancerEmail = `signup.ten015-freelancer.${Date.now()}@vietgara.test`
-  const freelancerInitial = await api.register({ email: freelancerEmail, password: 'Qa@123456', fullName: 'QA Freelancer TEN015' })
+  // Create freelancer user (verified: garage calls require it) and add to
+  // garage with Service Advisor group
+  const freelancer = await freshOwner('ten015-freelancer', { fullName: 'QA Freelancer TEN015' })
 
   // Get Service Advisor group
   const groups = await api.withToken(owner.session.accessToken).listStaffGroups(garageId)
-  const advisorGroup = groups.data?.find(g => g.name.toLowerCase().includes('advisor'))
+  const advisorGroup = groups.data?.find((g) => g.name.toLowerCase().includes('advisor'))
   if (!advisorGroup?.id) throw new Error('Service Advisor group not found')
 
   // Invite freelancer
-  const freelancerUserId = freelancerInitial.user?.id
+  const candidate = await api.withToken(owner.session.accessToken).lookupStaffCandidate(garageId, freelancer.email)
+  const freelancerUserId = candidate.userId ?? freelancer.session.user?.id
   if (!freelancerUserId) throw new Error('Freelancer user ID missing')
   await api.withToken(owner.session.accessToken).inviteStaff(garageId, freelancerUserId, [advisorGroup.id])
 
   // Freelancer accepts
-  const freelancerApi = api.withToken(freelancerInitial.accessToken)
-  const invites = await freelancerApi.listMyInvitations()
-  const invite = invites.data?.find(i => i.garageId === garageId)
-  if (invite?.id) await freelancerApi.acceptInvitation(invite.id)
+  const invites = await freelancer.api.listMyInvitations()
+  const invite = invites.data?.find((i) => i.garageId === garageId)
+  if (invite?.id) await freelancer.api.acceptInvitation(invite.id)
 
-  // Verify freelancer is active member
-  await page.goto(`/garages/${garageId}/staff`)
+  // Verify freelancer is active member (staff lives at /staff)
+  await signIn(owner.session, garageId)
+  await page.goto('/staff')
   await expect(page.getByRole('row', { name: 'QA Freelancer TEN015' }).getByText('Active')).toBeVisible()
 
   // Deactivate freelancer

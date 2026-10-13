@@ -10,7 +10,12 @@ test('E2E-TEN-004 a second garage beyond the trial limit is refused', async ({ p
 
   const garages = new GaragesPage(page)
   await garages.goto()
-  await garages.createGarage({ name: 'QA Gara TEN004 Second' })
+  // Beyond the trial limit the creation is refused: the dialog stays open
+  // with the limit error (so this inlines the steps instead of createGarage,
+  // which waits for the dialog to close on success).
+  await garages.addGarageButton.click()
+  await garages.nameField.fill('QA Gara TEN004 Second')
+  await garages.saveButton.click()
 
   await expect(page.getByText('Your plan limit is reached. Upgrade to add more.')).toBeVisible()
   await expect(garages.garageRow('QA Gara TEN004 Second')).toBeHidden()

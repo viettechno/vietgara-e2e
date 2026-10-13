@@ -8,6 +8,9 @@
 import type { APIRequestContext } from '@playwright/test'
 import { jsonRequest, query } from './http.js'
 import type {
+  PlanPaymentRequest,
+  SubscriptionSummary,
+  Supplier,
   ConvertQuoteResponse,
   Customer,
   Entitlements,
@@ -70,6 +73,9 @@ export type ItemInput = { sku: string; name: string; unit?: string; reorderThres
 export type StockReceiptInput = { quantity: string; unitCost?: string }
 export type StockReceiptResult = { transaction?: StockTransaction; item?: Item }
 
+// A valid 1x1 PNG: the transfer screenshot the plan payment flow requires.
+const TRANSFER_EVIDENCE_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+
 export class ApiClient {
   constructor(
     private readonly request: APIRequestContext,
@@ -85,7 +91,7 @@ export class ApiClient {
     return jsonRequest(this.request, 'GET', path, { token: this.token })
   }
 
-  private post<T>(path: string, body: unknown = {}): Promise<T> {
+  post<T>(path: string, body: unknown = {}): Promise<T> {
     return jsonRequest(this.request, 'POST', path, { token: this.token, body })
   }
 
@@ -169,8 +175,25 @@ export class ApiClient {
     return this.get('/v1/me/subscription')
   }
 
-  changeMyPlan(planId: string): Promise<Subscription> {
-    return this.post('/v1/me/subscription/plan-changes', { planId })
+  /**
+   * Moves the owner onto a plan the way Release 5.2 does it: a plan-change
+   * payment request, the transfer declared with evidence, and a platform
+   * admin approving it (`admin` is a client signed in as a platform admin).
+   * Returns the subscription with the new plan.
+   */
+  async changeMyPlan(planId: string, admin: ApiClient): Promise<Subscription> {
+    const request = await this.post<PlanPaymentRequest>('/v1/me/subscription/payment-requests', {
+      planId,
+      kind: 'PLAN_PAYMENT_KIND_CHANGE',
+    })
+    const id = request.id ?? ''
+    await this.post<PlanPaymentRequest>(`/v1/me/subscription/payment-requests/${id}:submit`, {
+      payerName: 'QA Payer',
+      transferredAmount: request.amountDue ?? '0',
+      paidAt: new Date().toISOString(),
+      evidence: { content: TRANSFER_EVIDENCE_PNG, contentType: 'image/png' },
+    })
+    return admin.post<Subscription>(`/v1/admin/plan-payment-requests/${id}:approve`, {})
   }
 
   getEntitlements(garageId: string): Promise<Entitlements> {
@@ -181,6 +204,7 @@ export class ApiClient {
     code: string
     name: string
     price: string
+    currency?: string
     billingCycle: 'BILLING_CYCLE_MONTHLY' | 'BILLING_CYCLE_YEARLY'
     maxGarages: number
     maxStaff: number
@@ -189,11 +213,28 @@ export class ApiClient {
     isPublic?: boolean
     isActive?: boolean
   }): Promise<Plan> {
-    const { maxGarages, maxStaff, maxTransactionsPerDay, ...rest } = input
+    const { maxGarages, maxStaff, maxTransactionsPerDay, currency, ...rest } = input
     return this.post('/v1/admin/plans', {
       ...rest,
+      currency: currency ?? 'VND',
       limits: { maxGarages, maxStaff, maxTransactionsPerDay },
     })
+  }
+
+  // ---- Platform admin (FRD 3.4) --------------------------------------------
+
+  listSubscriptions(query: string): Promise<ListResponse<SubscriptionSummary>> {
+    return this.get(`/v1/admin/subscriptions?query=${encodeURIComponent(query)}`)
+  }
+
+  extendSubscription(subscriptionId: string, days: number): Promise<Subscription> {
+    return this.post(`/v1/admin/subscriptions/${subscriptionId}/extensions`, { days })
+  }
+
+  // ---- Supplier (FRD 3.23) ------------------------------------------------
+
+  createSupplier(garageId: string, input: { name: string; taxCode?: string }): Promise<Supplier> {
+    return this.post(`/v1/garages/${garageId}/suppliers`, input)
   }
 
   // ---- Customer & Vehicle (FRD 3.5) --------------------------------------
@@ -257,6 +298,10 @@ export class ApiClient {
 
   updateRepairOrderLine(garageId: string, orderId: string, lineId: string, input: UpdateLineInput): Promise<RepairOrder> {
     return this.patch(`/v1/garages/${garageId}/repair-orders/${orderId}/lines/${lineId}`, input)
+  }
+
+  getRepairOrder(garageId: string, orderId: string): Promise<RepairOrder> {
+    return this.get(`/v1/garages/${garageId}/repair-orders/${orderId}`)
   }
 
   closeRepairOrder(garageId: string, orderId: string): Promise<RepairOrder> {

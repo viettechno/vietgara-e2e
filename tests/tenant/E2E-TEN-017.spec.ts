@@ -14,31 +14,32 @@ test('E2E-TEN-017 create a custom role in the role editor', async ({ page, fresh
   // Navigate to Roles & groups
   await page.goto('/roles')
 
-  // Add role
-  await page.getByRole('button', { name: 'Add role' }).click()
+  // Add role (a link to /roles/new, not a button)
+  await page.getByRole('link', { name: 'Add role' }).click()
 
-  // Fill role details
-  await page.getByLabel('Role name').fill('QA Partner Clerk')
-  await page.getByLabel('Description').fill('Manages partners only')
+  // Fill role details (the name field is labelled Name)
+  await page.getByLabel('Name', { exact: true }).fill('QA Supplier Clerk')
+  await page.getByLabel('Description').fill('Manages suppliers only')
 
-  // Partners -> Add & edit (should auto-check View)
-  await page.getByRole('checkbox', { name: 'Partners → Add & edit' }).check()
+  // Suppliers -> Manage (write implies view)
+  await page.getByRole('checkbox', { name: 'Manage suppliers' }).check()
 
   // Verify View is also checked
-  await expect(page.getByRole('checkbox', { name: 'Partners → View' })).toBeChecked()
+  await expect(page.getByRole('checkbox', { name: 'View suppliers' })).toBeChecked()
 
-  // Save
-  await page.getByRole('button', { name: 'Create', exact: true }).click()
+  // Save (the editor saves with Save, not Create)
+  await page.getByRole('button', { name: 'Save', exact: true }).click()
 
   // Verify role created
   await expect(page.getByText('Role created.')).toBeVisible()
-  await expect(page.getByText('QA Partner Clerk')).toBeVisible()
+  await expect(page.getByText('QA Supplier Clerk').first()).toBeVisible()
 
   // Verify no default tag
   await expect(page.getByText('Default')).toBeHidden()
 
-  // Clean up: delete the role
-  await page.getByRole('button', { name: 'Delete' }).click()
-  await page.getByRole('button', { name: 'Confirm' }).click()
-  await expect(page.getByText('Role deleted.')).toBeVisible()
+  // Clean up: delete the role from the list (the editor has no Delete)
+  await page.goto('/roles')
+  await page.getByRole('button', { name: 'Delete: QA Supplier Clerk' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Delete', exact: true }).click()
+  await expect(page.getByText('QA Supplier Clerk').first()).toBeHidden()
 })

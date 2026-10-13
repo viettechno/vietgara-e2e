@@ -18,22 +18,28 @@ test('E2E-REP-006 update line progress; order status derived', async ({ page, fr
   await form.fillLine(0, { itemType: 'Labor', description: 'Line A', quantity: '1', unitPrice: '100000' })
   await form.addLine({ itemType: 'Labor', description: 'Line B', quantity: '1', unitPrice: '100000' })
   await form.createButton.click()
+  // Wait for the creation to land: without this the URL below is still
+  // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
+  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
 
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!
 
   const detail = new RepairOrderDetailPage(page)
 
-  // Step 1: Both Not started -> To Do
+  // Step 1: Both Not started -> To Do (Kanban regions, cards show the plate)
+  // (wait for the lines to load first so slow runners don't race the board)
+  await detail.goto(orderId)
+  await expect(detail.lineRow(0).getByText('Line A')).toBeVisible()
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('To Do')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'To Do' }).getByText('51A-666.66')).toBeVisible()
 
   // Step 2: Line A -> In progress -> In Progress
   await detail.goto(orderId)
   await detail.setLineStatus(0, 'In progress')
   await detail.saveLine(0)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('In Progress')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'In Progress' }).getByText('51A-666.66')).toBeVisible()
 
   // Step 3: Line A -> Completed, Line B -> In progress -> In Progress
   await detail.goto(orderId)
@@ -42,12 +48,12 @@ test('E2E-REP-006 update line progress; order status derived', async ({ page, fr
   await detail.setLineStatus(1, 'In progress')
   await detail.saveLine(1)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('In Progress')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'In Progress' }).getByText('51A-666.66')).toBeVisible()
 
   // Step 4: Both Completed -> Completed
   await detail.goto(orderId)
   await detail.setLineStatus(1, 'Completed')
   await detail.saveLine(1)
   await page.goto('/repair-orders')
-  await expect(page.locator('tr', { hasText: orderId }).getByText('Completed')).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Completed' }).getByText('51A-666.66')).toBeVisible()
 })

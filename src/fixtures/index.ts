@@ -18,6 +18,14 @@ type Fixtures = {
   mailpit: MailpitClient
   signIn: (session: Session, garageId?: string) => Promise<void>
   freshOwner: (localPart: string, options?: { fullName?: string; phone?: string; locale?: string }) => Promise<RegisteredOwner>
+  /**
+   * A client signed in as the baseline platform admin (seeded by the
+   * global setup). The test is skipped when that login is not a platform
+   * admin, so a stack without the baseline shows as skipped, never red.
+   */
+  adminApi: ApiClient
+  /** The same baseline platform admin's session, for `signIn` in the admin web. */
+  adminSession: Session
 }
 
 export const test = base.extend<Fixtures>({
@@ -46,6 +54,12 @@ export const test = base.extend<Fixtures>({
   // Seeds the session before the app's first script runs, so no login
   // form round-trip is needed for tests that aren't about login itself.
   // Call it, then page.goto() wherever the test actually wants to land.
+  // NOTE: the seed re-runs on EVERY full page load (addInitScript). After
+  // the test changes auth state in the UI — signing out, switching the
+  // active garage — re-pin with signIn (new garage) or stop using it:
+  // otherwise the next goto reloads the old session/garage (E2E-IAM-009,
+  // E2E-TEN-005, E2E-BIL-004). Tests about login itself sign in through
+  // the real form instead.
   signIn: async ({ page }, use) => {
     await use(async (session: Session, garageId?: string) => {
       await page.addInitScript(
@@ -58,6 +72,19 @@ export const test = base.extend<Fixtures>({
         { session, garageId },
       )
     })
+  },
+
+  adminSession: async ({ api }, use, testInfo) => {
+    const session = await api.login(env.platformAdminEmail, env.platformAdminPassword).catch(() => undefined)
+    if (session?.user?.platformAdmin !== true) {
+      testInfo.skip(true, 'platform admin not provisioned: seed the baseline (global setup) first')
+      return
+    }
+    await use(session)
+  },
+
+  adminApi: async ({ api, adminSession }, use) => {
+    await use(api.withToken(adminSession.accessToken))
   },
 
   // A brand-new, verified owner user with no garage yet -- the

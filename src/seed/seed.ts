@@ -149,7 +149,12 @@ export async function seedBaseline(request: APIRequestContext, seedEnv: SeedEnv)
       if (!plan?.id) throw new Error(`no public plan matches dataset plan "${record.plan}" for ${key}`)
       const owned = ownedByKey.get(key)
       if (!owned) throw new Error(`seed owner ${key} has no session`)
-      await owned.changeMyPlan(plan.id ?? '')
+      const adminKey = adminKeys[0]
+      const adminSession = adminKey ? sessions.get(adminKey) : undefined
+      if (!adminSession?.accessToken) {
+        throw new Error(`plan "${record.plan}" for ${key} needs the dataset's platform admin to approve the plan payment (Release 5.2)`)
+      }
+      await owned.changeMyPlan(plan.id ?? '', api.withToken(adminSession.accessToken))
       const updated = await owned.getMySubscription()
       if (updated.plan?.id !== plan.id) {
         throw new Error(`plan change for ${key} did not take effect (still ${updated.plan?.code})`)
