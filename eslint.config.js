@@ -3,7 +3,7 @@ import playwright from 'eslint-plugin-playwright'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['playwright-report/**', 'test-results/**', 'src/api/schema.d.ts', 'src/api/openapi.json'] },
+  { ignores: ['playwright-report/**', 'test-results/**', 'src/api/schema.d.ts', 'src/api/openapi.json', '.testdata/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {

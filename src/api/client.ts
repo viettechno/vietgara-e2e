@@ -15,7 +15,9 @@ import type {
   Invitation,
   Item,
   ListResponse,
+  PaymentMethod,
   Plan,
+  PublicQuote,
   Quote,
   QuoteApprovalMode,
   QuoteItemType,
@@ -26,12 +28,15 @@ import type {
   RepairOrderLineStatus,
   RepairOrderStatus,
   Session,
+  Settlement,
+  SettlementStatus,
+  StaffGroup,
   StockTransaction,
   Subscription,
   Vehicle,
 } from './types.js'
 
-export type RegisterInput = { email: string; password: string; fullName: string; phone?: string }
+export type RegisterInput = { email: string; password: string; fullName: string; phone?: string; locale?: string }
 export type GarageInput = { name: string; address?: string; timezone?: string; defaultQuoteApprovalMode?: QuoteApprovalMode }
 export type CustomerInput = { fullName: string; phone?: string; email?: string; address?: string; personalDataConsent?: boolean }
 export type VehicleInput = {
@@ -82,6 +87,20 @@ export class ApiClient {
 
   private post<T>(path: string, body: unknown = {}): Promise<T> {
     return jsonRequest(this.request, 'POST', path, { token: this.token, body })
+  }
+
+  /**
+   * A creation with financial impact (settlement, payment): the API
+   * requires an Idempotency-Key and answers a repeated key with the first
+   * answer, so retrying one user action with the same key records it once.
+   * Make one key per user action (see `newIdempotencyKey`).
+   */
+  private postIdempotent<T>(path: string, body: unknown, idempotencyKey: string): Promise<T> {
+    return jsonRequest(this.request, 'POST', path, {
+      token: this.token,
+      body,
+      headers: { 'Idempotency-Key': idempotencyKey },
+    })
   }
 
   private patch<T>(path: string, body: unknown): Promise<T> {
@@ -213,12 +232,13 @@ export class ApiClient {
     return this.post(`/v1/garages/${garageId}/quotes/${quoteId}/conversion`)
   }
 
-  // Public link: no bearer token (see withToken(undefined)).
-  getPublicQuote(token: string) {
+  // Public link: no bearer token (see withToken(undefined)). The gateway
+  // unwraps the single-message responses, so these answer bare quotes.
+  getPublicQuote(token: string): Promise<PublicQuote> {
     return this.get(`/v1/public/quotes/${token}`)
   }
 
-  decidePublicQuote(token: string, decisions: QuoteLineDecisionInput[]) {
+  decidePublicQuote(token: string, decisions: QuoteLineDecisionInput[]): Promise<PublicQuote> {
     return this.post(`/v1/public/quotes/${token}/decision`, { decisions })
   }
 
@@ -264,4 +284,41 @@ export class ApiClient {
   deleteItem(garageId: string, itemId: string): Promise<void> {
     return this.delete(`/v1/garages/${garageId}/inventory-items/${itemId}`)
   }
+
+  // ---- Staff groups (FRD 3.3) --------------------------------------------
+
+  listStaffGroups(garageId: string): Promise<ListResponse<StaffGroup>> {
+    return this.get(`/v1/garages/${garageId}/staff-groups`)
+  }
+
+  // ---- Settlement (FRD 3.9, Release 1.4) -----------------------------------
+  //
+  // The gateway unwraps the single-message proto responses, so these answer
+  // bare settlements — the same shape `vietgara-owner-web` reads.
+
+  createSettlement(garageId: string, repairOrderId: string, idempotencyKey: string): Promise<Settlement> {
+    return this.postIdempotent(`/v1/garages/${garageId}/settlements`, { repairOrderId }, idempotencyKey)
+  }
+
+  listSettlements(garageId: string, params: { status?: SettlementStatus; page?: number } = {}): Promise<ListResponse<Settlement>> {
+    return this.get(`/v1/garages/${garageId}/settlements${query({ page: 1, pageSize: 20, ...params })}`)
+  }
+
+  getSettlement(garageId: string, settlementId: string): Promise<Settlement> {
+    return this.get(`/v1/garages/${garageId}/settlements/${settlementId}`)
+  }
+
+  recordSettlementPayment(
+    garageId: string,
+    settlementId: string,
+    input: { amount: string; method: PaymentMethod; note?: string },
+    idempotencyKey: string,
+  ): Promise<Settlement> {
+    return this.postIdempotent(`/v1/garages/${garageId}/settlements/${settlementId}/payments`, input, idempotencyKey)
+  }
+}
+
+/** One Idempotency-Key per user action, reused for its retries. */
+export function newIdempotencyKey(): string {
+  return crypto.randomUUID()
 }

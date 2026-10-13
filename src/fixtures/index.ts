@@ -17,7 +17,7 @@ type Fixtures = {
   api: ApiClient
   mailpit: MailpitClient
   signIn: (session: Session, garageId?: string) => Promise<void>
-  freshOwner: (localPart: string, options?: { fullName?: string; phone?: string }) => Promise<RegisteredOwner>
+  freshOwner: (localPart: string, options?: { fullName?: string; phone?: string; locale?: string }) => Promise<RegisteredOwner>
 }
 
 export const test = base.extend<Fixtures>({

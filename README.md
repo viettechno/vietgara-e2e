@@ -44,12 +44,12 @@ The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI doc
 
 ## Roadmap: Phase 4, Quality Foundation
 
-Per the [Release Plan](https://github.com/viettechno/vietgara-docs/blob/master/docs/01-Product/Release_Plan/Release_Plan_Phase4.md) in `vietgara-docs`. Today the suite has 6 specs (one test each) against 114 documented scenarios. Phase 4 changes how it is fed and how far it goes:
+Per the [Release Plan](https://github.com/viettechno/vietgara-docs/blob/master/docs/01-Product/Release_Plan/Release_Plan_Phase4.md) in `vietgara-docs`. The suite automates the P1 scenarios of the stable modules (plus the viewport check), currently 29 specs: 6 smoke on every pull request, the rest nightly. Phase 4 changes how it is fed and how far it goes:
 
-- **Shared test data (Release 4.0).** A private repository `vietgara-testdata` holds a YAML dataset (users, garages, staff, customers, vehicles, suppliers, parts, plans) with short names (`owner1`, `gara1-1`, `gara1-2`, `advisor1-1`, `customer1-1-1`) and a Go and a TypeScript loader. This suite pins a tag of it and `00_Test_Data.md` in `vietgara-docs` is generated from it. Fixed names are for the read-mostly baseline; scenario-owned data (sign-up, password reset, destructive scenarios) is still created with a unique suffix and deleted in teardown.
+- **Shared test data (Release 4.0).** The public repository `vietgara-testdata` holds the YAML dataset (users, garages, staff, customers, vehicles, suppliers, parts, plans) with short names (`owner1`, `gara1-1`, `gara1-2`, `advisor1-1`, `customer1-1-1`) and a Go and a TypeScript loader. This suite pins a tag of it in `testdata.version` (`npm run testdata` clones it into `.testdata/`, gitignored) and reads it through the vendored loader in `src/testdata/` — no spec hardcodes a dataset persona without the loader and the pin behind it. Fixed names are for the read-mostly baseline; scenario-owned data (sign-up, password reset, destructive scenarios) is still created with a unique suffix and deleted in teardown.
 - **Passwords.** One shared test password for the baseline users on the stubbed stack; on staging it comes from a CI secret (`passwordRef` in the dataset), never from the repository. The platform admin has its own secret and, once MFA ships, a fixed TOTP secret.
-- **Seed and purge.** A seeder creates the dataset through the public API; a privileged, test-only purge removes every user under the test domain after the run (the API cannot remove used records because of the delete-or-deactivate rule). It is off in production and refuses anything outside the test domain.
-- **Scope (Release 4.2).** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set nightly, traces on failure and a quarantine rule for flaky tests. Mobile device tests are deliberately left for later.
+- **Seed and purge.** The Playwright global setup seeds the dataset's owners, plans and garages plus the platform-admin user through the public API (the backend `make seed` scope, extended with the admin the admin-web suite needs); staff, customers, suppliers and the catalogue still wait for the backend seeder. A privileged, test-only purge removes every user under the test domain after the run (the API cannot remove used records because of the delete-or-deactivate rule). It is off in production and refuses anything outside the test domain.
+- **Scope (Release 4.2).** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set nightly against the stubbed stack and weekly against staging. Mobile device tests are deliberately left for later.
 - **Every later release** adds its own scenarios as part of its Definition of Done.
 
 ## Prerequisites
@@ -62,6 +62,7 @@ Per the [Release Plan](https://github.com/viettechno/vietgara-docs/blob/master/d
 
 ```bash
 npm install
+npm run testdata   # clone the pinned vietgara-testdata tag into .testdata/ (needed for the baseline seed)
 cp .env.example .env   # then edit WEB_BASE_URL / API_BASE_URL / MAILPIT_URL for your environment
 ```
 
@@ -86,6 +87,21 @@ npm run report         # reopen the last HTML report
 ```
 
 A failed run's HTML report links each failure to its trace (`npx playwright show-trace <path>`, or open the report and click through) — a full timeline with DOM snapshots, network requests and console output at the moment it failed. Failures also keep their video (`video: 'retain-on-failure'` in `playwright.config.ts`, stored under `test-results/` and uploaded as CI artifacts); passing runs discard theirs.
+
+### The baseline seed (owners, garages, platform admin)
+
+Every run starts with the Playwright global setup (`src/seed/global-setup.ts` → `src/seed/seed.ts`), which seeds the pinned dataset's garage owners, their plans and garages, plus the platform-admin user — through the public API and Mailpit, idempotently (login-or-register, same-name garages kept). It needs `.testdata/` (`npm run testdata`) and a reachable stack; otherwise it logs why and skips, and the specs self-provision as before. `SEED_BASELINE=0` disables it; `EXISTING_ENV=true` (set by CI for `--web-base-url` runs) never seeds a foreign environment implicitly.
+
+The one step the seed cannot do itself: the backend grants `PLATFORM_ADMIN_EMAILS` only at startup, so CI restarts the backend after the seed (see `.github/workflows/e2e.yml`) before the admin-web specs run. Admin specs skip — instead of failing — when the admin login is not actually a platform admin, so a forgotten restart shows as skipped, never green.
+
+### The admin web
+
+`vietgara-admin-web` shares Kong with the owner web but on its own host (`admin.localhost`, see `ci/kong.yml`), so it gets its own origin (`ADMIN_WEB_BASE_URL`, default `http://admin.localhost:8000`) and its own Playwright project (`admin-chromium`, serving only `tests/admin/`). The sign-in session storage is identical to the owner web, so the same `signIn` fixture works on both origins. Locally, `admin.localhost` must resolve to 127.0.0.1 (systemd-resolved does this; otherwise add it to `/etc/hosts`).
+
+### Schedules
+
+- **Nightly (stubbed stack):** the **E2E** workflow runs the full non-quarantined suite on schedule (`0 18 * * *` UTC, 01:00 ICT) with the newest release images — this is where the NON-smoke P1 batch earns `@smoke`.
+- **Weekly (staging):** BLOCKED — this repo has no staging endpoint or secrets (`STAGING_WEB_BASE_URL`, `TEST_PASSWORD`, `ADMIN_PASSWORD`), and the staging baseline still needs an explicit seed → run → purge flow (the suite never seeds a foreign environment implicitly). Until then, staging runs go through the **E2E (manual)** workflow's `web_base_url` input by hand.
 
 ### Quarantine (flaky tests)
 
@@ -145,15 +161,31 @@ Locators prefer `getByRole` / `getByLabel` / `getByText` over CSS selectors, mat
 
 Single-use users follow `00_Test_Data.md`'s own convention, `signup.<scenario id>.<unique>@vietgara.test` (the `freshOwner` fixture adds the uniqueness suffix, since this suite may run repeatedly against one long-lived environment where the doc's bare form would collide on a second run). Never a real e-mail address or phone number — `vietgara.test` is reserved (RFC 2606) and can never belong to a real person.
 
+Baseline personas (`owner1`, `gara1-1`, `51A-111.11`, …) always come from the pinned dataset through `src/testdata/dataset.ts` — never hardcoded. Bump the dataset with `npm run testdata` after moving `testdata.version`, and re-sync the vendored loader (`SYNCED_WITH_TESTDATA`) in the same change.
+
 ## What's automated so far
 
-Per [`01_Test_Strategy.md` §5](https://github.com/viettechno/vietgara-docs/blob/master/docs/05-Testing/01_Test_Strategy.md#5-end-to-end-testing), P1 scenarios come first, starting with the flows every release depends on:
+Per [`01_Test_Strategy.md` §5](https://github.com/viettechno/vietgara-docs/blob/master/docs/05-Testing/01_Test_Strategy.md#5-end-to-end-testing), P1 scenarios come first, starting with the flows every release depends on. `@smoke` runs on every pull request (under 10 minutes); everything else runs nightly:
 
-- **E2E-IAM-001** — sign up and verify by e-mail, through the real form.
-- **E2E-TEN-001** — create the first garage.
-- **E2E-QUO-001** — create a draft quote with labor and part lines.
-- **E2E-REP-001** — create an ad-hoc repair order.
-- **E2E-INV-001** — add a part code and record a goods receipt.
-- **E2E-INV-008** — closing a repair order with part lines automatically deducts stock (the suite's flagship cross-module test: Repair Order and Inventory meet through an async outbox event, `repair_order.closed`, and the assertion polls the real UI for it rather than reaching for the API to confirm).
+- **Smoke (PR gate):** E2E-IAM-001, E2E-TEN-001, E2E-QUO-001, E2E-REP-001, E2E-INV-001, E2E-INV-008. No new spec joins `@smoke` until a green nightly proves it fast and deterministic.
+- **Identity:** E2E-IAM-008 (sign in, wrong credentials, case-insensitive e-mail), E2E-IAM-009 (sign out ends the session), E2E-IAM-011 (password reset; cross-browser revocation stays manual), E2E-IAM-020 (platform admin in the admin web, owner denied).
+- **Tenant:** E2E-TEN-004 (trial garage limit), E2E-TEN-005 (switch active garage), E2E-TEN-007 (invite by e-mail, second-actor accept from the Mailpit link).
+- **License:** E2E-LIC-001 (trial reads), E2E-LIC-002 (switch to a paid plan).
+- **Customer:** E2E-CUS-001 (create with consent + search), E2E-CUS-005 (register a vehicle from the owner's page + lookup).
+- **Quote:** E2E-QUO-004 (LINK send + customer e-mail + quote PDF download), E2E-QUO-006 (public-link mixed and rejected decisions), E2E-QUO-008 (MANUAL record), E2E-QUO-010 (convert approved lines only).
+- **Repair order:** E2E-REP-008 (close requires completed lines).
+- **Inventory:** E2E-INV-003 (goods receipts accumulate), E2E-INV-010 (Technician view-only, outsider sidebar).
+- **Settlement:** E2E-BIL-001 (create from a closed order + receipt PDF download), E2E-BIL-003 (partial then full payment, third refused), E2E-BIL-008 (outstanding filter + dashboard revenue).
+- **Viewport:** no horizontal overflow and visible main content on home/customers/quotes at 1440/820/390 px (NON-smoke: 9 page loads).
+- **Testdata proof:** the seeded baseline users own the dataset garages (`tests/testdata/baseline.spec.ts`).
 
-The rest of `01`–`07`'s P1s (License plan changes, staff invitations, the public quote approval link, closing/permission edge cases, and so on) follow the same pattern above and are the natural next additions — `src/api/client.ts` already has most of the REST calls they'll need; extend it the same way for what's missing.
+Deliberately deferred, with reasons (review before automating):
+
+- E2E-LIC-010/011/012, E2E-TEN-012 — need the SQL time helpers (H1/H2/H4): no UI or API moves the clock.
+- E2E-CUS-010/011 — the Partners screen is now Suppliers (Release 5.0 rename): the scenarios predate it; automate after the docs catch up.
+- E2E-BIL-004/005 — payment vouchers have no API field yet (Phase 5 scope).
+- E2E-BIL-006 — API-level idempotency: blackbox territory, not browser.
+- E2E-BIL-007 — visual PDF check: manual only.
+- E2E-BIL-010, E2E-QUO-012 — need the transaction-limit plan plus faked clocks.
+- E2E-REP-004/005/007, E2E-TEN-014/015/017 — Kanban board and role-editor widget structures are unverified without a running browser; next after the first green nightly.
+- E2E-IAM-014..017, E2E-IAM-021, E2E-QUO-007/009/011/013, E2E-CUS rest — manual-only, P2/P3, or covered by the same page objects later.

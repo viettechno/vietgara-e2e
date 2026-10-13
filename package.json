@@ -13,6 +13,7 @@
     "test:debug": "playwright test --debug",
     "codegen": "playwright codegen $WEB_BASE_URL",
     "generate:api": "swagger2openapi ../vietgara-proto/openapi/vietgara.swagger.json -o src/api/openapi.json && openapi-typescript src/api/openapi.json -o src/api/schema.d.ts",
+    "testdata": "scripts/fetch-testdata.sh",
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -36,7 +37,8 @@
     "prettier": "^3.9.9",
     "swagger2openapi": "^7.0.8",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.71.0"
+    "typescript-eslint": "^8.71.0",
+    "yaml": "^2.9.1"
   },
   "engines": {
     "node": ">=22"

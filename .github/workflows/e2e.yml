@@ -14,6 +14,11 @@ on:
       - '.github/workflows/e2e-manual.yml'
       - 'playwright.config.ts'
       - 'package.json'
+  # Nightly full run on the stubbed stack (Release 4.2): newest release
+  # images, every non-quarantined spec including the NON-smoke P1 batch.
+  # 18:00 UTC is 01:00 ICT — the suite owns the runner alone overnight.
+  schedule:
+    - cron: '0 18 * * *'
   workflow_call:
     inputs:
       backend_tag:
@@ -59,6 +64,14 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
+      # The pinned shared dataset (testdata.version): the global setup seeds
+      # the baseline (owners, garages, platform admin) from it before the
+      # suite runs, and tests/testdata/baseline.spec.ts proves the seed.
+      # Skipped for foreign environments (no baseline there to seed).
+      - name: Fetch the pinned test dataset
+        if: ${{ env.EXISTING_ENV != 'true' }}
+        run: npm run testdata
+
       # The full stack (Postgres, Redis, Kafka, Mailpit, backend, both web apps,
       # Kong) runs from the PUBLISHED images (ghcr.io/viettechno/*, public), so
       # no source repository is cloned and no registry login is needed. See
@@ -85,6 +98,28 @@ jobs:
       - name: Start the stack
         if: ${{ env.EXISTING_ENV != 'true' }}
         run: docker compose -f ci/compose.yml up -d --wait
+
+      # The backend grants PLATFORM_ADMIN_EMAILS only at startup, so the
+      # seeded platform admin takes effect only after a restart. This runs
+      # the baseline proof spec (which triggers the global-setup seed) and
+      # then restarts the backend before the real suite starts.
+      - name: Seed the baseline and restart the backend for the admin grant
+        if: ${{ env.EXISTING_ENV != 'true' }}
+        env:
+          API_BASE_URL: ${{ env.WEB_BASE_URL }}/api
+          MAILPIT_URL: http://localhost:8025
+          CI: true
+        run: |
+          npx playwright test tests/testdata/baseline.spec.ts --reporter=line
+          docker compose -f ci/compose.yml restart backend
+          # `compose wait` blocks until a container STOPS (forever for a
+          # server): poll the image's own healthcheck instead, bounded.
+          for i in $(seq 1 36); do
+            status=$(docker inspect vietgara-e2e-backend-1 --format '{{.State.Health.Status}}' 2>/dev/null || echo starting)
+            if [ "$status" = "healthy" ]; then break; fi
+            if [ "$i" = "36" ]; then docker compose -f ci/compose.yml logs --tail 50 backend; exit 1; fi
+            sleep 5
+          done
 
       - name: Wait for the web app
         run: npx wait-on ${{ env.WEB_BASE_URL }} -t 120000
