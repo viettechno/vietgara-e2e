@@ -85,6 +85,10 @@ export class RepairOrderDetailPage {
     await this.lineRow(index).getByRole('checkbox', { name: technicianName }).check()
   }
 
+  async unassignTechnician(index: number, technicianName: string): Promise<void> {
+    await this.lineRow(index).getByRole('checkbox', { name: technicianName }).uncheck()
+  }
+
   async saveLine(index: number): Promise<void> {
     await this.lineRow(index).getByRole('button', { name: 'Save', exact: true }).click()
   }
