@@ -26,6 +26,9 @@ test('E2E-TEN-005 switch the active garage', async ({ page, signIn, freshOwner, 
   await expect(customers.row(chi.fullName ?? '')).toBeHidden()
 
   await switcher.switchTo('QA Gara TEN005 Two')
+  // Re-navigate so the customers list fetches for the new active garage
+  // (the list keeps the previous garage's rows while refetching).
+  await customers.goto()
   await expect(customers.row(chi.fullName ?? '')).toBeVisible()
   await expect(customers.row(an.fullName ?? '')).toBeHidden()
 

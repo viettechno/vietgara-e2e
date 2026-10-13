@@ -32,10 +32,12 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
     await api.withToken(owner.session.accessToken).changeMyPlan(smallPlan.id, adminApi)
   }
 
-  // Verify usage shows 0/2 staff initially
+  // Verify usage shows 0/2 staff initially (label and value are separate
+  // elements in the usage rows, so assert them separately)
   const subPage = new SubscriptionPage(page)
   await subPage.goto()
-  await expect(page.getByText(/Staff\s+0\s*\/\s*2/)).toBeVisible()
+  await expect(page.getByText('Staff')).toBeVisible()
+  await expect(page.getByText('0 / 2').first()).toBeVisible()
 
   // Create freelancer and invite
   const freelancerEmail = `signup.lic004-freelancer.${Date.now()}@vietgara.test`
@@ -60,7 +62,7 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
 
   // Usage should show 2/2 (1 member + 1 pending)
   await subPage.goto()
-  await expect(page.getByText(/Staff\s+2\s*\/\s*2/)).toBeVisible()
+  await expect(page.getByText('2 / 2').first()).toBeVisible()
 
   // Try to invite advisor - should be refused
   const advisorEmail = `signup.lic004-advisor.${Date.now()}@vietgara.test`

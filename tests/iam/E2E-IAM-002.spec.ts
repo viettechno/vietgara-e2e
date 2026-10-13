@@ -17,8 +17,9 @@ test('E2E-IAM-002 unverified user can only use the Account page', async ({ page,
   await login.goto()
   await login.signInAs(email, password)
 
-  // Step 1: Should land on verification page
-  await expect(page.getByText('Verify your e-mail')).toBeVisible()
+  // Step 1: Should land on verification page (the heading plus the
+  // explanation paragraph share the title text — scope to the heading)
+  await expect(page.getByRole('heading', { name: 'Verify your e-mail' })).toBeVisible()
   await expect(page.getByText(/6-digit code/)).toBeVisible()
 
   // Step 2: Navigate to protected pages - all should redirect to verification page

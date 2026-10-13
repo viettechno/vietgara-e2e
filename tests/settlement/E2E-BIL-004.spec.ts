@@ -73,6 +73,9 @@ test('E2E-BIL-004 each payment gets a numbered payment voucher', async ({ page, 
   const otherNumber = afterOne.payments?.[0]?.voucherNumber ?? ''
   expect(Number(otherNumber.match(/(\d+)$/)?.[1])).toBe(Number(first.match(/(\d+)$/)?.[1]))
 
+  // The header switcher caches the garage list: reload so the API-made
+  // second garage appears before switching.
+  await page.reload()
   await new GarageSwitcher(page).switchTo('QA Gara BIL004 A2')
   await detail.goto(settlementTwo.id ?? '')
   await expect(detail.paymentRow(otherNumber)).toBeVisible()

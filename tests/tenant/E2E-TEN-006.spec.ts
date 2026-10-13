@@ -21,7 +21,7 @@ test('E2E-TEN-006 deactivate and reactivate a garage', async ({ page, freshOwner
   // Deactivate (the confirm dialog confirms with Deactivate, not Confirm)
   await page.getByRole('button', { name: 'Deactivate' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Deactivate', exact: true }).click()
-  await expect(page.getByText('Inactive')).toBeVisible()
+  await expect(page.getByText('Inactive', { exact: true }).first()).toBeVisible()
 
   // Owner can still access the inactive garage
   await page.goto('/garages')
@@ -31,7 +31,7 @@ test('E2E-TEN-006 deactivate and reactivate a garage', async ({ page, freshOwner
   await garages.garageRow('QA Gara TEN006').getByRole('button', { name: 'Garage settings: QA Gara TEN006' }).click()
   await page.getByRole('button', { name: 'Reactivate' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Reactivate', exact: true }).click()
-  await expect(page.getByText('Active')).toBeVisible()
+  await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
 
   // Verify active again
   await page.goto('/garages')

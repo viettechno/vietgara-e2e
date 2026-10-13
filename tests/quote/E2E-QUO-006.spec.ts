@@ -44,7 +44,8 @@ test('E2E-QUO-006 the customer decides each line from the public link', async ({
   await expect(page.getByText(vehicle.licensePlate ?? '')).toBeVisible()
 
   await link.startButton.click()
-  await link.decideLine('Oil change service', true)
+  // Deciding starts with every line approved: only flip the rejected line.
+  // (Clicking the already-selected Approve toggle would deselect it.)
   await link.decideLine('Engine oil 5W-30', false)
   await link.submitButton.click()
   await expect(page.getByText('You approved this quote. Thank you!')).toBeVisible({ timeout: 20000 })

@@ -30,10 +30,11 @@ test('E2E-QUO-014 permissions: no access, and full access', async ({ page, api, 
   // Should be able to create quote
   await expect(page.getByRole('heading', { name: 'New quote' })).toBeVisible()
 
-  // Create a draft quote (pickers search by name/plate, not by id)
+  // Create a draft quote (pickers search by name/plate, not by id; the
+  // form starts with one empty line, so fill it rather than adding)
   await quoteForm.pickCustomer(customer.fullName ?? '', customer.fullName ?? '')
   await quoteForm.pickSearchSelect(quoteForm.vehicleField, vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
-  await quoteForm.addLine({ itemType: 'Labor', description: 'Oil change', quantity: '1', unitPrice: '250000' })
+  await quoteForm.fillLine(0, { itemType: 'Labor', description: 'Oil change', quantity: '1', unitPrice: '250000' })
   await quoteForm.saveButton.click()
   await expect(page.getByText('Draft')).toBeVisible()
 

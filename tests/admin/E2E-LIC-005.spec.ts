@@ -23,7 +23,7 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByText('Changes saved.')).toBeVisible()
   await expect(plansPage.row('qa-hidden')).toBeVisible()
-  await expect(plansPage.row('qa-hidden').getByText('Hidden')).toBeVisible()
+  await expect(plansPage.row('qa-hidden').getByText('Hidden').first()).toBeVisible()
 
   // Create QA Yearly plan
   await plansPage.newPlanButton.click()

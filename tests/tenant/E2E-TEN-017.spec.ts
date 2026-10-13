@@ -32,7 +32,7 @@ test('E2E-TEN-017 create a custom role in the role editor', async ({ page, fresh
 
   // Verify role created
   await expect(page.getByText('Role created.')).toBeVisible()
-  await expect(page.getByText('QA Supplier Clerk')).toBeVisible()
+  await expect(page.getByText('QA Supplier Clerk').first()).toBeVisible()
 
   // Verify no default tag
   await expect(page.getByText('Default')).toBeHidden()
@@ -40,5 +40,5 @@ test('E2E-TEN-017 create a custom role in the role editor', async ({ page, fresh
   // Clean up: delete the role
   await page.getByRole('button', { name: 'Delete: QA Supplier Clerk' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Delete', exact: true }).click()
-  await expect(page.getByText('QA Supplier Clerk')).toBeHidden()
+  await expect(page.getByText('QA Supplier Clerk').first()).toBeHidden()
 })

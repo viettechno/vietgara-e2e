@@ -77,7 +77,8 @@ export class RepairOrderDetailPage {
   }
 
   async setLineStatus(index: number, status: 'Not started' | 'In progress' | 'Completed'): Promise<void> {
-    await this.lineRow(index).locator('select').selectOption({ label: status })
+    // Scope to the Status select: the row also holds the item-type select.
+    await this.lineRow(index).getByLabel('Status').selectOption({ label: status })
   }
 
   async assignTechnician(index: number, technicianName: string): Promise<void> {

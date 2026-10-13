@@ -47,7 +47,8 @@ test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, 
   await signIn(owner.session, garage.id)
 
   await new SubscriptionPage(page).goto()
-  await expect(page.getByText(/Transactions today\s+2\s*\/\s*2/)).toBeVisible()
+  await expect(page.getByText('Transactions today')).toBeVisible()
+  await expect(page.getByText('2 / 2').first()).toBeVisible()
 
   // Transaction 3 is refused.
   const quoteForm = new QuoteFormPage(page)

@@ -18,9 +18,10 @@ test('E2E-IAM-009 sign out ends the session', async ({ page, signIn, freshOwner 
 
   await page.goBack()
   // Sign-out navigates with `replace` (no history entry), so Back lands on
-  // about:blank when the test started mid-history. Either way no customer
-  // data may show: not the customers page.
-  await expect(page).not.toHaveURL(/\/customers/)
+  // about:blank or a cached page. Reload to force the auth guard: no
+  // customer data may show and the sign-in page returns.
+  await page.reload()
+  await expect(page).toHaveURL(/\/login/)
 
   await page.goto(address)
   await expect(page).toHaveURL(/\/login/)
