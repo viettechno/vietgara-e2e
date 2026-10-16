@@ -1,0 +1,89 @@
+import type { Locator, Page } from '@playwright/test'
+
+/** The Catalogue at /catalogue: parts, units and categories (E2E-CAT-*). */
+export class CataloguePage {
+  readonly partsTab: Locator
+  readonly unitsTab: Locator
+  readonly categoriesTab: Locator
+  readonly newPartButton: Locator
+  readonly newUnitButton: Locator
+  readonly newCategoryButton: Locator
+  readonly showInactive: Locator
+
+  constructor(readonly page: Page) {
+    this.partsTab = page.getByRole('tab', { name: 'Parts' })
+    this.unitsTab = page.getByRole('tab', { name: 'Units' })
+    this.categoriesTab = page.getByRole('tab', { name: 'Categories' })
+    this.newPartButton = page.getByRole('button', { name: 'New part' })
+    this.newUnitButton = page.getByRole('button', { name: 'New unit' })
+    this.newCategoryButton = page.getByRole('button', { name: 'New category' })
+    this.showInactive = page.getByRole('switch', { name: 'Show inactive items' })
+  }
+
+  async goto(): Promise<void> {
+    await this.page.goto('/catalogue')
+  }
+
+  row(text: string): Locator {
+    return this.page.locator('tbody tr', { hasText: text })
+  }
+
+  async createUnit(name: string, abbreviation: string): Promise<void> {
+    await this.unitsTab.click()
+    await this.newUnitButton.first().click()
+    const dialog = this.page.getByRole('dialog')
+    await dialog.getByLabel('Name', { exact: true }).fill(name)
+    await dialog.getByLabel('Abbreviation').fill(abbreviation)
+    await dialog.getByRole('button', { name: 'Create', exact: true }).click()
+  }
+
+  async createCategory(name: string, parent?: string): Promise<void> {
+    await this.categoriesTab.click()
+    await this.newCategoryButton.first().click()
+    const dialog = this.page.getByRole('dialog')
+    await dialog.getByLabel('Name', { exact: true }).fill(name)
+    if (parent) {
+      // The options are indented by depth, so match on the name inside the label.
+      const select = dialog.getByLabel('Parent category')
+      const labels = await select.locator('option').allTextContents()
+      await select.selectOption({ label: labels.find((label) => label.trim().endsWith(parent)) ?? parent })
+    }
+    await dialog.getByRole('button', { name: 'Create', exact: true }).click()
+  }
+
+  async createPart(input: {
+    sku: string
+    name: string
+    baseUnit?: string
+    salePrice?: string
+    category?: string
+    brand?: string
+    reorderThreshold?: string
+  }): Promise<void> {
+    await this.partsTab.click()
+    await this.newPartButton.first().click()
+    const dialog = this.page.getByRole('dialog')
+    await dialog.getByLabel('SKU', { exact: true }).fill(input.sku)
+    await dialog.getByLabel('Name', { exact: true }).fill(input.name)
+    if (input.baseUnit) await dialog.getByLabel('Base unit', { exact: true }).selectOption({ label: input.baseUnit })
+    if (input.salePrice) await dialog.getByLabel('Selling price per base unit (VND)').fill(input.salePrice)
+    if (input.category) await dialog.getByLabel('Category', { exact: true }).selectOption({ label: input.category })
+    if (input.brand) await dialog.getByLabel('Brand', { exact: true }).fill(input.brand)
+    if (input.reorderThreshold) await dialog.getByLabel('Reorder threshold').fill(input.reorderThreshold)
+    await dialog.getByRole('button', { name: 'Create', exact: true }).click()
+  }
+
+  async openPackaging(sku: string): Promise<Locator> {
+    await this.row(sku)
+      .getByRole('button', { name: `Packaging: ${sku}` })
+      .click()
+    return this.page.getByRole('dialog')
+  }
+
+  async openImages(sku: string): Promise<Locator> {
+    await this.row(sku)
+      .getByRole('button', { name: `Images: ${sku}` })
+      .click()
+    return this.page.getByRole('dialog')
+  }
+}

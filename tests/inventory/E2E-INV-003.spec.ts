@@ -6,7 +6,7 @@ import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'
 test('E2E-INV-003 record a goods receipt increases stock on hand', async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('inv003')
   const garage = await owner.api.createGarage({ name: 'QA Gara INV003' })
-  await owner.api.createItem(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30', unit: 'L', reorderThreshold: 5 })
+  await owner.api.createSimplePart(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30', reorderThreshold: '5' })
   await signIn(owner.session, garage.id)
 
   const inventory = new InventoryPage(page)

@@ -4,8500 +4,9486 @@
  */
 
 export interface paths {
-    "/api/v1/admin/payment-settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseAdminService_GetPlatformPaymentSettings"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["LicenseAdminService_UpdatePlatformPaymentSettings"];
-        trace?: never;
-    };
-    "/api/v1/admin/payment-settings/qr": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Uploads or replaces the QR code image. */
-        post: operations["LicenseAdminService_UploadPaymentQr"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/plan-payment-requests": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The review queue (FR-LIC-08). */
-        get: operations["LicenseAdminService_ListPlanPaymentRequests"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/plan-payment-requests/{requestId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseAdminService_GetPlanPaymentRequest"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/plan-payment-requests/{requestId}:approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Approves the payment: the plan applies at once and a new period starts;
-         *     the limits are validated again (PLAN_LIMIT_REACHED).
-         *     REQUEST_NOT_OPEN unless SUBMITTED.
-         */
-        post: operations["LicenseAdminService_ApprovePlanPayment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/plan-payment-requests/{requestId}:reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["LicenseAdminService_RejectPlanPayment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/plans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Every plan, including hidden and inactive ones. */
-        get: operations["LicenseAdminService_ListAllPlans"];
-        put?: never;
-        post: operations["LicenseAdminService_CreatePlan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/plans/{planId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["LicenseAdminService_UpdatePlan"];
-        trace?: never;
-    };
-    "/api/v1/admin/subscriptions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseAdminService_ListSubscriptions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/subscriptions/{subscriptionId}/credit-adjustments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["LicenseAdminService_AdjustCredit"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/subscriptions/{subscriptionId}/extensions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** A correction: renewals and plan changes go through payment requests. */
-        post: operations["LicenseAdminService_ExtendSubscription"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/email-verification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Confirms the signed-in user's e-mail with the OTP and returns a
-         *     session whose token is marked verified.
-         */
-        post: operations["AuthService_VerifyEmail"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/email-verification/otp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * E-mails a new 6-digit verification OTP, valid for 2 minutes, to the
-         *     signed-in user.
-         */
-        post: operations["AuthService_SendEmailVerificationOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/google/id-token": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Signs in with a Google ID token obtained natively by a mobile app
-         *     (FR-IAM-01, FR-CAPP-01). The token's signature, issuer, audience (one
-         *     of the configured mobile client IDs) and verified e-mail are checked;
-         *     the user is found by its Google subject or e-mail, or created --
-         *     the same rules as the web's Google redirect sign-in.
-         */
-        post: operations["AuthService_SignInWithGoogleIdToken"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Signs in with e-mail and password (FR-IAM-02). */
-        post: operations["AuthService_Login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Revokes a refresh token. */
-        post: operations["AuthService_Logout"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/password-reset": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sets a new password with the reset token and revokes every session. */
-        post: operations["AuthService_ResetPassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/password-reset/otp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Starts a password reset (FR-IAM-04): e-mails an OTP valid for 2
-         *     minutes. Always succeeds so user existence is not revealed.
-         */
-        post: operations["AuthService_RequestPasswordReset"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/password-reset/otp/verification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Checks the password-reset OTP and returns a short-lived reset token. */
-        post: operations["AuthService_VerifyPasswordResetOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Exchanges a refresh token for a new session; the old token is revoked
-         *     (rotation).
-         */
-        post: operations["AuthService_RefreshToken"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/register": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Registers a user as an owner with e-mail and password (FR-IAM-01). The
-         *     user starts unverified and a verification OTP is e-mailed.
-         */
-        post: operations["AuthService_Register"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customer/garages/{garageId}/vehicles/{vehicleId}/history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * One of the person's vehicles' repair history (FR-CAPP-02, FR-CUS-03);
-         *     NOT_FOUND unless the vehicle belongs to their customer record there.
-         */
-        get: operations["CustomerPortalService_GetMyVehicleHistory"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customer/vehicles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The signed-in person's vehicles, grouped by garage (FR-CAPP-02). */
-        get: operations["CustomerPortalService_ListMyVehicles"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GarageService_ListGarages"];
-        put?: never;
-        /**
-         * Creates a garage owned by the signed-in user, within the plan's
-         *     garage limit.
-         */
-        post: operations["GarageService_CreateGarage"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GarageService_GetGarage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["GarageService_UpdateGarage"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CustomerService_ListCustomers"];
-        put?: never;
-        post: operations["CustomerService_CreateCustomer"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/lookup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * FR-CUS-06: finds the garage's customers by phone or e-mail while a quote
-         *     is being prepared, and tells whether a user exists. Declared last so
-         *     that the gateway matches /customers/lookup before /customers/{id}.
-         */
-        get: operations["CustomerService_LookupCustomers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CustomerService_GetCustomer"];
-        put?: never;
-        post?: never;
-        /**
-         * Follows the delete-or-deactivate rule (FR-CAT-07): a customer that
-         *     quotes, repair orders or settlements refer to is deactivated, otherwise
-         *     the customer and their vehicles are soft-deleted.
-         */
-        delete: operations["CustomerService_DeleteCustomer"];
-        options?: never;
-        head?: never;
-        patch: operations["CustomerService_UpdateCustomer"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CustomerTaxProfileService_ListCustomerTaxProfiles"];
-        put?: never;
-        /**
-         * Fails VALIDATION_ERROR on a malformed tax id, and when the customer
-         *     already has a personal profile.
-         */
-        post: operations["CustomerTaxProfileService_CreateCustomerTaxProfile"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles/{taxProfileId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CustomerTaxProfileService_GetCustomerTaxProfile"];
-        put?: never;
-        post?: never;
-        /**
-         * Follows the delete-or-deactivate rule (FR-CAT-07): a profile that a
-         *     document was billed to is deactivated.
-         */
-        delete: operations["CustomerTaxProfileService_DeleteCustomerTaxProfile"];
-        options?: never;
-        head?: never;
-        patch: operations["CustomerTaxProfileService_UpdateCustomerTaxProfile"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles/{taxProfileId}:activate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CustomerTaxProfileService_ActivateCustomerTaxProfile"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}/user-links": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Asks the user that owns the profile's verified phone or e-mail to
-         *     confirm; sends them a one-time code and a request in the app. Fails
-         *     FAILED_PRECONDITION when no user matches.
-         */
-        post: operations["CustomerLinkService_RequestCustomerUserLink"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}/user-links/current": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Ends the link from the garage's side; the profile stays. */
-        delete: operations["CustomerLinkService_UnlinkCustomerUser"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}/user-links/current:confirm": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Confirms the pending request with the code the user read out. */
-        post: operations["CustomerLinkService_ConfirmCustomerUserLink"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/customers/{customerId}:activate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Reactivates a deactivated customer. */
-        post: operations["CustomerService_ActivateCustomer"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/entitlements": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** What the garage may use; any active member may read it. */
-        get: operations["LicenseService_GetGarageEntitlements"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/files": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Registers and stores a file; answers 201. */
-        post: operations["FileService_UploadFile"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/files/{fileId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Follows the delete-or-deactivate rule (FR-CAT-07). */
-        delete: operations["FileService_DeleteFile"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/files/{fileId}/url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** A short-lived signed URL for a private file. */
-        get: operations["FileService_GetFileUrl"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/inventory-items": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Items with their current stock on hand (FR-INV-03), the same list
-         *     the Stock on Hand screen shows.
-         */
-        get: operations["InventoryService_ListItems"];
-        put?: never;
-        post: operations["InventoryService_CreateItem"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/inventory-items/{itemId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["InventoryService_GetItem"];
-        put?: never;
-        post?: never;
-        delete: operations["InventoryService_DeleteItem"];
-        options?: never;
-        head?: never;
-        patch: operations["InventoryService_UpdateItem"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/invitations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["InvitationService_ListInvitations"];
-        put?: never;
-        /**
-         * Invites an existing user and e-mails them, within the plan's staff
-         *     limit.
-         */
-        post: operations["InvitationService_CreateInvitation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/invitations/{invitationId}/revoke": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Cancels a pending invitation. */
-        post: operations["InvitationService_RevokeInvitation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/logo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Replaces the garage logo. */
-        put: operations["GarageService_UploadGarageLogo"];
-        post?: never;
-        delete: operations["GarageService_DeleteGarageLogo"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/quotes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["QuoteService_ListQuotes"];
-        put?: never;
-        /** Counts against the plan's max_transactions_per_day (FR-LIC-02). */
-        post: operations["QuoteService_CreateQuote"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/quotes/{quoteId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["QuoteService_GetQuote"];
-        put?: never;
-        post?: never;
-        delete: operations["QuoteService_DeleteQuote"];
-        options?: never;
-        head?: never;
-        /** Fails with FAILED_PRECONDITION once the quote is no longer a draft. */
-        patch: operations["QuoteService_UpdateQuote"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/quotes/{quoteId}/conversion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Converts an approved quote into a draft repair order (FR-QUO-04),
-         *     preserving only the approved lines.
-         */
-        post: operations["QuoteService_ConvertQuote"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/quotes/{quoteId}/decision": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Records the customer's decision on behalf of the customer (FR-QUO-03),
-         *     for a MANUAL-mode quote or as a staff override of a LINK-mode one
-         *     (e.g. the customer decided by phone).
-         */
-        post: operations["QuoteService_RecordQuoteDecision"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/quotes/{quoteId}/pdf": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** FR-DOC-01: the quote as a PDF, using the garage's standard layout. */
-        get: operations["DocumentService_ExportQuotePdf"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/quotes/{quoteId}/sending": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sends the quote for customer approval (FR-QUO-02): generates the
-         *     public link for LINK mode (e-mailing it when the customer has an
-         *     e-mail on file), or simply marks a MANUAL-mode quote ready for
-         *     RecordQuoteDecision.
-         */
-        post: operations["QuoteService_SendQuote"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/repair-orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RepairOrderService_ListRepairOrders"];
-        put?: never;
-        /**
-         * Creates an ad-hoc repair order (FR-REP-01); counts against the plan's
-         *     daily transaction limit (FR-LIC-02). A quote converts into one
-         *     through QuoteService.ConvertQuote instead.
-         */
-        post: operations["RepairOrderService_CreateRepairOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/repair-orders/{repairOrderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RepairOrderService_GetRepairOrder"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/closing": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Closes the repair order (FR-REP-06): fails FAILED_PRECONDITION
-         *     unless every line is completed. Publishes repair_order.closed, which
-         *     deducts stock for the part lines (Event Design).
-         */
-        post: operations["RepairOrderService_CloseRepairOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/lines/{lineId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Assigns technicians and/or updates one line's own progress
-         *     (FR-REP-02/03); the repair order's overall status (the Kanban
-         *     column) is derived from its lines and returned in the response.
-         */
-        patch: operations["RepairOrderService_UpdateRepairOrderLine"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/pdf": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * FR-DOC-01: the repair order as a PDF, using the garage's standard
-         *     layout.
-         */
-        get: operations["DocumentService_ExportRepairOrderPdf"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/reports/revenue": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ReportingService_GetRevenueReport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/reports/stock-movements": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * The stock in/out/on-hand movement report (FR-INV-05); Excel export
-         *     of the same data is added with the Document/Print Service (Release
-         *     1.4).
-         */
-        get: operations["InventoryService_ListStockTransactions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/reports/stock-movements/excel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * FR-DOC-02: the stock in/out/on-hand movement report (FR-INV-05) as an
-         *     Excel workbook; same filter as the JSON report
-         *     (InventoryService.ListStockTransactions).
-         */
-        get: operations["DocumentService_ExportStockMovementsExcel"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/settlements": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Also FR-REC-01 (receivables) via outstanding_only. */
-        get: operations["SettlementService_ListSettlements"];
-        put?: never;
-        /**
-         * Creates a settlement from a closed repair order (FR-BIL-01),
-         *     aggregating its total; fails FAILED_PRECONDITION unless the repair
-         *     order is closed, and ALREADY_EXISTS if it already has one.
-         */
-        post: operations["SettlementService_CreateSettlement"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/settlements/{settlementId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SettlementService_GetSettlement"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Changes the billing party and the invoice request of a settlement
-         *     (FR-CUS-07). Fails INVOICE_DATA_INCOMPLETE when an invoice is requested
-         *     and the billing party's profile lacks required fields.
-         */
-        patch: operations["SettlementService_UpdateSettlement"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/settlements/{settlementId}/payments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Records a payment actually collected (FR-BIL-03); a settlement may
-         *     receive several until the total is fully collected.
-         */
-        post: operations["SettlementService_RecordSettlementPayment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}/voucher-pdf": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * FR-BIL-05: one payment voucher (phiếu thu) as a PDF in the 01-TT
-         *     layout: the garage's legal header, amount in figures and words, and
-         *     signature blocks.
-         */
-        get: operations["DocumentService_ExportPaymentVoucherPdf"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}:void": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * FR-BIL-06: voids a payment voucher with a reason. The voucher stays on
-         *     file marked void, the settlement's paid amount and status are
-         *     recalculated, and the audit log records who voided it.
-         */
-        post: operations["SettlementService_VoidSettlementPayment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/settlements/{settlementId}/receipt-pdf": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** FR-DOC-01: the settlement as a receipt PDF. */
-        get: operations["DocumentService_ExportSettlementReceiptPdf"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/staff": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["StaffService_ListStaff"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/staff-candidates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Finds an existing user by exact e-mail or phone to invite. */
-        get: operations["StaffService_LookupStaffCandidate"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/staff-groups": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["StaffGroupService_ListStaffGroups"];
-        put?: never;
-        post: operations["StaffGroupService_CreateStaffGroup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/staff-groups/{groupId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Removes the group; its members keep their other groups. */
-        delete: operations["StaffGroupService_DeleteStaffGroup"];
-        options?: never;
-        head?: never;
-        patch: operations["StaffGroupService_UpdateStaffGroup"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/staff/{staffId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Removes a member from the garage. */
-        delete: operations["StaffService_DeleteStaff"];
-        options?: never;
-        head?: never;
-        /** Activates/deactivates a member or changes their groups. */
-        patch: operations["StaffService_UpdateStaff"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/stock-receipts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Records a goods-receipt note from a supplier (FR-INV-01), increasing
-         *     stock on hand.
-         */
-        post: operations["InventoryService_CreateStockReceipt"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/suppliers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SupplierService_ListSuppliers"];
-        put?: never;
-        post: operations["SupplierService_CreateSupplier"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/suppliers/{supplierId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SupplierService_GetSupplier"];
-        put?: never;
-        post?: never;
-        /** Follows the delete-or-deactivate rule (FR-CAT-07). */
-        delete: operations["SupplierService_DeleteSupplier"];
-        options?: never;
-        head?: never;
-        patch: operations["SupplierService_UpdateSupplier"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/suppliers/{supplierId}:activate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Reactivates a deactivated supplier. */
-        post: operations["SupplierService_ActivateSupplier"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/vehicles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["VehicleService_ListVehicles"];
-        put?: never;
-        post: operations["VehicleService_CreateVehicle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/vehicles/{vehicleId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["VehicleService_GetVehicle"];
-        put?: never;
-        post?: never;
-        /**
-         * Follows the delete-or-deactivate rule (FR-CAT-07): a vehicle that
-         *     documents refer to is deactivated, otherwise soft-deleted.
-         */
-        delete: operations["VehicleService_DeleteVehicle"];
-        options?: never;
-        head?: never;
-        patch: operations["VehicleService_UpdateVehicle"];
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/vehicles/{vehicleId}/history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Vehicle repair history (FR-CUS-03, Release 1.2). */
-        get: operations["VehicleService_GetVehicleHistory"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/vehicles/{vehicleId}:activate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Reactivates a deactivated vehicle. */
-        post: operations["VehicleService_ActivateVehicle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/vehicles/{vehicleId}:change-owner": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * FR-CUS-09: moves a sold vehicle to another customer, keeping its
-         *     history. Needs PERMISSION_CUSTOMER_CORRECT.
-         */
-        post: operations["VehicleService_ChangeVehicleOwner"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/garages/{garageId}/vehicles/{vehicleId}:correct": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * FR-CUS-09: corrects a locked identity field with a mandatory reason.
-         *     Audited; documents keep the value they snapshotted. Needs
-         *     PERMISSION_CUSTOMER_CORRECT.
-         */
-        post: operations["VehicleService_CorrectVehicle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Returns the signed-in user. */
-        get: operations["UserService_GetMe"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Updates the signed-in user's profile and language. */
-        patch: operations["UserService_UpdateMe"];
-        trace?: never;
-    };
-    "/api/v1/me/garage-links": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** FR-CAPP-05: link requests from garages and the garages already linked. */
-        get: operations["CustomerPortalService_ListMyGarageLinks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/garage-links/{linkId}:accept": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Accepts a garage's request to link the user with its customer profile. */
-        post: operations["CustomerPortalService_AcceptGarageLink"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/garage-links/{linkId}:decline": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CustomerPortalService_DeclineGarageLink"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/garage-links/{linkId}:unlink": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Ends a link from the user's side. */
-        post: operations["CustomerPortalService_UnlinkGarageLink"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/invitations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["InvitationService_ListMyInvitations"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/invitations/{invitationId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["InvitationService_GetMyInvitation"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/invitations/{invitationId}/accept": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Joins the garage with the invitation's groups. */
-        post: operations["InvitationService_AcceptInvitation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/invitations/{invitationId}/decline": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["InvitationService_DeclineInvitation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/subscription": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The signed-in owner's subscription and usage. */
-        get: operations["LicenseService_GetMySubscription"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/subscription/credit-ledger": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseService_ListMyCreditLedger"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/subscription/payment-requests": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseService_ListMyPlanPaymentRequests"];
-        put?: never;
-        /**
-         * Starts a plan change or a renewal (FR-LIC-07): validates the owner's
-         *     usage against the plan's limits (PLAN_LIMIT_REACHED), quotes the amount
-         *     with the account credit applied (FR-LIC-09) and returns the transfer
-         *     reference and the platform's payment details. TRIAL_NOT_AVAILABLE for
-         *     the trial plan, PLAN_NOT_AVAILABLE for a plan that cannot be chosen,
-         *     REQUEST_ALREADY_OPEN while a request is SUBMITTED; a request still
-         *     AWAITING_PAYMENT is replaced.
-         */
-        post: operations["LicenseService_CreatePlanPaymentRequest"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/subscription/payment-requests/{requestId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseService_GetMyPlanPaymentRequest"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/subscription/payment-requests/{requestId}:cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Cancels a request that is AWAITING_PAYMENT or SUBMITTED;
-         *     REQUEST_NOT_OPEN once reviewed.
-         */
-        post: operations["LicenseService_CancelPlanPayment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/subscription/payment-requests/{requestId}:submit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Declares the transfer with its evidence (EVIDENCE_REQUIRED when the
-         *     amount due is not 0); the platform admins are notified.
-         */
-        post: operations["LicenseService_SubmitPlanPayment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/payment-settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The platform's payment details (FR-LIC-10). */
-        get: operations["LicenseService_GetPaymentInstructions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/permissions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lists the permission catalog. */
-        get: operations["RoleService_ListPermissions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/plans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LicenseService_ListPlans"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/public/quotes/{token}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["PublicQuoteService_GetPublicQuote"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/public/quotes/{token}/decision": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["PublicQuoteService_DecidePublicQuote"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/roles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RoleService_ListRoles"];
-        put?: never;
-        post: operations["RoleService_CreateRole"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/roles/{roleId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RoleService_GetRole"];
-        put?: never;
-        post?: never;
-        /** Fails with ROLE_IN_USE while a staff group uses the role. */
-        delete: operations["RoleService_DeleteRole"];
-        options?: never;
-        head?: never;
-        patch: operations["RoleService_UpdateRole"];
-        trace?: never;
-    };
-    "/api/v1/technician/work": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * The technician's work: the repair-order lines assigned to them that are
-         *     still open, across their garages (FR-TAPP-01).
-         */
-        get: operations["TechnicianService_ListMyWork"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  '/api/v1/admin/payment-settings': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseAdminService_GetPlatformPaymentSettings']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch: operations['LicenseAdminService_UpdatePlatformPaymentSettings']
+    trace?: never
+  }
+  '/api/v1/admin/payment-settings/qr': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Uploads or replaces the QR code image. */
+    post: operations['LicenseAdminService_UploadPaymentQr']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/plan-payment-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The review queue (FR-LIC-08). */
+    get: operations['LicenseAdminService_ListPlanPaymentRequests']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/plan-payment-requests/{requestId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseAdminService_GetPlanPaymentRequest']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/plan-payment-requests/{requestId}:approve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Approves the payment: the plan applies at once and a new period starts;
+     *     the limits are validated again (PLAN_LIMIT_REACHED).
+     *     REQUEST_NOT_OPEN unless SUBMITTED.
+     */
+    post: operations['LicenseAdminService_ApprovePlanPayment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/plan-payment-requests/{requestId}:reject': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['LicenseAdminService_RejectPlanPayment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/plans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Every plan, including hidden and inactive ones. */
+    get: operations['LicenseAdminService_ListAllPlans']
+    put?: never
+    post: operations['LicenseAdminService_CreatePlan']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/plans/{planId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch: operations['LicenseAdminService_UpdatePlan']
+    trace?: never
+  }
+  '/api/v1/admin/subscriptions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseAdminService_ListSubscriptions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/subscriptions/{subscriptionId}/credit-adjustments': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['LicenseAdminService_AdjustCredit']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/subscriptions/{subscriptionId}/extensions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** A correction: renewals and plan changes go through payment requests. */
+    post: operations['LicenseAdminService_ExtendSubscription']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/email-verification': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Confirms the signed-in user's e-mail with the OTP and returns a
+     *     session whose token is marked verified.
+     */
+    post: operations['AuthService_VerifyEmail']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/email-verification/otp': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * E-mails a new 6-digit verification OTP, valid for 2 minutes, to the
+     *     signed-in user.
+     */
+    post: operations['AuthService_SendEmailVerificationOtp']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/google/id-token': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Signs in with a Google ID token obtained natively by a mobile app
+     *     (FR-IAM-01, FR-CAPP-01). The token's signature, issuer, audience (one
+     *     of the configured mobile client IDs) and verified e-mail are checked;
+     *     the user is found by its Google subject or e-mail, or created --
+     *     the same rules as the web's Google redirect sign-in.
+     */
+    post: operations['AuthService_SignInWithGoogleIdToken']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/login': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Signs in with e-mail and password (FR-IAM-02). */
+    post: operations['AuthService_Login']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/logout': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Revokes a refresh token. */
+    post: operations['AuthService_Logout']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/password-reset': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Sets a new password with the reset token and revokes every session. */
+    post: operations['AuthService_ResetPassword']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/password-reset/otp': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Starts a password reset (FR-IAM-04): e-mails an OTP valid for 2
+     *     minutes. Always succeeds so user existence is not revealed.
+     */
+    post: operations['AuthService_RequestPasswordReset']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/password-reset/otp/verification': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Checks the password-reset OTP and returns a short-lived reset token. */
+    post: operations['AuthService_VerifyPasswordResetOtp']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/refresh': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Exchanges a refresh token for a new session; the old token is revoked
+     *     (rotation).
+     */
+    post: operations['AuthService_RefreshToken']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/auth/register': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Registers a user as an owner with e-mail and password (FR-IAM-01). The
+     *     user starts unverified and a verification OTP is e-mailed.
+     */
+    post: operations['AuthService_Register']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/customer/garages/{garageId}/vehicles/{vehicleId}/history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * One of the person's vehicles' repair history (FR-CAPP-02, FR-CUS-03);
+     *     NOT_FOUND unless the vehicle belongs to their customer record there.
+     */
+    get: operations['CustomerPortalService_GetMyVehicleHistory']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/customer/vehicles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The signed-in person's vehicles, grouped by garage (FR-CAPP-02). */
+    get: operations['CustomerPortalService_ListMyVehicles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['GarageService_ListGarages']
+    put?: never
+    /**
+     * Creates a garage owned by the signed-in user, within the plan's
+     *     garage limit.
+     */
+    post: operations['GarageService_CreateGarage']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['GarageService_GetGarage']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch: operations['GarageService_UpdateGarage']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['CustomerService_ListCustomers']
+    put?: never
+    post: operations['CustomerService_CreateCustomer']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/lookup': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-CUS-06: finds the garage's customers by phone or e-mail while a quote
+     *     is being prepared, and tells whether a user exists. Declared last so
+     *     that the gateway matches /customers/lookup before /customers/{id}.
+     */
+    get: operations['CustomerService_LookupCustomers']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['CustomerService_GetCustomer']
+    put?: never
+    post?: never
+    /**
+     * Follows the delete-or-deactivate rule (FR-CAT-07): a customer that
+     *     quotes, repair orders or settlements refer to is deactivated, otherwise
+     *     the customer and their vehicles are soft-deleted.
+     */
+    delete: operations['CustomerService_DeleteCustomer']
+    options?: never
+    head?: never
+    patch: operations['CustomerService_UpdateCustomer']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['CustomerTaxProfileService_ListCustomerTaxProfiles']
+    put?: never
+    /**
+     * Fails VALIDATION_ERROR on a malformed tax id, and when the customer
+     *     already has a personal profile.
+     */
+    post: operations['CustomerTaxProfileService_CreateCustomerTaxProfile']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles/{taxProfileId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['CustomerTaxProfileService_GetCustomerTaxProfile']
+    put?: never
+    post?: never
+    /**
+     * Follows the delete-or-deactivate rule (FR-CAT-07): a profile that a
+     *     document was billed to is deactivated.
+     */
+    delete: operations['CustomerTaxProfileService_DeleteCustomerTaxProfile']
+    options?: never
+    head?: never
+    patch: operations['CustomerTaxProfileService_UpdateCustomerTaxProfile']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles/{taxProfileId}:activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['CustomerTaxProfileService_ActivateCustomerTaxProfile']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}/user-links': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Asks the user that owns the profile's verified phone or e-mail to
+     *     confirm; sends them a one-time code and a request in the app. Fails
+     *     FAILED_PRECONDITION when no user matches.
+     */
+    post: operations['CustomerLinkService_RequestCustomerUserLink']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}/user-links/current': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Ends the link from the garage's side; the profile stays. */
+    delete: operations['CustomerLinkService_UnlinkCustomerUser']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}/user-links/current:confirm': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Confirms the pending request with the code the user read out. */
+    post: operations['CustomerLinkService_ConfirmCustomerUserLink']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/customers/{customerId}:activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Reactivates a deactivated customer. */
+    post: operations['CustomerService_ActivateCustomer']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/entitlements': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** What the garage may use; any active member may read it. */
+    get: operations['LicenseService_GetGarageEntitlements']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/files': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Registers and stores a file; answers 201. */
+    post: operations['FileService_UploadFile']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/files/{fileId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Follows the delete-or-deactivate rule (FR-CAT-07). */
+    delete: operations['FileService_DeleteFile']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/files/{fileId}/url': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** A short-lived signed URL for a private file. */
+    get: operations['FileService_GetFileUrl']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/inventory-items': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The stock-on-hand list (FR-INV-03): parts with their balances. */
+    get: operations['InventoryService_ListStockLevels']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/inventory-items/{partId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_GetStockLevel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/invitations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InvitationService_ListInvitations']
+    put?: never
+    /**
+     * Invites an existing user and e-mails them, within the plan's staff
+     *     limit.
+     */
+    post: operations['InvitationService_CreateInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/invitations/{invitationId}/revoke': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Cancels a pending invitation. */
+    post: operations['InvitationService_RevokeInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/logo': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** Replaces the garage logo. */
+    put: operations['GarageService_UploadGarageLogo']
+    post?: never
+    delete: operations['GarageService_DeleteGarageLogo']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/part-categories': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The category tree of at most three levels (FR-CAT-03). */
+    get: operations['CatalogueService_ListPartCategories']
+    put?: never
+    post: operations['CatalogueService_CreatePartCategory']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/part-categories/{categoryId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete: operations['CatalogueService_DeletePartCategory']
+    options?: never
+    head?: never
+    patch: operations['CatalogueService_UpdatePartCategory']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['CatalogueService_ListParts']
+    put?: never
+    post: operations['CatalogueService_CreatePart']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['CatalogueService_GetPart']
+    put?: never
+    post?: never
+    /** Follows the delete-or-deactivate rule (FR-CAT-07). */
+    delete: operations['CatalogueService_DeletePart']
+    options?: never
+    head?: never
+    patch: operations['CatalogueService_UpdatePart']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}/images': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Attaches an uploaded part_image file, at most three per part
+     *     (FR-CAT-04).
+     */
+    post: operations['CatalogueService_AddPartImage']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}/images/{fileId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete: operations['CatalogueService_RemovePartImage']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}/units': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** Replaces the part's packaging table (FR-CAT-02). */
+    put: operations['CatalogueService_SetPartUnits']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}:activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['CatalogueService_ActivatePart']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/quotes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['QuoteService_ListQuotes']
+    put?: never
+    /** Counts against the plan's max_transactions_per_day (FR-LIC-02). */
+    post: operations['QuoteService_CreateQuote']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['QuoteService_GetQuote']
+    put?: never
+    post?: never
+    delete: operations['QuoteService_DeleteQuote']
+    options?: never
+    head?: never
+    /** Fails with FAILED_PRECONDITION once the quote is no longer a draft. */
+    patch: operations['QuoteService_UpdateQuote']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}/conversion': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Converts an approved quote into a draft repair order (FR-QUO-04),
+     *     preserving only the approved lines.
+     */
+    post: operations['QuoteService_ConvertQuote']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}/decision': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records the customer's decision on behalf of the customer (FR-QUO-03),
+     *     for a MANUAL-mode quote or as a staff override of a LINK-mode one
+     *     (e.g. the customer decided by phone).
+     */
+    post: operations['QuoteService_RecordQuoteDecision']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}/pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-DOC-01: the quote as a PDF, using the garage's standard layout. */
+    get: operations['DocumentService_ExportQuotePdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}/sending': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Sends the quote for customer approval (FR-QUO-02): generates the
+     *     public link for LINK mode (e-mailing it when the customer has an
+     *     e-mail on file), or simply marks a MANUAL-mode quote ready for
+     *     RecordQuoteDecision.
+     */
+    post: operations['QuoteService_SendQuote']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['RepairOrderService_ListRepairOrders']
+    put?: never
+    /**
+     * Creates an ad-hoc repair order (FR-REP-01); counts against the plan's
+     *     daily transaction limit (FR-LIC-02). A quote converts into one
+     *     through QuoteService.ConvertQuote instead.
+     */
+    post: operations['RepairOrderService_CreateRepairOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['RepairOrderService_GetRepairOrder']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/closing': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Closes the repair order (FR-REP-06): fails FAILED_PRECONDITION
+     *     unless every line is completed. Publishes repair_order.closed, which
+     *     deducts stock for the part lines (Event Design).
+     */
+    post: operations['RepairOrderService_CloseRepairOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/lines/{lineId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Assigns technicians and/or updates one line's own progress
+     *     (FR-REP-02/03); the repair order's overall status (the Kanban
+     *     column) is derived from its lines and returned in the response.
+     */
+    patch: operations['RepairOrderService_UpdateRepairOrderLine']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-DOC-01: the repair order as a PDF, using the garage's standard
+     *     layout.
+     */
+    get: operations['DocumentService_ExportRepairOrderPdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/revenue': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['ReportingService_GetRevenueReport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/revenue/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-DOC-02 (Release 6.0): the revenue-by-period report
+     *     (ReportingService.GetRevenueReport) as an Excel workbook.
+     */
+    get: operations['DocumentService_ExportRevenueExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/stock-movements': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The stock in/out/on-hand movement report (FR-INV-05). */
+    get: operations['InventoryService_ListStockTransactions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/stock-movements/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-DOC-02: the stock in/out/on-hand movement report (FR-INV-05) as an
+     *     Excel workbook; same filter as the JSON report
+     *     (InventoryService.ListStockTransactions).
+     */
+    get: operations['DocumentService_ExportStockMovementsExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Also FR-REC-01 (receivables) via outstanding_only. */
+    get: operations['SettlementService_ListSettlements']
+    put?: never
+    /**
+     * Creates a settlement from a closed repair order (FR-BIL-01),
+     *     aggregating its total; fails FAILED_PRECONDITION unless the repair
+     *     order is closed, and ALREADY_EXISTS if it already has one.
+     */
+    post: operations['SettlementService_CreateSettlement']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['SettlementService_GetSettlement']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Changes the billing party and the invoice request of a settlement
+     *     (FR-CUS-07). Fails INVOICE_DATA_INCOMPLETE when an invoice is requested
+     *     and the billing party's profile lacks required fields.
+     */
+    patch: operations['SettlementService_UpdateSettlement']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}/payments': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records a payment actually collected (FR-BIL-03); a settlement may
+     *     receive several until the total is fully collected.
+     */
+    post: operations['SettlementService_RecordSettlementPayment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}/voucher-pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-BIL-05: one payment voucher (phiếu thu) as a PDF in the 01-TT
+     *     layout: the garage's legal header, amount in figures and words, and
+     *     signature blocks.
+     */
+    get: operations['DocumentService_ExportPaymentVoucherPdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}:void': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-BIL-06: voids a payment voucher with a reason. The voucher stays on
+     *     file marked void, the settlement's paid amount and status are
+     *     recalculated, and the audit log records who voided it.
+     */
+    post: operations['SettlementService_VoidSettlementPayment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}/receipt-pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-DOC-01: the settlement as a receipt PDF. */
+    get: operations['DocumentService_ExportSettlementReceiptPdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/staff': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['StaffService_ListStaff']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/staff-candidates': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Finds an existing user by exact e-mail or phone to invite. */
+    get: operations['StaffService_LookupStaffCandidate']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/staff-groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['StaffGroupService_ListStaffGroups']
+    put?: never
+    post: operations['StaffGroupService_CreateStaffGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/staff-groups/{groupId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Removes the group; its members keep their other groups. */
+    delete: operations['StaffGroupService_DeleteStaffGroup']
+    options?: never
+    head?: never
+    patch: operations['StaffGroupService_UpdateStaffGroup']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/staff/{staffId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Removes a member from the garage. */
+    delete: operations['StaffService_DeleteStaff']
+    options?: never
+    head?: never
+    /** Activates/deactivates a member or changes their groups. */
+    patch: operations['StaffService_UpdateStaff']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-receipts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records a goods-receipt note from a supplier (FR-INV-01), increasing
+     *     stock on hand.
+     */
+    post: operations['InventoryService_CreateStockReceipt']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/suppliers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['SupplierService_ListSuppliers']
+    put?: never
+    post: operations['SupplierService_CreateSupplier']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/suppliers/{supplierId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['SupplierService_GetSupplier']
+    put?: never
+    post?: never
+    /** Follows the delete-or-deactivate rule (FR-CAT-07). */
+    delete: operations['SupplierService_DeleteSupplier']
+    options?: never
+    head?: never
+    patch: operations['SupplierService_UpdateSupplier']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/suppliers/{supplierId}:activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Reactivates a deactivated supplier. */
+    post: operations['SupplierService_ActivateSupplier']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/units': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Units of measure of the garage (FR-CAT-01). */
+    get: operations['CatalogueService_ListUnits']
+    put?: never
+    post: operations['CatalogueService_CreateUnit']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/units/{unitId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete: operations['CatalogueService_DeleteUnit']
+    options?: never
+    head?: never
+    patch: operations['CatalogueService_UpdateUnit']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/vehicles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['VehicleService_ListVehicles']
+    put?: never
+    post: operations['VehicleService_CreateVehicle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/vehicles/{vehicleId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['VehicleService_GetVehicle']
+    put?: never
+    post?: never
+    /**
+     * Follows the delete-or-deactivate rule (FR-CAT-07): a vehicle that
+     *     documents refer to is deactivated, otherwise soft-deleted.
+     */
+    delete: operations['VehicleService_DeleteVehicle']
+    options?: never
+    head?: never
+    patch: operations['VehicleService_UpdateVehicle']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/vehicles/{vehicleId}/history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Vehicle repair history (FR-CUS-03, Release 1.2). */
+    get: operations['VehicleService_GetVehicleHistory']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/vehicles/{vehicleId}:activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Reactivates a deactivated vehicle. */
+    post: operations['VehicleService_ActivateVehicle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/vehicles/{vehicleId}:change-owner': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-CUS-09: moves a sold vehicle to another customer, keeping its
+     *     history. Needs PERMISSION_CUSTOMER_CORRECT.
+     */
+    post: operations['VehicleService_ChangeVehicleOwner']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/vehicles/{vehicleId}:correct': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-CUS-09: corrects a locked identity field with a mandatory reason.
+     *     Audited; documents keep the value they snapshotted. Needs
+     *     PERMISSION_CUSTOMER_CORRECT.
+     */
+    post: operations['VehicleService_CorrectVehicle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Returns the signed-in user. */
+    get: operations['UserService_GetMe']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /** Updates the signed-in user's profile and language. */
+    patch: operations['UserService_UpdateMe']
+    trace?: never
+  }
+  '/api/v1/me/garage-links': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-CAPP-05: link requests from garages and the garages already linked. */
+    get: operations['CustomerPortalService_ListMyGarageLinks']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/garage-links/{linkId}:accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Accepts a garage's request to link the user with its customer profile. */
+    post: operations['CustomerPortalService_AcceptGarageLink']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/garage-links/{linkId}:decline': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['CustomerPortalService_DeclineGarageLink']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/garage-links/{linkId}:unlink': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Ends a link from the user's side. */
+    post: operations['CustomerPortalService_UnlinkGarageLink']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/invitations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InvitationService_ListMyInvitations']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/invitations/{invitationId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InvitationService_GetMyInvitation']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/invitations/{invitationId}/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Joins the garage with the invitation's groups. */
+    post: operations['InvitationService_AcceptInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/invitations/{invitationId}/decline': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['InvitationService_DeclineInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/subscription': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The signed-in owner's subscription and usage. */
+    get: operations['LicenseService_GetMySubscription']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/subscription/credit-ledger': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseService_ListMyCreditLedger']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/subscription/payment-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseService_ListMyPlanPaymentRequests']
+    put?: never
+    /**
+     * Starts a plan change or a renewal (FR-LIC-07): validates the owner's
+     *     usage against the plan's limits (PLAN_LIMIT_REACHED), quotes the amount
+     *     with the account credit applied (FR-LIC-09) and returns the transfer
+     *     reference and the platform's payment details. TRIAL_NOT_AVAILABLE for
+     *     the trial plan, PLAN_NOT_AVAILABLE for a plan that cannot be chosen,
+     *     REQUEST_ALREADY_OPEN while a request is SUBMITTED; a request still
+     *     AWAITING_PAYMENT is replaced.
+     */
+    post: operations['LicenseService_CreatePlanPaymentRequest']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/subscription/payment-requests/{requestId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseService_GetMyPlanPaymentRequest']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/subscription/payment-requests/{requestId}:cancel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Cancels a request that is AWAITING_PAYMENT or SUBMITTED;
+     *     REQUEST_NOT_OPEN once reviewed.
+     */
+    post: operations['LicenseService_CancelPlanPayment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/subscription/payment-requests/{requestId}:submit': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Declares the transfer with its evidence (EVIDENCE_REQUIRED when the
+     *     amount due is not 0); the platform admins are notified.
+     */
+    post: operations['LicenseService_SubmitPlanPayment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/payment-settings': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The platform's payment details (FR-LIC-10). */
+    get: operations['LicenseService_GetPaymentInstructions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/permissions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Lists the permission catalog. */
+    get: operations['RoleService_ListPermissions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/plans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['LicenseService_ListPlans']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/public/quotes/{token}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PublicQuoteService_GetPublicQuote']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/public/quotes/{token}/decision': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['PublicQuoteService_DecidePublicQuote']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['RoleService_ListRoles']
+    put?: never
+    post: operations['RoleService_CreateRole']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/roles/{roleId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['RoleService_GetRole']
+    put?: never
+    post?: never
+    /** Fails with ROLE_IN_USE while a staff group uses the role. */
+    delete: operations['RoleService_DeleteRole']
+    options?: never
+    head?: never
+    patch: operations['RoleService_UpdateRole']
+    trace?: never
+  }
+  '/api/v1/technician/work': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The technician's work: the repair-order lines assigned to them that are
+     *     still open, across their garages (FR-TAPP-01).
+     */
+    get: operations['TechnicianService_ListMyWork']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
-export type webhooks = Record<string, never>;
+export type webhooks = Record<string, never>
 export interface components {
-    schemas: {
-        CustomerLinkServiceConfirmCustomerUserLinkBody: {
-            /** @description The one-time code the user read out. */
-            otp: string;
-        };
-        CustomerLinkServiceRequestCustomerUserLinkBody: Record<string, never>;
-        CustomerPortalServiceAcceptGarageLinkBody: Record<string, never>;
-        CustomerPortalServiceDeclineGarageLinkBody: Record<string, never>;
-        CustomerPortalServiceUnlinkGarageLinkBody: Record<string, never>;
-        CustomerServiceActivateCustomerBody: Record<string, never>;
-        CustomerTaxProfileServiceActivateCustomerTaxProfileBody: Record<string, never>;
-        FileServiceUploadFileBody: {
-            kind: components["schemas"]["v1FileKind"];
-            entityType: string;
-            entityId: string;
-            /**
-             * Format: byte
-             * @description The file content (base64 in JSON); the size limit depends on the kind.
-             */
-            content: string;
-            contentType: string;
-        };
-        GarageServiceUploadGarageLogoBody: {
-            /**
-             * Format: byte
-             * @description PNG, JPEG or WebP image, at most 1 MB (base64 in JSON).
-             */
-            content: string;
-            /** @description image/png, image/jpeg or image/webp. */
-            contentType: string;
-        };
-        InventoryServiceCreateStockReceiptBody: {
-            itemId: string;
-            quantity: string;
-            /** Format: int64 */
-            unitCost?: string;
-        };
-        InvitationServiceAcceptInvitationBody: Record<string, never>;
-        InvitationServiceCreateInvitationBody: {
-            /** @description From LookupStaffCandidate. */
-            userId: string;
-            groupIds?: string[];
-        };
-        InvitationServiceDeclineInvitationBody: Record<string, never>;
-        InvitationServiceRevokeInvitationBody: Record<string, never>;
-        LicenseAdminServiceAdjustCreditBody: {
-            /**
-             * Format: int64
-             * @description Signed VND; the balance never goes below 0.
-             */
-            amount: string;
-            note: string;
-        };
-        LicenseAdminServiceApprovePlanPaymentBody: {
-            /**
-             * @description Required when the amount transferred differs from the amount due
-             *     (AMOUNT_MISMATCH_NOTE_REQUIRED).
-             */
-            note?: string;
-        };
-        LicenseAdminServiceExtendSubscriptionBody: {
-            /**
-             * Format: int32
-             * @description 1 to 366 days added to the current period end (or to now when
-             *     already expired); reactivates past-due and suspended subscriptions.
-             */
-            days: number;
-        };
-        LicenseAdminServiceRejectPlanPaymentBody: {
-            reason: string;
-        };
-        LicenseServiceCancelPlanPaymentBody: Record<string, never>;
-        LicenseServiceSubmitPlanPaymentBody: {
-            payerName: string;
-            payerBank?: string;
-            payerAccount?: string;
-            /** Format: int64 */
-            transferredAmount: string;
-            bankTransactionRef?: string;
-            /** Format: date-time */
-            paidAt?: string;
-            evidence?: components["schemas"]["v1PaymentEvidence"];
-        };
-        PublicQuoteServiceDecidePublicQuoteBody: {
-            decisions: components["schemas"]["v1QuoteLineDecisionInput"][];
-        };
-        QuoteServiceConvertQuoteBody: Record<string, never>;
-        QuoteServiceRecordQuoteDecisionBody: {
-            /** @description One decision per line of the quote. */
-            decisions: components["schemas"]["v1QuoteLineDecisionInput"][];
-        };
-        QuoteServiceSendQuoteBody: Record<string, never>;
-        RepairOrderServiceCloseRepairOrderBody: Record<string, never>;
-        SettlementServiceCreateSettlementBody: {
-            repairOrderId: string;
-            billingParty?: components["schemas"]["v1BillingParty"];
-            invoiceRequested?: boolean;
-        };
-        SettlementServiceRecordSettlementPaymentBody: {
-            /** Format: int64 */
-            amount: string;
-            method: components["schemas"]["v1PaymentMethod"];
-            note?: string;
-            /**
-             * @description Voucher details; each defaults to the billing party's (or customer's)
-             *     name and address and to a standard reason naming the settlement.
-             */
-            payerName?: string;
-            payerAddress?: string;
-            reason?: string;
-        };
-        SettlementServiceVoidSettlementPaymentBody: {
-            reason: string;
-        };
-        SupplierServiceActivateSupplierBody: Record<string, never>;
-        VehicleServiceActivateVehicleBody: Record<string, never>;
-        VehicleServiceChangeVehicleOwnerBody: {
-            /** @description The customer the vehicle moves to; must belong to the same garage. */
-            customerId: string;
-            reason?: string;
-        };
-        VehicleServiceCorrectVehicleBody: {
-            field: components["schemas"]["v1VehicleIdentityField"];
-            /** @description The corrected value (the year as digits). */
-            value: string;
-            /** @description Why the correction is needed; kept in the audit log. */
-            reason: string;
-        };
+  schemas: {
+    CatalogueServiceActivatePartBody: Record<string, never>
+    CatalogueServiceAddPartImageBody: {
+      /**
+       * @description A file of kind part_image of this garage, uploaded with FileService
+       *     (entity_type "part", entity_id the part id).
+       */
+      fileId: string
+    }
+    CatalogueServiceSetPartUnitsBody: {
+      /** @description Replaces the whole packaging table. */
+      packagingUnits?: components['schemas']['v1PackagingUnit'][]
+    }
+    CustomerLinkServiceConfirmCustomerUserLinkBody: {
+      /** @description The one-time code the user read out. */
+      otp: string
+    }
+    CustomerLinkServiceRequestCustomerUserLinkBody: Record<string, never>
+    CustomerPortalServiceAcceptGarageLinkBody: Record<string, never>
+    CustomerPortalServiceDeclineGarageLinkBody: Record<string, never>
+    CustomerPortalServiceUnlinkGarageLinkBody: Record<string, never>
+    CustomerServiceActivateCustomerBody: Record<string, never>
+    CustomerTaxProfileServiceActivateCustomerTaxProfileBody: Record<string, never>
+    FileServiceUploadFileBody: {
+      kind: components['schemas']['v1FileKind']
+      entityType: string
+      entityId: string
+      /**
+       * Format: byte
+       * @description The file content (base64 in JSON); the size limit depends on the kind.
+       */
+      content: string
+      contentType: string
+    }
+    GarageServiceUploadGarageLogoBody: {
+      /**
+       * Format: byte
+       * @description PNG, JPEG or WebP image, at most 1 MB (base64 in JSON).
+       */
+      content: string
+      /** @description image/png, image/jpeg or image/webp. */
+      contentType: string
+    }
+    InventoryServiceCreateStockReceiptBody: {
+      /** @description The part's id (the JSON field keeps the name item_id). */
+      itemId: string
+      /**
+       * @description In the base unit unless unit_id names a packaging unit of the part, in
+       *     which case it is converted on save (FR-CAT-02).
+       */
+      quantity: string
+      /**
+       * Format: int64
+       * @description VND per entered unit; stored per base unit. Zero means "not recorded".
+       */
+      unitCost?: string
+      unitId?: string
+    }
+    InvitationServiceAcceptInvitationBody: Record<string, never>
+    InvitationServiceCreateInvitationBody: {
+      /** @description From LookupStaffCandidate. */
+      userId: string
+      groupIds?: string[]
+    }
+    InvitationServiceDeclineInvitationBody: Record<string, never>
+    InvitationServiceRevokeInvitationBody: Record<string, never>
+    LicenseAdminServiceAdjustCreditBody: {
+      /**
+       * Format: int64
+       * @description Signed VND; the balance never goes below 0.
+       */
+      amount: string
+      note: string
+    }
+    LicenseAdminServiceApprovePlanPaymentBody: {
+      /**
+       * @description Required when the amount transferred differs from the amount due
+       *     (AMOUNT_MISMATCH_NOTE_REQUIRED).
+       */
+      note?: string
+    }
+    LicenseAdminServiceExtendSubscriptionBody: {
+      /**
+       * Format: int32
+       * @description 1 to 366 days added to the current period end (or to now when
+       *     already expired); reactivates past-due and suspended subscriptions.
+       */
+      days: number
+    }
+    LicenseAdminServiceRejectPlanPaymentBody: {
+      reason: string
+    }
+    LicenseServiceCancelPlanPaymentBody: Record<string, never>
+    LicenseServiceSubmitPlanPaymentBody: {
+      payerName: string
+      payerBank?: string
+      payerAccount?: string
+      /** Format: int64 */
+      transferredAmount: string
+      bankTransactionRef?: string
+      /** Format: date-time */
+      paidAt?: string
+      evidence?: components['schemas']['v1PaymentEvidence']
+    }
+    PublicQuoteServiceDecidePublicQuoteBody: {
+      decisions: components['schemas']['v1QuoteLineDecisionInput'][]
+    }
+    QuoteServiceConvertQuoteBody: Record<string, never>
+    QuoteServiceRecordQuoteDecisionBody: {
+      /** @description One decision per line of the quote. */
+      decisions: components['schemas']['v1QuoteLineDecisionInput'][]
+    }
+    QuoteServiceSendQuoteBody: Record<string, never>
+    RepairOrderServiceCloseRepairOrderBody: Record<string, never>
+    SettlementServiceCreateSettlementBody: {
+      repairOrderId: string
+      billingParty?: components['schemas']['v1BillingParty']
+      invoiceRequested?: boolean
+    }
+    SettlementServiceRecordSettlementPaymentBody: {
+      /** Format: int64 */
+      amount: string
+      method: components['schemas']['v1PaymentMethod']
+      note?: string
+      /**
+       * @description Voucher details; each defaults to the billing party's (or customer's)
+       *     name and address and to a standard reason naming the settlement.
+       */
+      payerName?: string
+      payerAddress?: string
+      reason?: string
+    }
+    SettlementServiceVoidSettlementPaymentBody: {
+      reason: string
+    }
+    SupplierServiceActivateSupplierBody: Record<string, never>
+    VehicleServiceActivateVehicleBody: Record<string, never>
+    VehicleServiceChangeVehicleOwnerBody: {
+      /** @description The customer the vehicle moves to; must belong to the same garage. */
+      customerId: string
+      reason?: string
+    }
+    VehicleServiceCorrectVehicleBody: {
+      field: components['schemas']['v1VehicleIdentityField']
+      /** @description The corrected value (the year as digits). */
+      value: string
+      /** @description Why the correction is needed; kept in the audit log. */
+      reason: string
+    }
+    /**
+     * @description Message that represents an arbitrary HTTP body. It should only be used for
+     *     payload formats that can't be represented as JSON, such as raw binary or
+     *     an HTML page.
+     *
+     *
+     *     This message can be used both in streaming and non-streaming API methods in
+     *     the request as well as the response.
+     *
+     *     It can be used as a top-level request field, which is convenient if one
+     *     wants to extract parameters from either the URL or HTTP template into the
+     *     request fields and also want access to the raw HTTP body.
+     *
+     *     Example:
+     *
+     *         message GetResourceRequest {
+     *           // A unique request id.
+     *           string request_id = 1;
+     *
+     *           // The raw HTTP body is bound to this field.
+     *           google.api.HttpBody http_body = 2;
+     *
+     *         }
+     *
+     *         service ResourceService {
+     *           rpc GetResource(GetResourceRequest)
+     *             returns (google.api.HttpBody);
+     *           rpc UpdateResource(google.api.HttpBody)
+     *             returns (google.protobuf.Empty);
+     *
+     *         }
+     *
+     *     Example with streaming methods:
+     *
+     *         service CaldavService {
+     *           rpc GetCalendar(stream google.api.HttpBody)
+     *             returns (stream google.api.HttpBody);
+     *           rpc UpdateCalendar(stream google.api.HttpBody)
+     *             returns (stream google.api.HttpBody);
+     *
+     *         }
+     *
+     *     Use of this type only changes how the request and response bodies are
+     *     handled, all other features will continue to work unchanged.
+     */
+    apiHttpBody: {
+      /** @description The HTTP Content-Type header value specifying the content type of the body. */
+      contentType?: string
+      /**
+       * Format: byte
+       * @description The HTTP request/response body as raw binary.
+       */
+      data?: string
+      /**
+       * @description Application specific response metadata. Must be set in the first response
+       *     for streaming APIs.
+       */
+      extensions?: components['schemas']['protobufAny'][]
+    }
+    /**
+     * @description `Any` contains an arbitrary serialized protocol buffer message along with a
+     *     URL that describes the type of the serialized message.
+     *
+     *     Protobuf library provides support to pack/unpack Any values in the form
+     *     of utility functions or additional generated methods of the Any type.
+     *
+     *     Example 1: Pack and unpack a message in C++.
+     *
+     *         Foo foo = ...;
+     *         Any any;
+     *         any.PackFrom(foo);
+     *         ...
+     *         if (any.UnpackTo(&foo)) {
+     *           ...
+     *         }
+     *
+     *     Example 2: Pack and unpack a message in Java.
+     *
+     *         Foo foo = ...;
+     *         Any any = Any.pack(foo);
+     *         ...
+     *         if (any.is(Foo.class)) {
+     *           foo = any.unpack(Foo.class);
+     *         }
+     *         // or ...
+     *         if (any.isSameTypeAs(Foo.getDefaultInstance())) {
+     *           foo = any.unpack(Foo.getDefaultInstance());
+     *         }
+     *
+     *      Example 3: Pack and unpack a message in Python.
+     *
+     *         foo = Foo(...)
+     *         any = Any()
+     *         any.Pack(foo)
+     *         ...
+     *         if any.Is(Foo.DESCRIPTOR):
+     *           any.Unpack(foo)
+     *           ...
+     *
+     *      Example 4: Pack and unpack a message in Go
+     *
+     *          foo := &pb.Foo{...}
+     *          any, err := anypb.New(foo)
+     *          if err != nil {
+     *            ...
+     *          }
+     *          ...
+     *          foo := &pb.Foo{}
+     *          if err := any.UnmarshalTo(foo); err != nil {
+     *            ...
+     *          }
+     *
+     *     The pack methods provided by protobuf library will by default use
+     *     'type.googleapis.com/full.type.name' as the type URL and the unpack
+     *     methods only use the fully qualified type name after the last '/'
+     *     in the type URL, for example "foo.bar.com/x/y.z" will yield type
+     *     name "y.z".
+     *
+     *     JSON
+     *     ====
+     *     The JSON representation of an `Any` value uses the regular
+     *     representation of the deserialized, embedded message, with an
+     *     additional field `@type` which contains the type URL. Example:
+     *
+     *         package google.profile;
+     *         message Person {
+     *           string first_name = 1;
+     *           string last_name = 2;
+     *         }
+     *
+     *         {
+     *           "@type": "type.googleapis.com/google.profile.Person",
+     *           "firstName": <string>,
+     *           "lastName": <string>
+     *         }
+     *
+     *     If the embedded message type is well-known and has a custom JSON
+     *     representation, that representation will be embedded adding a field
+     *     `value` which holds the custom JSON in addition to the `@type`
+     *     field. Example (for message [google.protobuf.Duration][]):
+     *
+     *         {
+     *           "@type": "type.googleapis.com/google.protobuf.Duration",
+     *           "value": "1.212s"
+     *         }
+     */
+    protobufAny: {
+      /**
+       * @description A URL/resource name that uniquely identifies the type of the serialized
+       *     protocol buffer message. This string must contain at least
+       *     one "/" character. The last segment of the URL's path must represent
+       *     the fully qualified name of the type (as in
+       *     `path/google.protobuf.Duration`). The name should be in a canonical form
+       *     (e.g., leading "." is not accepted).
+       *
+       *     In practice, teams usually precompile into the binary all types that they
+       *     expect it to use in the context of Any. However, for URLs which use the
+       *     scheme `http`, `https`, or no scheme, one can optionally set up a type
+       *     server that maps type URLs to message definitions as follows:
+       *
+       *     * If no scheme is provided, `https` is assumed.
+       *     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+       *       value in binary format, or produce an error.
+       *     * Applications are allowed to cache lookup results based on the
+       *       URL, or have them precompiled into a binary to avoid any
+       *       lookup. Therefore, binary compatibility needs to be preserved
+       *       on changes to types. (Use versioned type names to manage
+       *       breaking changes.)
+       *
+       *     Note: this functionality is not currently available in the official
+       *     protobuf release, and it is not used for type URLs beginning with
+       *     type.googleapis.com. As of May 2023, there are no widely used type server
+       *     implementations and no plans to implement one.
+       *
+       *     Schemes other than `http`, `https` (or the empty scheme) might be
+       *     used with implementation specific semantics.
+       */
+      '@type'?: string
+    } & {
+      [key: string]: unknown
+    }
+    /**
+     * @description Represents a day of the week.
+     *
+     *      - MONDAY: Monday
+     *      - TUESDAY: Tuesday
+     *      - WEDNESDAY: Wednesday
+     *      - THURSDAY: Thursday
+     *      - FRIDAY: Friday
+     *      - SATURDAY: Saturday
+     *      - SUNDAY: Sunday
+     * @enum {string}
+     */
+    typeDayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY'
+    v1AcceptGarageLinkResponse: {
+      link?: components['schemas']['v1GarageLink']
+    }
+    v1AcceptInvitationResponse: {
+      invitation?: components['schemas']['v1Invitation']
+    }
+    v1ActivateCustomerResponse: {
+      customer?: components['schemas']['v1Customer']
+    }
+    v1ActivateCustomerTaxProfileResponse: {
+      taxProfile?: components['schemas']['v1CustomerTaxProfile']
+    }
+    v1ActivatePartResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    v1ActivateSupplierResponse: {
+      supplier?: components['schemas']['v1Supplier']
+    }
+    v1ActivateVehicleResponse: {
+      vehicle?: components['schemas']['v1Vehicle']
+    }
+    v1AddPartImageResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    v1AdjustCreditResponse: {
+      entry?: components['schemas']['v1CreditLedgerEntry']
+    }
+    /** @description AdminPlanPaymentRequest is one row of the platform admin's review queue. */
+    v1AdminPlanPaymentRequest: {
+      request?: components['schemas']['v1PlanPaymentRequest']
+      subscriptionId?: string
+      userEmail?: string
+      userName?: string
+      currentPlan?: components['schemas']['v1Plan']
+      usage?: components['schemas']['v1Usage']
+    }
+    v1ApprovePlanPaymentResponse: {
+      subscription?: components['schemas']['v1Subscription']
+    }
+    /**
+     * @description AuthProvider is how the user signed up (FR-IAM-01).
+     * @enum {string}
+     */
+    v1AuthProvider: 'AUTH_PROVIDER_EMAIL' | 'AUTH_PROVIDER_GOOGLE'
+    /**
+     * @description BankDetails is a bank account that money is paid into. Shared by every
+     *     record that carries one (suppliers today; the garage's legal profile and
+     *     customers' tax profiles later).
+     */
+    v1BankDetails: {
+      bankName?: string
+      accountNumber?: string
+      /** @description Name the account is registered under. */
+      accountHolder?: string
+    }
+    /** @enum {string} */
+    v1BillingCycle: 'BILLING_CYCLE_MONTHLY' | 'BILLING_CYCLE_YEARLY'
+    /**
+     * @description BillingParty is who a quote or settlement is billed to (FR-CUS-07). A
+     *     client sends only tax_profile_id; the other fields are the snapshot kept
+     *     on the document, so later edits of the profile never change a document
+     *     already issued. Without a tax_profile_id the customer is billed under
+     *     their own name as a retail receipt.
+     */
+    v1BillingParty: {
+      taxProfileId?: string
+      kind?: components['schemas']['v1TaxProfileKind']
+      readonly legalName?: string
+      readonly taxId?: string
+      readonly address?: string
+      /** @description Where an e-invoice is sent. */
+      readonly invoiceEmail?: string
+    }
+    v1CancelPlanPaymentResponse: {
+      request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    /**
+     * @description CandidateMembership is where a looked-up user stands with the garage.
+     * @enum {string}
+     */
+    v1CandidateMembership: 'CANDIDATE_MEMBERSHIP_NONE' | 'CANDIDATE_MEMBERSHIP_MEMBER' | 'CANDIDATE_MEMBERSHIP_INVITED'
+    v1ChangeVehicleOwnerResponse: {
+      vehicle?: components['schemas']['v1Vehicle']
+    }
+    v1CloseRepairOrderResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
+    }
+    v1ConfirmCustomerUserLinkResponse: {
+      link?: components['schemas']['v1CustomerUserLink']
+    }
+    v1ConvertQuoteResponse: {
+      quote?: components['schemas']['v1Quote']
+      /**
+       * @description The draft repair order created from the quote's approved lines
+       *     (FR-QUO-04); managed further by the Repair Order module (Release 1.3).
+       */
+      repairOrderId?: string
+    }
+    v1CorrectVehicleResponse: {
+      vehicle?: components['schemas']['v1Vehicle']
+    }
+    v1CreateCustomerResponse: {
+      customer?: components['schemas']['v1Customer']
+    }
+    v1CreateCustomerTaxProfileResponse: {
+      taxProfile?: components['schemas']['v1CustomerTaxProfile']
+    }
+    v1CreateGarageResponse: {
+      garage?: components['schemas']['v1Garage']
+    }
+    v1CreateInvitationResponse: {
+      invitation?: components['schemas']['v1Invitation']
+    }
+    v1CreatePartCategoryResponse: {
+      category?: components['schemas']['v1PartCategory']
+    }
+    v1CreatePartResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    v1CreatePlanPaymentRequestRequest: {
+      planId: string
+      kind: components['schemas']['v1PlanPaymentKind']
+    }
+    v1CreatePlanPaymentRequestResponse: {
+      request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    v1CreatePlanResponse: {
+      plan?: components['schemas']['v1Plan']
+    }
+    v1CreateQuoteResponse: {
+      quote?: components['schemas']['v1Quote']
+    }
+    v1CreateRepairOrderResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
+    }
+    v1CreateRoleResponse: {
+      role?: components['schemas']['v1Role']
+    }
+    v1CreateSettlementResponse: {
+      settlement?: components['schemas']['v1Settlement']
+    }
+    v1CreateStaffGroupResponse: {
+      group?: components['schemas']['v1StaffGroup']
+    }
+    v1CreateStockReceiptResponse: {
+      transaction?: components['schemas']['v1StockTransaction']
+      stockLevel?: components['schemas']['v1StockLevel']
+    }
+    v1CreateSupplierResponse: {
+      supplier?: components['schemas']['v1Supplier']
+    }
+    v1CreateUnitResponse: {
+      unit?: components['schemas']['v1Unit']
+    }
+    v1CreateVehicleResponse: {
+      vehicle?: components['schemas']['v1Vehicle']
+    }
+    /**
+     * @description CreditEntryKind is why the account credit changed (FR-LIC-09).
+     *
+     *      - CREDIT_ENTRY_KIND_EARNED: A downgrade's surplus.
+     *      - CREDIT_ENTRY_KIND_APPLIED: Credit used by a payment.
+     *      - CREDIT_ENTRY_KIND_ADJUSTMENT: A correction by a platform admin.
+     * @enum {string}
+     */
+    v1CreditEntryKind: 'CREDIT_ENTRY_KIND_EARNED' | 'CREDIT_ENTRY_KIND_APPLIED' | 'CREDIT_ENTRY_KIND_ADJUSTMENT'
+    /** @description CreditLedgerEntry is one change of the owner's account credit. */
+    v1CreditLedgerEntry: {
+      kind?: components['schemas']['v1CreditEntryKind']
+      /**
+       * Format: int64
+       * @description Signed VND: positive adds credit, negative uses it.
+       */
+      amount?: string
+      /** Format: int64 */
+      balanceAfter?: string
+      planPaymentRequestId?: string
+      note?: string
+      /** Format: date-time */
+      createdAt?: string
+    }
+    /**
+     * @description Customer is a vehicle owner served by one garage (FR-CUS-01). It needs no
+     *     VietGara user: a walk-in customer is just a profile the garage keeps.
+     */
+    v1Customer: {
+      readonly id?: string
+      readonly garageId?: string
+      fullName: string
+      /** @description Unique per garage among live customers; stored normalized. */
+      phone?: string
+      email?: string
+      address?: string
+      /** @description Personal-data consent (Decree 13/2023/ND-CP); every change is logged. */
+      personalDataConsent?: boolean
+      /** Format: date-time */
+      readonly personalDataConsentAt?: string
+      /** Format: int32 */
+      readonly vehicleCount?: number
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      /**
+       * @description False once the customer was deactivated instead of deleted (FR-CAT-07);
+       *     an inactive customer is left out of pickers.
+       */
+      readonly isActive?: boolean
+      linkStatus?: components['schemas']['v1CustomerUserLinkStatus']
+    }
+    /**
+     * @description CustomerTaxProfile is a legal identity a customer can be billed under
+     *     (FR-CUS-07): at most one personal profile and any number of company
+     *     profiles.
+     */
+    v1CustomerTaxProfile: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly customerId?: string
+      kind: components['schemas']['v1TaxProfileKind']
+      /** @description The company's legal name, or the person's name. */
+      legalName: string
+      /** @description 10 digits, or 13 with the branch suffix. */
+      taxId?: string
+      address?: string
+      /** @description Where an e-invoice is sent. */
+      invoiceEmail?: string
+      /** @description The profile a document is billed to when none is chosen. */
+      isDefault?: boolean
+      /** @description False once deactivated instead of deleted (FR-CAT-07). */
+      readonly isActive?: boolean
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description CustomerUserLink is the link between one customer profile and a user.
+     *     The garage never sees which user it is, only the state of the link.
+     */
+    v1CustomerUserLink: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly customerId?: string
+      status?: components['schemas']['v1CustomerUserLinkStatus']
+      channel?: components['schemas']['v1CustomerUserLinkChannel']
+      /** Format: date-time */
+      readonly requestedAt?: string
+      /** Format: date-time */
+      readonly linkedAt?: string
+    }
+    /**
+     * @description CustomerUserLinkChannel is how a link was confirmed (FR-CUS-06).
+     *
+     *      - CUSTOMER_USER_LINK_CHANNEL_OTP: The user told the garage a one-time code.
+     *      - CUSTOMER_USER_LINK_CHANNEL_APP: The user accepted in the Customer App.
+     *      - CUSTOMER_USER_LINK_CHANNEL_AUTO_EMAIL: A verified user e-mail matched the profile at sign-in.
+     * @enum {string}
+     */
+    v1CustomerUserLinkChannel: 'CUSTOMER_USER_LINK_CHANNEL_OTP' | 'CUSTOMER_USER_LINK_CHANNEL_APP' | 'CUSTOMER_USER_LINK_CHANNEL_AUTO_EMAIL'
+    /**
+     * @description CustomerUserLinkStatus is the state of the link between a garage's
+     *     customer profile and a VietGara user (FR-CUS-06). A customer needs no
+     *     user; UNSPECIFIED means the profile has never been linked.
+     *
+     *      - CUSTOMER_USER_LINK_STATUS_REQUESTED: The garage asked; the user has not answered yet.
+     *      - CUSTOMER_USER_LINK_STATUS_UNLINKED: Ended by either side.
+     * @enum {string}
+     */
+    v1CustomerUserLinkStatus:
+      | 'CUSTOMER_USER_LINK_STATUS_REQUESTED'
+      | 'CUSTOMER_USER_LINK_STATUS_LINKED'
+      | 'CUSTOMER_USER_LINK_STATUS_DECLINED'
+      | 'CUSTOMER_USER_LINK_STATUS_UNLINKED'
+    /** @description DailyHours is the opening time of one weekday (FR-TEN-05). */
+    v1DailyHours: {
+      day?: components['schemas']['typeDayOfWeek']
+      /** @description True when the garage does not open that day. */
+      closed?: boolean
+      /** @description "HH:MM", 24-hour clock, garage timezone. */
+      open?: string
+      close?: string
+    }
+    v1DecidePublicQuoteResponse: {
+      quote?: components['schemas']['v1PublicQuote']
+    }
+    v1DeclineGarageLinkResponse: {
+      link?: components['schemas']['v1GarageLink']
+    }
+    v1DeclineInvitationResponse: {
+      invitation?: components['schemas']['v1Invitation']
+    }
+    v1DeleteCustomerResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeleteCustomerTaxProfileResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeleteFileResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeleteGarageLogoResponse: {
+      garage?: components['schemas']['v1Garage']
+    }
+    /**
+     * @description DeleteOutcome is what a DELETE did (FR-CAT-07, the delete-or-deactivate
+     *     rule). An object that nothing references is soft-deleted; one that is
+     *     still in use is only deactivated: it disappears from pickers, stays on
+     *     the documents that use it, and staff can reactivate it.
+     *
+     *     Every deletable resource takes a `dry_run` flag (`?dryRun=true`) that
+     *     answers with the outcome without changing anything, so a confirmation
+     *     dialog can tell the user which one will happen.
+     * @enum {string}
+     */
+    v1DeleteOutcome: 'DELETE_OUTCOME_DELETED' | 'DELETE_OUTCOME_DEACTIVATED'
+    v1DeletePartCategoryResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeletePartResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeleteQuoteResponse: Record<string, never>
+    v1DeleteRoleResponse: Record<string, never>
+    v1DeleteStaffGroupResponse: Record<string, never>
+    v1DeleteStaffResponse: Record<string, never>
+    v1DeleteSupplierResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeleteUnitResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    v1DeleteVehicleResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
+    /**
+     * @description Entitlements is what a garage may currently use, derived from its
+     *     owner's subscription; the web admin uses it to lock UI.
+     */
+    v1Entitlements: {
+      garageId?: string
+      status?: components['schemas']['v1SubscriptionStatus']
+      planCode?: string
+      features?: components['schemas']['v1Feature'][]
+      limits?: components['schemas']['v1PlanLimits']
+      readOnly?: boolean
+      /** Format: date-time */
+      currentPeriodEnd?: string
+    }
+    /** @description Error describes why a request failed. */
+    v1Error: {
+      /**
+       * @description Stable, machine-readable code the client translates, e.g.
+       *     VALIDATION_ERROR, EMAIL_NOT_VERIFIED, OTP_EXPIRED, PLAN_LIMIT_REACHED.
+       */
+      code?: string
+      /**
+       * @description English, developer-facing description; clients show a localized text
+       *     for `code` instead.
+       */
+      message?: string
+      /** @description Field-level problems for VALIDATION_ERROR. */
+      details?: components['schemas']['v1ErrorDetail'][]
+    }
+    /** @description ErrorDetail is one invalid request field. */
+    v1ErrorDetail: {
+      /** @description JSON name of the field, e.g. "email" or "garage.name". */
+      field?: string
+      /** @description Machine-readable problem: required, invalid, too_long, taken, ... */
+      issue?: string
+    }
+    /**
+     * @description ErrorResponse is the body of every non-2xx REST response:
+     *     `{"error": {"code", "message", "details"}}`.
+     */
+    v1ErrorResponse: {
+      error?: components['schemas']['v1Error']
+    }
+    v1ExtendSubscriptionResponse: {
+      subscription?: components['schemas']['v1Subscription']
+    }
+    /**
+     * @description Feature is a module a plan may include.
+     * @enum {string}
+     */
+    v1Feature:
+      | 'FEATURE_CUSTOMERS'
+      | 'FEATURE_QUOTES'
+      | 'FEATURE_REPAIR_ORDERS'
+      | 'FEATURE_INVENTORY'
+      | 'FEATURE_BILLING'
+      | 'FEATURE_DOCUMENTS'
+      | 'FEATURE_REPORTS'
+    /**
+     * @description File is one uploaded object registered in the garage's file registry.
+     *     Business records refer to a file by id, never by URL, so a CDN or bucket
+     *     change breaks nothing.
+     */
+    v1File: {
+      readonly id?: string
+      readonly garageId?: string
+      kind: components['schemas']['v1FileKind']
+      /** @description What the file belongs to, e.g. "garage" or "part". */
+      entityType: string
+      entityId: string
+      readonly contentType?: string
+      /** Format: int64 */
+      readonly size?: string
+      /** @description Hex-encoded SHA-256 of the content. */
+      readonly sha256?: string
+      /** @description Set for public kinds only; private files use GetFileUrl. */
+      readonly url?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /**
+     * @description FileKind says what a file is for, and so whether it is public. Every kind
+     *     added later (repair photo, customer document, claim document, export) is
+     *     private, except part images and served through short-lived signed URLs.
+     *
+     *      - FILE_KIND_LOGO: A garage logo (public).
+     *      - FILE_KIND_PAYMENT_EVIDENCE: The screenshot of a subscription transfer (private).
+     *      - FILE_KIND_PLATFORM_QR: The platform's bank QR code (private, read through a signed URL).
+     *      - FILE_KIND_PART_IMAGE: An image of a part (public, at most three per part, Release 6.0).
+     * @enum {string}
+     */
+    v1FileKind: 'FILE_KIND_LOGO' | 'FILE_KIND_PAYMENT_EVIDENCE' | 'FILE_KIND_PLATFORM_QR' | 'FILE_KIND_PART_IMAGE'
+    /** @description Garage is one tenant (branch) owned by a user (FR-TEN-01/02). */
+    v1Garage: {
+      readonly id?: string
+      readonly ownerUserId?: string
+      name: string
+      taxCode?: string
+      address?: string
+      phone?: string
+      email?: string
+      /** @description Set through UploadGarageLogo; the logo is a file of the file registry. */
+      readonly logoUrl?: string
+      /** @description IANA timezone, default Asia/Ho_Chi_Minh. */
+      timezone?: string
+      /** @description ISO 4217, default VND. */
+      currency?: string
+      status?: components['schemas']['v1GarageStatus']
+      operatingHours?: components['schemas']['v1DailyHours'][]
+      numbering?: components['schemas']['v1NumberingTemplates']
+      access?: components['schemas']['v1GarageAccess']
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      defaultQuoteApprovalMode?: components['schemas']['v1QuoteApprovalMode']
+      /**
+       * @description The garage's legal identity, printed in the header of every document
+       *     with the logo and tax_code (FR-TEN-06). Changing it never rewrites a
+       *     document already issued: each document keeps a snapshot.
+       */
+      legalName?: string
+      legalAddress?: string
+      /** @description The legal representative. */
+      representative?: string
+      bank?: components['schemas']['v1BankDetails']
+    }
+    /** @description GarageAccess is what the signed-in user may do in the garage. */
+    v1GarageAccess: {
+      owner?: boolean
+      permissions?: components['schemas']['v1Permission'][]
+    }
+    /**
+     * @description GarageLink is a garage's customer profile that is linked, or is waiting to
+     *     be linked, to the signed-in user (FR-CUS-06, FR-CAPP-05). Suppliers never
+     *     appear here.
+     */
+    v1GarageLink: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly garageName?: string
+      readonly garageAddress?: string
+      readonly garagePhone?: string
+      readonly customerId?: string
+      readonly customerName?: string
+      status?: components['schemas']['v1CustomerUserLinkStatus']
+      /** Format: date-time */
+      readonly requestedAt?: string
+      /** Format: date-time */
+      readonly linkedAt?: string
+    }
+    /**
+     * @description GarageStatus: an inactive garage is hidden from staff and read-only for
+     *     its owner until reactivated (FR-TEN-02).
+     * @enum {string}
+     */
+    v1GarageStatus: 'GARAGE_STATUS_ACTIVE' | 'GARAGE_STATUS_INACTIVE'
+    v1GetCustomerResponse: {
+      customer?: components['schemas']['v1Customer']
+    }
+    v1GetCustomerTaxProfileResponse: {
+      taxProfile?: components['schemas']['v1CustomerTaxProfile']
+    }
+    v1GetFileUrlResponse: {
+      /** @description A short-lived signed URL for a private file, or the public URL. */
+      url?: string
+      /** Format: date-time */
+      expiresAt?: string
+    }
+    v1GetGarageEntitlementsResponse: {
+      entitlements?: components['schemas']['v1Entitlements']
+    }
+    v1GetGarageResponse: {
+      garage?: components['schemas']['v1Garage']
+    }
+    v1GetMeResponse: {
+      user?: components['schemas']['v1User']
+    }
+    v1GetMyInvitationResponse: {
+      invitation?: components['schemas']['v1Invitation']
+    }
+    v1GetMyPlanPaymentRequestResponse: {
+      request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    v1GetMySubscriptionResponse: {
+      subscription?: components['schemas']['v1Subscription']
+    }
+    v1GetMyVehicleHistoryResponse: {
+      /** @description Quotes, repair orders and settlements of the vehicle, newest first. */
+      data?: components['schemas']['v1VehicleHistoryEntry'][]
+    }
+    v1GetPartResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    v1GetPaymentInstructionsResponse: {
+      instructions?: components['schemas']['v1PaymentInstructions']
+    }
+    v1GetPlanPaymentRequestResponse: {
+      request?: components['schemas']['v1AdminPlanPaymentRequest']
+    }
+    v1GetPlatformPaymentSettingsResponse: {
+      settings?: components['schemas']['v1PlatformPaymentSettings']
+    }
+    v1GetPublicQuoteResponse: {
+      quote?: components['schemas']['v1PublicQuote']
+    }
+    v1GetQuoteResponse: {
+      quote?: components['schemas']['v1Quote']
+    }
+    v1GetRepairOrderResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
+    }
+    v1GetRevenueReportResponse: {
+      points?: components['schemas']['v1RevenuePoint'][]
+      /**
+       * Format: int64
+       * @description Sum of every point's amount, over the requested range.
+       */
+      totalAmount?: string
+    }
+    v1GetRoleResponse: {
+      role?: components['schemas']['v1Role']
+    }
+    v1GetSettlementResponse: {
+      settlement?: components['schemas']['v1Settlement']
+    }
+    v1GetStockLevelResponse: {
+      stockLevel?: components['schemas']['v1StockLevel']
+    }
+    v1GetSupplierResponse: {
+      supplier?: components['schemas']['v1Supplier']
+    }
+    v1GetVehicleHistoryResponse: {
+      data?: components['schemas']['v1VehicleHistoryEntry'][]
+    }
+    v1GetVehicleResponse: {
+      vehicle?: components['schemas']['v1Vehicle']
+    }
+    /**
+     * @description Invitation asks an existing user to join a garage (FR-TEN-04). It is
+     *     e-mailed to the user and expires after 7 days.
+     */
+    v1Invitation: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly garageName?: string
+      userId?: string
+      readonly fullName?: string
+      readonly email?: string
+      /** @description Staff groups the member joins on acceptance. */
+      groupIds?: string[]
+      status?: components['schemas']['v1InvitationStatus']
+      readonly invitedByName?: string
+      /** Format: date-time */
+      readonly expiresAt?: string
+      /** Format: date-time */
+      readonly respondedAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /** @enum {string} */
+    v1InvitationStatus:
+      | 'INVITATION_STATUS_PENDING'
+      | 'INVITATION_STATUS_ACCEPTED'
+      | 'INVITATION_STATUS_DECLINED'
+      | 'INVITATION_STATUS_REVOKED'
+      | 'INVITATION_STATUS_EXPIRED'
+    v1ListAllPlansResponse: {
+      data?: components['schemas']['v1Plan'][]
+    }
+    v1ListCustomerTaxProfilesResponse: {
+      data?: components['schemas']['v1CustomerTaxProfile'][]
+    }
+    v1ListCustomersResponse: {
+      data?: components['schemas']['v1Customer'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListGaragesResponse: {
+      /**
+       * @description Garages the user owns or is an active member of; staff do not see
+       *     inactive garages.
+       */
+      data?: components['schemas']['v1Garage'][]
+    }
+    v1ListInvitationsResponse: {
+      data?: components['schemas']['v1Invitation'][]
+    }
+    v1ListMyCreditLedgerResponse: {
+      data?: components['schemas']['v1CreditLedgerEntry'][]
+    }
+    v1ListMyGarageLinksResponse: {
+      /** @description Link requests waiting for an answer and the garages already linked. */
+      data?: components['schemas']['v1GarageLink'][]
+    }
+    v1ListMyInvitationsResponse: {
+      data?: components['schemas']['v1Invitation'][]
+    }
+    v1ListMyPlanPaymentRequestsResponse: {
+      data?: components['schemas']['v1PlanPaymentRequest'][]
+    }
+    v1ListMyVehiclesResponse: {
+      /**
+       * @description One entry per garage whose customer record carries the user's
+       *     verified e-mail, by garage name.
+       */
+      data?: components['schemas']['v1MyGarage'][]
+    }
+    v1ListMyWorkResponse: {
+      /**
+       * @description Open repair orders (not closed) with at least one line assigned to the
+       *     technician, across every garage where they are an active member
+       *     allowed to read repair orders; oldest first.
+       */
+      data?: components['schemas']['v1WorkOrder'][]
+    }
+    /** @description The whole tree as a flat list with parent ids. */
+    v1ListPartCategoriesResponse: {
+      data?: components['schemas']['v1PartCategory'][]
+    }
+    v1ListPartsResponse: {
+      data?: components['schemas']['v1Part'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListPermissionsResponse: {
+      data?: components['schemas']['v1PermissionInfo'][]
+    }
+    v1ListPlanPaymentRequestsResponse: {
+      data?: components['schemas']['v1AdminPlanPaymentRequest'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListPlansResponse: {
+      /** @description Public, active plans, cheapest first. */
+      data?: components['schemas']['v1Plan'][]
+    }
+    v1ListQuotesResponse: {
+      data?: components['schemas']['v1Quote'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListRepairOrdersResponse: {
+      data?: components['schemas']['v1RepairOrder'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListRolesResponse: {
+      data?: components['schemas']['v1Role'][]
+    }
+    v1ListSettlementsResponse: {
+      data?: components['schemas']['v1Settlement'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListStaffGroupsResponse: {
+      data?: components['schemas']['v1StaffGroup'][]
+    }
+    v1ListStaffResponse: {
+      data?: components['schemas']['v1Staff'][]
+    }
+    v1ListStockLevelsResponse: {
+      data?: components['schemas']['v1StockLevel'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListStockTransactionsResponse: {
+      data?: components['schemas']['v1StockTransaction'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListSubscriptionsResponse: {
+      data?: components['schemas']['v1SubscriptionSummary'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListSuppliersResponse: {
+      data?: components['schemas']['v1Supplier'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListUnitsResponse: {
+      data?: components['schemas']['v1Unit'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListVehiclesResponse: {
+      data?: components['schemas']['v1Vehicle'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    /**
+     * @description Locale is the user's interface and e-mail language. Vietnamese is the
+     *     default (NFR-US-01).
+     * @enum {string}
+     */
+    v1Locale: 'LOCALE_VI' | 'LOCALE_EN'
+    v1LoginRequest: {
+      email: string
+      password: string
+    }
+    v1LoginResponse: {
+      session?: components['schemas']['v1Session']
+    }
+    v1LogoutRequest: {
+      refreshToken: string
+    }
+    v1LogoutResponse: Record<string, never>
+    v1LookupCustomersResponse: {
+      /** @description The garage's own customers matching the contact. */
+      data?: components['schemas']['v1Customer'][]
+      /**
+       * @description Whether a VietGara user has this verified phone or e-mail. Nothing else
+       *     about the user is ever returned.
+       */
+      userExists?: boolean
+    }
+    v1LookupStaffCandidateResponse: {
+      candidate?: components['schemas']['v1StaffCandidate']
+    }
+    /** @description MyGarage is a garage where the signed-in person is a customer. */
+    v1MyGarage: {
+      readonly garageId?: string
+      readonly name?: string
+      readonly address?: string
+      readonly phone?: string
+      /** @description The garage's customer record matched to the signed-in person. */
+      readonly customerId?: string
+      readonly customerName?: string
+      /** @description The vehicles on that customer record. */
+      readonly vehicles?: components['schemas']['v1Vehicle'][]
+    }
+    /**
+     * @description NumberingTemplates configures document numbers (FR-TEN-05). Placeholders:
+     *     {YYYY}, {YY}, {MM}, {DD} and {SEQ:n} (sequence padded to n digits),
+     *     e.g. "BG-{YYYY}{MM}-{SEQ:4}".
+     */
+    v1NumberingTemplates: {
+      quote?: string
+      repairOrder?: string
+      /** @description Settlement document numbers (Release 1.4). */
+      settlement?: string
+      /** @description Payment voucher (phiếu thu) numbers (FR-BIL-05, Release 5.0). */
+      paymentVoucher?: string
+    }
+    /** @description OtpChallenge tells the client how long the e-mailed OTP is valid. */
+    v1OtpChallenge: {
+      /** Format: date-time */
+      expiresAt?: string
+      /**
+       * Format: date-time
+       * @description A new OTP cannot be requested before this time.
+       */
+      resendAvailableAt?: string
+    }
+    /**
+     * @description PackagingUnit is one non-base unit of a part with its factor to the base
+     *     unit (FR-CAT-02): 1 case = 24 cans is factor "24" when the base unit is
+     *     the can. The base unit has no row.
+     */
+    v1PackagingUnit: {
+      unitId: string
+      /** @description Base units in one of this unit; a decimal string above zero. */
+      factor: string
+      /**
+       * Format: int64
+       * @description VND for one of this unit. On input it is an override; on output it is
+       *     the override or, when none is set, the part's sale_price times factor.
+       */
+      salePrice?: string
+      readonly unitName?: string
+      readonly unitAbbreviation?: string
+      /** @description True when sale_price is an override rather than derived. */
+      readonly salePriceOverridden?: boolean
+    }
+    /**
+     * @description Pagination describes the page returned by every List call (API
+     *     Specification Section 1.1): lists are requested with `page` (1-based,
+     *     default 1) and `page_size` (default 20, max 100).
+     */
+    v1Pagination: {
+      /**
+       * Format: int32
+       * @description Total number of items matching the query, across all pages.
+       */
+      total?: number
+      /**
+       * Format: int32
+       * @description The 1-based page that was returned.
+       */
+      page?: number
+      /**
+       * Format: int32
+       * @description The page size that was applied.
+       */
+      pageSize?: number
+    }
+    /** @description Part is one part code of a garage (FR-INV-01, FR-CAT-01..04, FR-CAT-09). */
+    v1Part: {
+      readonly id?: string
+      readonly garageId?: string
+      sku: string
+      name: string
+      /**
+       * @description The unit stock, thresholds and document quantities are kept in. It
+       *     cannot change once the part has stock movements, packaging units or
+       *     document lines.
+       */
+      baseUnitId: string
+      readonly baseUnitName?: string
+      readonly baseUnitAbbreviation?: string
+      /**
+       * Format: int64
+       * @description What the customer pays per base unit, whole VND (FR-CAT-09).
+       */
+      salePrice?: string
+      categoryId?: string
+      readonly categoryName?: string
+      brand?: string
+      isActive?: boolean
+      /**
+       * @description A decimal string in the base unit; the low-stock badge shows at or
+       *     below it (FR-INV-04, display half).
+       */
+      reorderThreshold?: string
+      readonly packagingUnits?: components['schemas']['v1PackagingUnit'][]
+      /** @description At most three, in display order; the first is the thumbnail. */
+      readonly images?: components['schemas']['v1PartImage'][]
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description PartCategory is one node of the category tree of at most three levels
+     *     (FR-CAT-03), e.g. Engine oil > Synthetic > 5W-30.
+     */
+    v1PartCategory: {
+      readonly id?: string
+      readonly garageId?: string
+      parentId?: string
+      name: string
+      isActive?: boolean
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /** @description PartImage is one image of a part (FR-CAT-04), a file of kind part_image. */
+    v1PartImage: {
+      fileId?: string
+      /** @description Public URL; the part_image kind needs no signature. */
+      url?: string
+    }
+    /** @description PaymentEvidence is the screenshot of the transfer. */
+    v1PaymentEvidence: {
+      /** Format: byte */
+      content: string
+      /** @description image/png, image/jpeg, image/webp or application/pdf, at most 5 MB. */
+      contentType: string
+    }
+    /**
+     * @description PaymentInstructions are the platform's payment details shown with a
+     *     payment request (FR-LIC-10).
+     */
+    v1PaymentInstructions: {
+      bankName?: string
+      accountNumber?: string
+      accountHolder?: string
+      branch?: string
+      transferInstructions?: string
+      /** @description The QR code image, a signed URL valid for 5 minutes; empty when none. */
+      readonly qrUrl?: string
+    }
+    /**
+     * @description PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE
+     *     is recorded manually in Release 1.4 (staff sees a bank app or gateway
+     *     dashboard confirmation and records it); automatic confirmation via a
+     *     payment gateway webhook is Release 2.0 (FR-PAY-02).
+     * @enum {string}
+     */
+    v1PaymentMethod: 'PAYMENT_METHOD_CASH' | 'PAYMENT_METHOD_BANK_TRANSFER' | 'PAYMENT_METHOD_ONLINE'
+    /**
+     * @description Permission is one action a staff member may perform in a garage
+     *     (FR-IAM-03). The catalog is fixed by the platform and grouped by module,
+     *     each module offering a read and/or a write action; garage owners combine
+     *     permissions into roles. A write permission includes the read permission
+     *     of its module. Owners always hold every permission; every active member
+     *     may read the garage profile.
+     *
+     *      - PERMISSION_GARAGE_WRITE: Edit the garage profile, configuration and logo.
+     *      - PERMISSION_STAFF_WRITE: Invite, activate/deactivate and remove staff, and change their groups.
+     *      - PERMISSION_CUSTOMER_READ: Customers and their vehicles.
+     *      - PERMISSION_SUPPLIER_READ: The garage's suppliers (FR-SUP-01).
+     *      - PERMISSION_CUSTOMER_CORRECT: Correct a locked vehicle identity field and move a vehicle to another
+     *     customer (FR-CUS-09). Held by the manager role by default.
+     *      - PERMISSION_CATALOGUE_READ: Parts, units, packaging, categories, prices and images (Release 6.0).
+     * @enum {string}
+     */
+    v1Permission:
+      | 'PERMISSION_GARAGE_WRITE'
+      | 'PERMISSION_STAFF_READ'
+      | 'PERMISSION_STAFF_WRITE'
+      | 'PERMISSION_CUSTOMER_READ'
+      | 'PERMISSION_CUSTOMER_WRITE'
+      | 'PERMISSION_SUPPLIER_READ'
+      | 'PERMISSION_SUPPLIER_WRITE'
+      | 'PERMISSION_SUBSCRIPTION_READ'
+      | 'PERMISSION_QUOTE_READ'
+      | 'PERMISSION_QUOTE_WRITE'
+      | 'PERMISSION_REPAIR_ORDER_READ'
+      | 'PERMISSION_REPAIR_ORDER_WRITE'
+      | 'PERMISSION_INVENTORY_READ'
+      | 'PERMISSION_INVENTORY_WRITE'
+      | 'PERMISSION_BILLING_READ'
+      | 'PERMISSION_BILLING_WRITE'
+      | 'PERMISSION_REPORT_READ'
+      | 'PERMISSION_CUSTOMER_CORRECT'
+      | 'PERMISSION_CATALOGUE_READ'
+      | 'PERMISSION_CATALOGUE_WRITE'
+    /** @description PermissionInfo describes one catalog entry. */
+    v1PermissionInfo: {
+      permission?: components['schemas']['v1Permission']
+      /**
+       * @description Module the permission belongs to, e.g. "customer", used to group the
+       *     role editor.
+       */
+      module?: string
+      /** @description "read" or "write": the permission's column in the role editor. */
+      action?: string
+    }
+    /** @description Plan is a subscription offer (FR-LIC-05). */
+    v1Plan: {
+      readonly id?: string
+      /** @description Unique, e.g. "pro"; "trial" is the plan every new owner starts on. */
+      code: string
+      name: string
+      description?: string
+      /**
+       * Format: int64
+       * @description Price per billing cycle in the smallest currency unit (VND).
+       */
+      price?: string
+      currency?: string
+      billingCycle?: components['schemas']['v1BillingCycle']
+      limits: components['schemas']['v1PlanLimits']
+      features?: components['schemas']['v1Feature'][]
+      /** @description Shown to garage owners. */
+      isPublic?: boolean
+      /** @description Inactive plans cannot be chosen; existing subscribers keep them. */
+      isActive?: boolean
+      /** Format: int32 */
+      sortOrder?: number
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /** @description PlanLimits caps usage across all garages of the subscribing owner. */
+    v1PlanLimits: {
+      /** Format: int32 */
+      maxGarages?: number
+      /**
+       * Format: int32
+       * @description Staff members across all garages, excluding the owner and counting
+       *     pending invitations.
+       */
+      maxStaff?: number
+      /**
+       * Format: int32
+       * @description Business documents (quotes, repair orders, settlements) created per
+       *     calendar day (Asia/Ho_Chi_Minh).
+       */
+      maxTransactionsPerDay?: number
+    }
+    /**
+     * @description PlanPaymentKind says what a payment request pays for (FR-LIC-07).
+     *
+     *      - PLAN_PAYMENT_KIND_CHANGE: Another plan.
+     *      - PLAN_PAYMENT_KIND_RENEW: The current plan for another period.
+     * @enum {string}
+     */
+    v1PlanPaymentKind: 'PLAN_PAYMENT_KIND_CHANGE' | 'PLAN_PAYMENT_KIND_RENEW'
+    /**
+     * @description PlanPaymentRequest is an owner's request to switch to a plan, or to renew
+     *     the current one, paid by a manual bank transfer (FR-LIC-07). The amounts
+     *     are fixed when it is quoted and honoured at approval.
+     */
+    v1PlanPaymentRequest: {
+      readonly id?: string
+      kind?: components['schemas']['v1PlanPaymentKind']
+      plan?: components['schemas']['v1Plan']
+      status?: components['schemas']['v1PlanPaymentStatus']
+      /** @description The code the owner puts in the transfer note, e.g. "VG-7K2M9Q". */
+      reference?: string
+      /**
+       * Format: int64
+       * @description New plan price, account credit applied, amount to transfer and any
+       *     surplus that becomes credit (VND, FR-LIC-09).
+       */
+      quotedAmount?: string
+      /** Format: int64 */
+      creditApplied?: string
+      /** Format: int64 */
+      amountDue?: string
+      /** Format: int64 */
+      creditSurplus?: string
+      /**
+       * Format: int32
+       * @description Days of the current period and how many are unused (0 after expiry).
+       */
+      periodDays?: number
+      /** Format: int32 */
+      unusedDays?: number
+      instructions?: components['schemas']['v1PaymentInstructions']
+      /** @description The owner's declaration, set once submitted. */
+      payerName?: string
+      payerBank?: string
+      payerAccount?: string
+      /** Format: int64 */
+      transferredAmount?: string
+      bankTransactionRef?: string
+      /** Format: date-time */
+      paidAt?: string
+      /** @description The evidence screenshot, a signed URL valid for 5 minutes. */
+      readonly evidenceUrl?: string
+      /** @description True when the transferred amount differs from amount_due. */
+      amountMismatch?: boolean
+      /** @description The admin's note on approval (required when amount_mismatch). */
+      reviewNote?: string
+      rejectionReason?: string
+      /** Format: date-time */
+      submittedAt?: string
+      /** Format: date-time */
+      reviewedAt?: string
+      /** Format: date-time */
+      createdAt?: string
+    }
+    /**
+     * @description PlanPaymentStatus is the state of a payment request (LLD 3.3).
+     *
+     *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
+     *     transfer yet. A new request replaces it.
+     *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
+     *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
+     * @enum {string}
+     */
+    v1PlanPaymentStatus:
+      | 'PLAN_PAYMENT_STATUS_AWAITING_PAYMENT'
+      | 'PLAN_PAYMENT_STATUS_SUBMITTED'
+      | 'PLAN_PAYMENT_STATUS_APPROVED'
+      | 'PLAN_PAYMENT_STATUS_REJECTED'
+      | 'PLAN_PAYMENT_STATUS_CANCELLED'
+    /** @description PlatformPaymentSettings are the details owners transfer to (FR-LIC-10). */
+    v1PlatformPaymentSettings: {
+      bankName?: string
+      accountNumber?: string
+      accountHolder?: string
+      branch?: string
+      transferInstructions?: string
+      /** @description The QR code, a signed URL valid for 5 minutes; empty when none. */
+      readonly qrUrl?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description PublicQuote is what an unauthenticated customer sees through the
+     *     approval link: no internal identifiers, only what they need to decide.
+     */
+    v1PublicQuote: {
+      number?: string
+      status?: components['schemas']['v1QuoteStatus']
+      garageName?: string
+      customerName?: string
+      vehicleLicensePlate?: string
+      lines?: components['schemas']['v1QuoteLine'][]
+      /** Format: int64 */
+      totalAmount?: string
+      notes?: string
+      /**
+       * Format: date-time
+       * @description The link stops working after this time or once decided.
+       */
+      expiresAt?: string
+    }
+    /** @description Quote is a price estimate awaiting the customer's approval (FR-QUO-01). */
+    v1Quote: {
+      readonly id?: string
+      readonly garageId?: string
+      customerId: string
+      readonly customerName?: string
+      vehicleId: string
+      readonly vehicleLicensePlate?: string
+      /**
+       * @description Assigned from the garage's quote numbering template (FR-TEN-05) when
+       *     the quote is first created.
+       */
+      readonly number?: string
+      status?: components['schemas']['v1QuoteStatus']
+      approvalMode?: components['schemas']['v1QuoteApprovalMode']
+      lines?: components['schemas']['v1QuoteLine'][]
+      /** Format: int64 */
+      readonly totalAmount?: string
+      notes?: string
+      /** Format: date-time */
+      readonly sentAt?: string
+      /** Format: date-time */
+      readonly decidedAt?: string
+      /** Format: date-time */
+      readonly convertedAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      billingParty?: components['schemas']['v1BillingParty']
+    }
+    /**
+     * @description QuoteApprovalMode selects how a quote is approved by the customer
+     *     (FR-QUO-02). Used by both Tenant (a garage's default, FR-TEN-05) and
+     *     Quote & Pricing (the mode of one quote), so it lives here rather than in
+     *     either module's package.
+     *
+     *      - QUOTE_APPROVAL_MODE_LINK: A public approval link is generated; it is e-mailed to the customer
+     *     automatically when they have an e-mail on file (so they are notified
+     *     of the proposed work even if they decide over the phone), and they may
+     *     approve or reject each line online with no login.
+     *      - QUOTE_APPROVAL_MODE_MANUAL: No link is generated or sent. A staff member records the customer's
+     *     decision directly (e.g. approved face to face at the counter), for
+     *     garages that prefer not to depend on the customer's e-mail or a link.
+     * @enum {string}
+     */
+    v1QuoteApprovalMode: 'QUOTE_APPROVAL_MODE_LINK' | 'QUOTE_APPROVAL_MODE_MANUAL'
+    /**
+     * @description QuoteItemType: a quote line is either labor or a part.
+     * @enum {string}
+     */
+    v1QuoteItemType: 'QUOTE_ITEM_TYPE_LABOR' | 'QUOTE_ITEM_TYPE_PART'
+    /** @description QuoteLine is one labor or part line of a quote. */
+    v1QuoteLine: {
+      readonly id?: string
+      itemType: components['schemas']['v1QuoteItemType']
+      /**
+       * @description A parts-catalog reference once the Inventory module ships (Release
+       *     1.3); free text for now.
+       */
+      itemRefId?: string
+      description: string
+      /**
+       * @description Decimal string, e.g. "1" or "1.5", in the base unit of the part. When
+       *     unit_id is set the server ignores this on input and derives it from
+       *     entered_quantity (FR-CAT-02), so a line read back and sent again is
+       *     never converted twice.
+       */
+      quantity: string
+      /**
+       * Format: int64
+       * @description Integer VND.
+       */
+      unitPrice: string
+      /** Format: int64 */
+      readonly lineTotal?: string
+      decision?: components['schemas']['v1QuoteLineDecision']
+      /**
+       * @description The packaging unit of the part the amount was entered in; unset for
+       *     labor and for base-unit lines.
+       */
+      unitId?: string
+      /** @description The amount as typed, in unit_id (decimal string); required with unit_id. */
+      enteredQuantity?: string
+      readonly unitAbbreviation?: string
+    }
+    /**
+     * @description QuoteLineDecision is the customer's decision on one line item
+     *     (FR-QUO-03), recorded either by the customer through the public link or
+     *     by a staff member on their behalf (manual approval mode).
+     * @enum {string}
+     */
+    v1QuoteLineDecision: 'QUOTE_LINE_DECISION_PENDING' | 'QUOTE_LINE_DECISION_APPROVED' | 'QUOTE_LINE_DECISION_REJECTED'
+    v1QuoteLineDecisionInput: {
+      lineId: string
+      approved?: boolean
+    }
+    /**
+     * @description QuoteStatus is the lifecycle of a quote (FR-QUO-01..04).
+     *
+     *      - QUOTE_STATUS_DRAFT: Being edited by the service advisor; not visible to the customer yet.
+     *      - QUOTE_STATUS_SENT: A LINK-mode quote waiting on the customer's decision.
+     *      - QUOTE_STATUS_APPROVED: At least one line was approved.
+     *      - QUOTE_STATUS_REJECTED: Every line was rejected.
+     *      - QUOTE_STATUS_CONVERTED: Converted into a repair order (FR-QUO-04); no further edits.
+     * @enum {string}
+     */
+    v1QuoteStatus: 'QUOTE_STATUS_DRAFT' | 'QUOTE_STATUS_SENT' | 'QUOTE_STATUS_APPROVED' | 'QUOTE_STATUS_REJECTED' | 'QUOTE_STATUS_CONVERTED'
+    v1RecordQuoteDecisionResponse: {
+      quote?: components['schemas']['v1Quote']
+    }
+    v1RecordSettlementPaymentResponse: {
+      settlement?: components['schemas']['v1Settlement']
+    }
+    v1RefreshTokenRequest: {
+      refreshToken: string
+    }
+    v1RefreshTokenResponse: {
+      session?: components['schemas']['v1Session']
+    }
+    v1RegisterRequest: {
+      email: string
+      /** @description At least 8 characters. */
+      password: string
+      fullName: string
+      phone?: string
+      locale?: components['schemas']['v1Locale']
+    }
+    v1RegisterResponse: {
+      session?: components['schemas']['v1Session']
+    }
+    v1RejectPlanPaymentResponse: {
+      request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    v1RemovePartImageResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    /**
+     * @description RepairOrder is a repair job for one vehicle (FR-REP-01), either
+     *     converted from an approved quote (Release 1.2's ConvertQuote) or
+     *     created directly for ad-hoc work.
+     */
+    v1RepairOrder: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Set when converted from a quote; empty for ad-hoc repair orders. */
+      readonly quoteId?: string
+      vehicleId: string
+      readonly vehicleLicensePlate?: string
+      readonly customerName?: string
+      /** @description Rendered from the garage's repair_order_number_template (FR-TEN-05). */
+      readonly number?: string
+      status?: components['schemas']['v1RepairOrderStatus']
+      lines?: components['schemas']['v1RepairOrderLine'][]
+      /** Format: int64 */
+      readonly totalAmount?: string
+      /** Format: date-time */
+      readonly closedAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description RepairOrderItemType: a repair order line is either labor or a part.
+     * @enum {string}
+     */
+    v1RepairOrderItemType: 'REPAIR_ORDER_ITEM_TYPE_LABOR' | 'REPAIR_ORDER_ITEM_TYPE_PART'
+    /** @description RepairOrderLine is one labor or part line of a repair order. */
+    v1RepairOrderLine: {
+      readonly id?: string
+      itemType: components['schemas']['v1RepairOrderItemType']
+      /**
+       * @description An Inventory item id for PART lines (FR-INV-02 stock deduction on
+       *     close needs this); free text or empty for a part not carried in
+       *     stock. Validated against the garage's items when set.
+       */
+      itemRefId?: string
+      description: string
+      /**
+       * @description Decimal string in the base unit of the part; derived from
+       *     entered_quantity when unit_id is set (same rule as a quote line).
+       */
+      quantity: string
+      /**
+       * Format: int64
+       * @description Integer VND.
+       */
+      unitPrice: string
+      /** Format: int64 */
+      readonly lineTotal?: string
+      status?: components['schemas']['v1RepairOrderLineStatus']
+      unitId?: string
+      enteredQuantity?: string
+      readonly unitAbbreviation?: string
+      /**
+       * @description Technician user ids assigned to this line (FR-REP-02); a line may
+       *     have more than one.
+       */
+      assignedTechnicianIds?: string[]
+    }
+    /**
+     * @description RepairOrderLineStatus is one line's own progress (FR-REP-03), tracked
+     *     separately from the repair order's overall status.
+     * @enum {string}
+     */
+    v1RepairOrderLineStatus:
+      'REPAIR_ORDER_LINE_STATUS_NOT_STARTED' | 'REPAIR_ORDER_LINE_STATUS_IN_PROGRESS' | 'REPAIR_ORDER_LINE_STATUS_COMPLETED'
+    /**
+     * @description RepairOrderStatus is the lifecycle of a repair order (FR-REP-01..06),
+     *     shown as the Kanban board's columns (UI Design Spec Section 3.3).
+     *
+     *      - REPAIR_ORDER_STATUS_OPEN: "To Do": not yet started.
+     *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock.
+     *      - REPAIR_ORDER_STATUS_COMPLETED: Every line is done; ready for the advisor to close it.
+     *      - REPAIR_ORDER_STATUS_CLOSED: Closed (FR-REP-06): no further edits; ready for settlement (Release
+     *     1.4) and triggers stock deduction (Event Design, repair_order.closed).
+     * @enum {string}
+     */
+    v1RepairOrderStatus:
+      | 'REPAIR_ORDER_STATUS_OPEN'
+      | 'REPAIR_ORDER_STATUS_IN_PROGRESS'
+      | 'REPAIR_ORDER_STATUS_WAITING_ON_PARTS'
+      | 'REPAIR_ORDER_STATUS_COMPLETED'
+      | 'REPAIR_ORDER_STATUS_CLOSED'
+    v1RequestCustomerUserLinkResponse: {
+      link?: components['schemas']['v1CustomerUserLink']
+    }
+    v1RequestPasswordResetRequest: {
+      email: string
+    }
+    v1RequestPasswordResetResponse: {
+      challenge?: components['schemas']['v1OtpChallenge']
+    }
+    v1ResetPasswordRequest: {
+      resetToken: string
+      /** @description At least 8 characters. */
+      newPassword: string
+    }
+    v1ResetPasswordResponse: Record<string, never>
+    /**
+     * @description RevenuePeriod is the bucket granularity of a revenue report (FR-RPT-01).
+     * @enum {string}
+     */
+    v1RevenuePeriod: 'REVENUE_PERIOD_DAY' | 'REVENUE_PERIOD_MONTH' | 'REVENUE_PERIOD_QUARTER' | 'REVENUE_PERIOD_YEAR'
+    /** @description RevenuePoint is one bucket of a revenue report. */
+    v1RevenuePoint: {
+      /**
+       * @description The bucket's start, formatted for its granularity: "2026-09-30" (day),
+       *     "2026-09" (month), "2026-Q3" (quarter), "2026" (year).
+       */
+      readonly periodLabel?: string
+      /**
+       * Format: int64
+       * @description Integer VND.
+       */
+      readonly amount?: string
+    }
+    v1RevokeInvitationResponse: {
+      invitation?: components['schemas']['v1Invitation']
+    }
+    /**
+     * @description Role is a named set of permissions defined by a garage owner and shared
+     *     by all the owner's garages. Default roles are created when the owner
+     *     verifies their e-mail.
+     */
+    v1Role: {
+      readonly id?: string
+      name: string
+      description?: string
+      permissions?: components['schemas']['v1Permission'][]
+      /** @description Created by the platform; still editable. */
+      readonly isDefault?: boolean
+      /**
+       * Format: int32
+       * @description Number of staff groups using the role.
+       */
+      readonly groupCount?: number
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      /**
+       * @description For a default role, the permissions the platform created it with: what
+       *     the role editor's "Reset to default" restores. Empty for other roles.
+       */
+      readonly defaultPermissions?: components['schemas']['v1Permission'][]
+    }
+    v1SendEmailVerificationOtpRequest: Record<string, never>
+    v1SendEmailVerificationOtpResponse: {
+      challenge?: components['schemas']['v1OtpChallenge']
+    }
+    v1SendQuoteResponse: {
+      quote?: components['schemas']['v1Quote']
+      /**
+       * @description The public approval URL, returned once for the advisor to copy or
+       *     share; set only for QUOTE_APPROVAL_MODE_LINK. Also e-mailed to the
+       *     customer automatically when they have an e-mail on file.
+       */
+      publicUrl?: string
+      /**
+       * @description Whether the e-mail above was actually sent (false: no e-mail on file,
+       *     or approval_mode is MANUAL).
+       */
+      emailed?: boolean
+    }
+    /** @description Session is what every successful sign-in returns. */
+    v1Session: {
+      accessToken?: string
+      refreshToken?: string
+      /** @description Always "Bearer". */
+      tokenType?: string
+      /**
+       * Format: int64
+       * @description Access token lifetime in seconds.
+       */
+      expiresIn?: string
+      user?: components['schemas']['v1User']
+    }
+    v1SetPartUnitsResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    /**
+     * @description Settlement is the final bill of a closed repair order (FR-BIL-01),
+     *     paid by the customer. FR-REC-01's receivables view is this same list
+     *     filtered to not yet fully paid (ListSettlementsRequest.outstanding_only)
+     *     -- Release 1.4 has no separate receivables table; one arrives with
+     *     Release 2.2's reminders and reconciliation, which need their own
+     *     persisted state.
+     */
+    v1Settlement: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly repairOrderId?: string
+      /**
+       * @description Denormalized from the repair order at creation, the same pattern as
+       *     the repair order's own vehicle/customer fields.
+       */
+      readonly vehicleLicensePlate?: string
+      readonly customerName?: string
+      /** @description Rendered from the garage's settlement_number_template (FR-TEN-05). */
+      readonly number?: string
+      /**
+       * Format: int64
+       * @description Copied from the repair order's total at creation time. Integer VND.
+       */
+      readonly totalAmount?: string
+      /**
+       * Format: int64
+       * @description Running total of the payments that are not voided (FR-BIL-03). Integer
+       *     VND.
+       */
+      readonly paidAmount?: string
+      status?: components['schemas']['v1SettlementStatus']
+      readonly payments?: components['schemas']['v1SettlementPayment'][]
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      billingParty?: components['schemas']['v1BillingParty']
+      /**
+       * @description The customer asked for a VAT invoice; only possible while the billing
+       *     party's profile is complete, otherwise INVOICE_DATA_INCOMPLETE. When
+       *     false the document is a retail receipt.
+       */
+      invoiceRequested?: boolean
+    }
+    /**
+     * @description SettlementPayment is one payment recorded against a settlement
+     *     (FR-BIL-03); a settlement may receive several. The customer is the only
+     *     payer. Every payment is a payment voucher (phiếu thu, FR-BIL-05).
+     */
+    v1SettlementPayment: {
+      readonly id?: string
+      /**
+       * Format: int64
+       * @description Integer VND.
+       */
+      readonly amount?: string
+      method?: components['schemas']['v1PaymentMethod']
+      readonly note?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** @description Numbered from the garage's payment voucher template (FR-BIL-05). */
+      readonly voucherNumber?: string
+      /** @description Who paid: the billing party's name, or the customer's. */
+      readonly payerName?: string
+      readonly payerAddress?: string
+      /** @description Reason for payment printed on the voucher. */
+      readonly reason?: string
+      /** @description The staff member who collected the money. */
+      readonly collectorName?: string
+      /**
+       * @description A voided voucher stays on file and no longer counts towards paid_amount
+       *     (FR-BIL-06).
+       */
+      readonly voided?: boolean
+      readonly voidReason?: string
+      /** Format: date-time */
+      readonly voidedAt?: string
+    }
+    /**
+     * @description SettlementStatus is a settlement's collection status, derived from the
+     *     amounts actually paid against the total (FR-BIL-01..03).
+     *
+     *      - SETTLEMENT_STATUS_PENDING: Nothing collected yet.
+     *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the total collected.
+     *      - SETTLEMENT_STATUS_PAID: The full total collected.
+     * @enum {string}
+     */
+    v1SettlementStatus: 'SETTLEMENT_STATUS_PENDING' | 'SETTLEMENT_STATUS_PARTIALLY_PAID' | 'SETTLEMENT_STATUS_PAID'
+    v1SignInWithGoogleIdTokenRequest: {
+      /** @description The ID token (a JWT) returned by Google Sign-In on the device. */
+      idToken: string
+      locale?: components['schemas']['v1Locale']
+    }
+    v1SignInWithGoogleIdTokenResponse: {
+      session?: components['schemas']['v1Session']
+    }
+    /** @description Staff is a user's membership of a garage (FR-TEN-04). */
+    v1Staff: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly userId?: string
+      readonly fullName?: string
+      readonly email?: string
+      readonly phone?: string
+      /** @description The garage owner; cannot be deactivated, removed or grouped. */
+      readonly owner?: boolean
+      status?: components['schemas']['v1StaffStatus']
+      /** @description Staff groups of this garage the member belongs to. */
+      groupIds?: string[]
+      /** @description Union of the permissions of the member's groups. */
+      readonly permissions?: components['schemas']['v1Permission'][]
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /** @description StaffCandidate is an existing user found by e-mail or phone. */
+    v1StaffCandidate: {
+      userId?: string
+      fullName?: string
+      email?: string
+      phone?: string
+      membership?: components['schemas']['v1CandidateMembership']
+    }
+    /**
+     * @description StaffGroup is a set of staff in one garage that all receive the
+     *     permissions of the group's role.
+     */
+    v1StaffGroup: {
+      readonly id?: string
+      readonly garageId?: string
+      name: string
+      description?: string
+      roleId: string
+      readonly roleName?: string
+      /** Format: int32 */
+      readonly memberCount?: number
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description StaffStatus: inactive staff keep their record but lose access.
+     * @enum {string}
+     */
+    v1StaffStatus: 'STAFF_STATUS_ACTIVE' | 'STAFF_STATUS_INACTIVE'
+    /**
+     * @description StockLevel is one part with how many of it the garage has (FR-INV-03).
+     *     The part itself (SKU, name, units, category, brand, price, images) is
+     *     owned by the Catalogue module (vietgara.catalogue.v1); this is the
+     *     stock-on-hand view that joins it with the balance.
+     */
+    v1StockLevel: {
+      readonly partId?: string
+      readonly sku?: string
+      readonly name?: string
+      readonly baseUnitName?: string
+      readonly baseUnitAbbreviation?: string
+      readonly categoryName?: string
+      readonly brand?: string
+      readonly isActive?: boolean
+      /** @description URL of the first image, empty when the part has none. */
+      readonly thumbnailUrl?: string
+      /**
+       * @description Decimal string in the base unit; derived from stock_transactions, never
+       *     written directly (FR-INV-03).
+       */
+      readonly quantityOnHand?: string
+      /** @description Decimal string in the base unit. */
+      readonly reorderThreshold?: string
+      /** @description True at or below the reorder threshold. */
+      readonly lowStock?: boolean
+    }
+    /** @description StockTransaction is one recorded stock movement. */
+    v1StockTransaction: {
+      readonly id?: string
+      readonly itemId?: string
+      readonly itemSku?: string
+      readonly itemName?: string
+      type?: components['schemas']['v1StockTransactionType']
+      /** @description Decimal string, always positive; type says the direction. */
+      readonly quantity?: string
+      /**
+       * Format: int64
+       * @description Integer VND; set on IN transactions from a purchase.
+       */
+      readonly unitCost?: string
+      refType?: components['schemas']['v1StockTransactionRefType']
+      /** @description The repair order id, for an OUT transaction caused by one. */
+      readonly refId?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /**
+       * @description Release 6.0: the packaging unit the user entered and the typed amount;
+       *     `quantity` stays the base-unit amount. Empty when the base unit was used.
+       */
+      readonly unitId?: string
+      readonly enteredQuantity?: string
+      /** @description The abbreviation of the entered unit; empty when the base unit was used. */
+      readonly unitAbbreviation?: string
+      /** @description The abbreviation of the part's base unit, the unit `quantity` is in. */
+      readonly baseUnitAbbreviation?: string
+    }
+    /**
+     * @description StockTransactionRefType names what caused a stock movement.
+     *
+     *      - STOCK_TRANSACTION_REF_TYPE_PURCHASE: A manual stock receipt from a supplier (FR-INV-01).
+     *      - STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER: Automatic deduction when a repair order with part lines closes
+     *     (FR-INV-02).
+     * @enum {string}
+     */
+    v1StockTransactionRefType: 'STOCK_TRANSACTION_REF_TYPE_PURCHASE' | 'STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER'
+    /**
+     * @description StockTransactionType: a movement either adds to stock or removes from it.
+     * @enum {string}
+     */
+    v1StockTransactionType: 'STOCK_TRANSACTION_TYPE_IN' | 'STOCK_TRANSACTION_TYPE_OUT'
+    v1SubmitPlanPaymentResponse: {
+      request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    /**
+     * @description Subscription belongs to an owner user and covers all their garages
+     *     (FR-LIC-01..04).
+     */
+    v1Subscription: {
+      id?: string
+      userId?: string
+      status?: components['schemas']['v1SubscriptionStatus']
+      plan?: components['schemas']['v1Plan']
+      /** Format: date-time */
+      trialEndAt?: string
+      /** Format: date-time */
+      currentPeriodStart?: string
+      /** Format: date-time */
+      currentPeriodEnd?: string
+      /** Format: date-time */
+      gracePeriodEnd?: string
+      autoRenew?: boolean
+      usage?: components['schemas']['v1Usage']
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      updatedAt?: string
+      /**
+       * Format: int64
+       * @description Account credit in VND (FR-LIC-09), applied to the next payment.
+       */
+      creditBalance?: string
+      /**
+       * Format: int64
+       * @description What was paid for the current period (0 for a trial); the basis of the
+       *     credit when the plan is changed.
+       */
+      periodPaidAmount?: string
+      openRequest?: components['schemas']['v1PlanPaymentRequest']
+    }
+    /**
+     * @description SubscriptionStatus (LLD 3.1): past_due is read-only during the grace
+     *     period, suspended and cancelled are locked.
+     * @enum {string}
+     */
+    v1SubscriptionStatus:
+      | 'SUBSCRIPTION_STATUS_TRIAL'
+      | 'SUBSCRIPTION_STATUS_ACTIVE'
+      | 'SUBSCRIPTION_STATUS_PAST_DUE'
+      | 'SUBSCRIPTION_STATUS_SUSPENDED'
+      | 'SUBSCRIPTION_STATUS_CANCELLED'
+    /** @description SubscriptionSummary is one row of the platform admin's subscription list. */
+    v1SubscriptionSummary: {
+      subscription?: components['schemas']['v1Subscription']
+      userEmail?: string
+      userName?: string
+    }
+    /**
+     * @description Supplier is a business that sells parts to the garage, kept in the
+     *     garage's directory (FR-SUP-01). It is not a customer; insurers are not
+     *     suppliers either and come back in their own record in Phase 17.
+     */
+    v1Supplier: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Unique per garage (case-insensitive). */
+      name: string
+      taxCode?: string
+      contact?: components['schemas']['v1SupplierContact']
+      bank?: components['schemas']['v1BankDetails']
+      note?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      /** @description False once the supplier was deactivated instead of deleted (FR-CAT-07). */
+      readonly isActive?: boolean
+    }
+    v1SupplierContact: {
+      contactPerson?: string
+      phone?: string
+      email?: string
+      address?: string
+    }
+    /**
+     * @description TaxProfileKind: a customer has at most one personal tax profile and any
+     *     number of company tax profiles (FR-CUS-07).
+     * @enum {string}
+     */
+    v1TaxProfileKind: 'TAX_PROFILE_KIND_PERSONAL' | 'TAX_PROFILE_KIND_COMPANY'
+    /**
+     * @description Unit is one unit of measure of a garage (FR-CAT-01). A unit is per
+     *     garage; the factor between two units lives on the part, not here.
+     */
+    v1Unit: {
+      readonly id?: string
+      readonly garageId?: string
+      name: string
+      abbreviation: string
+      isActive?: boolean
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    v1UnlinkCustomerUserResponse: {
+      link?: components['schemas']['v1CustomerUserLink']
+    }
+    v1UnlinkGarageLinkResponse: {
+      link?: components['schemas']['v1GarageLink']
+    }
+    v1UpdateCustomerResponse: {
+      customer?: components['schemas']['v1Customer']
+    }
+    v1UpdateCustomerTaxProfileResponse: {
+      taxProfile?: components['schemas']['v1CustomerTaxProfile']
+    }
+    v1UpdateGarageResponse: {
+      garage?: components['schemas']['v1Garage']
+    }
+    v1UpdateMeResponse: {
+      user?: components['schemas']['v1User']
+    }
+    v1UpdatePartCategoryResponse: {
+      category?: components['schemas']['v1PartCategory']
+    }
+    v1UpdatePartResponse: {
+      part?: components['schemas']['v1Part']
+    }
+    v1UpdatePlanResponse: {
+      plan?: components['schemas']['v1Plan']
+    }
+    v1UpdatePlatformPaymentSettingsResponse: {
+      settings?: components['schemas']['v1PlatformPaymentSettings']
+    }
+    v1UpdateQuoteResponse: {
+      quote?: components['schemas']['v1Quote']
+    }
+    v1UpdateRepairOrderLineResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
+    }
+    v1UpdateRoleResponse: {
+      role?: components['schemas']['v1Role']
+    }
+    v1UpdateSettlementResponse: {
+      settlement?: components['schemas']['v1Settlement']
+    }
+    v1UpdateStaffGroupResponse: {
+      group?: components['schemas']['v1StaffGroup']
+    }
+    v1UpdateStaffResponse: {
+      staff?: components['schemas']['v1Staff']
+    }
+    v1UpdateSupplierResponse: {
+      supplier?: components['schemas']['v1Supplier']
+    }
+    v1UpdateUnitResponse: {
+      unit?: components['schemas']['v1Unit']
+    }
+    v1UpdateVehicleResponse: {
+      vehicle?: components['schemas']['v1Vehicle']
+    }
+    v1UploadFileResponse: {
+      file?: components['schemas']['v1File']
+    }
+    v1UploadGarageLogoResponse: {
+      garage?: components['schemas']['v1Garage']
+    }
+    v1UploadPaymentQrRequest: {
+      /** Format: byte */
+      content: string
+      /** @description image/png, image/jpeg or image/webp, at most 1 MB. */
+      contentType: string
+    }
+    v1UploadPaymentQrResponse: {
+      settings?: components['schemas']['v1PlatformPaymentSettings']
+    }
+    /** @description Usage is the owner's current consumption of the plan limits. */
+    v1Usage: {
+      /** Format: int32 */
+      garages?: number
+      /** Format: int32 */
+      staff?: number
+      /** Format: int32 */
+      transactionsToday?: number
+    }
+    /** @description User is a person who can sign in to VietGara. */
+    v1User: {
+      readonly id?: string
+      readonly email?: string
+      /** @description Optional contact phone, unique across users; used to look staff up. */
+      phone?: string
+      authProvider?: components['schemas']['v1AuthProvider']
+      fullName?: string
+      status?: components['schemas']['v1UserStatus']
+      /**
+       * @description False until the e-mail OTP is confirmed; unverified users cannot use
+       *     garage, staff or business APIs.
+       */
+      readonly emailVerified?: boolean
+      locale?: components['schemas']['v1Locale']
+      /** @description Platform operators manage subscription plans (FR-LIC-05). */
+      readonly platformAdmin?: boolean
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description UserStatus is the lifecycle of a VietGara user (Database Design 2.1).
+     * @enum {string}
+     */
+    v1UserStatus: 'USER_STATUS_ACTIVE' | 'USER_STATUS_SUSPENDED'
+    /** @description Vehicle belongs to one customer of the garage (FR-CUS-02). */
+    v1Vehicle: {
+      readonly id?: string
+      readonly garageId?: string
+      customerId: string
+      readonly customerName?: string
+      /** @description Unique per garage (ignoring punctuation and case). */
+      licensePlate: string
+      make?: string
+      model?: string
+      /** Format: int32 */
+      year?: number
+      vin?: string
+      engineNumber?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      /** @description False once the vehicle was deactivated instead of deleted (FR-CAT-07). */
+      readonly isActive?: boolean
+      /**
+       * @description False while a live quote, repair order, settlement, booking or claim
+       *     refers to the vehicle: its identity fields are then locked.
+       */
+      readonly editable?: boolean
+      /**
+       * @description The identity fields that cannot be edited now (empty when editable).
+       *     Colour, notes and odometer are never locked.
+       */
+      readonly lockedFields?: components['schemas']['v1VehicleIdentityField'][]
+    }
+    /**
+     * @description VehicleHistoryEntry is one quote, repair order or settlement of a
+     *     vehicle, newest first (FR-CUS-03).
+     */
+    v1VehicleHistoryEntry: {
+      type?: components['schemas']['v1VehicleHistoryEntryType']
+      entityId?: string
+      /** @description The quote/repair-order/settlement's own document number. */
+      number?: string
+      /** @description The status string of the originating entity (e.g. a QuoteStatus name). */
+      status?: string
+      /** Format: int64 */
+      totalAmount?: string
+      /** Format: date-time */
+      occurredAt?: string
+    }
+    /**
+     * @description VehicleHistoryEntryType names which module produced a history entry
+     *     (FR-CUS-03). Repair order and settlement entries appear once those
+     *     modules ship (Releases 1.3, 1.4); only QUOTE is produced today.
+     * @enum {string}
+     */
+    v1VehicleHistoryEntryType:
+      'VEHICLE_HISTORY_ENTRY_TYPE_QUOTE' | 'VEHICLE_HISTORY_ENTRY_TYPE_REPAIR_ORDER' | 'VEHICLE_HISTORY_ENTRY_TYPE_SETTLEMENT'
+    /**
+     * @description VehicleIdentityField names a field that identifies a vehicle (FR-CUS-02).
+     *     These fields are locked while a live document refers to the vehicle; a
+     *     locked field is changed by a correction (FR-CUS-09).
+     *
+     *      - VEHICLE_IDENTITY_FIELD_VIN: The chassis number.
+     * @enum {string}
+     */
+    v1VehicleIdentityField:
+      | 'VEHICLE_IDENTITY_FIELD_LICENSE_PLATE'
+      | 'VEHICLE_IDENTITY_FIELD_VIN'
+      | 'VEHICLE_IDENTITY_FIELD_ENGINE_NUMBER'
+      | 'VEHICLE_IDENTITY_FIELD_MAKE'
+      | 'VEHICLE_IDENTITY_FIELD_MODEL'
+      | 'VEHICLE_IDENTITY_FIELD_YEAR'
+    v1VerifyEmailRequest: {
+      otpCode: string
+      /**
+       * @description The refresh token of the current session; it is rotated so the new
+       *     session carries the verified claim.
+       */
+      refreshToken: string
+    }
+    v1VerifyEmailResponse: {
+      session?: components['schemas']['v1Session']
+    }
+    v1VerifyPasswordResetOtpRequest: {
+      email: string
+      otpCode: string
+    }
+    v1VerifyPasswordResetOtpResponse: {
+      /** @description Single-use token for ResetPassword. */
+      resetToken?: string
+      /** Format: date-time */
+      expiresAt?: string
+    }
+    v1VoidSettlementPaymentResponse: {
+      settlement?: components['schemas']['v1Settlement']
+    }
+    /**
+     * @description WorkOrder is a repair order with the lines assigned to the signed-in
+     *     technician (FR-TAPP-01).
+     */
+    v1WorkOrder: {
+      readonly garageId?: string
+      readonly garageName?: string
+      readonly repairOrderId?: string
+      /** @description The repair order's own document number. */
+      readonly number?: string
+      status?: components['schemas']['v1RepairOrderStatus']
+      readonly vehicleLicensePlate?: string
+      readonly customerName?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** @description Only the lines assigned to the technician, in the order's line order. */
+      readonly lines?: components['schemas']['v1RepairOrderLine'][]
+    }
+  }
+  responses: never
+  parameters: never
+  requestBodies: {
+    v1Plan: {
+      content: {
+        'application/json': components['schemas']['v1Plan']
+      }
+    }
+    v1Unit: {
+      content: {
+        'application/json': components['schemas']['v1Unit']
+      }
+    }
+    v1Garage: {
+      content: {
+        'application/json': components['schemas']['v1Garage']
+      }
+    }
+    v1Customer: {
+      content: {
+        'application/json': components['schemas']['v1Customer']
+      }
+    }
+    v1PartCategory: {
+      content: {
+        'application/json': components['schemas']['v1PartCategory']
+      }
+    }
+    v1Part: {
+      content: {
+        'application/json': components['schemas']['v1Part']
+      }
+    }
+    v1StaffGroup: {
+      content: {
+        'application/json': components['schemas']['v1StaffGroup']
+      }
+    }
+    v1Supplier: {
+      content: {
+        'application/json': components['schemas']['v1Supplier']
+      }
+    }
+    v1Role: {
+      content: {
+        'application/json': components['schemas']['v1Role']
+      }
+    }
+  }
+  headers: never
+  pathItems: never
+}
+export type $defs = Record<string, never>
+export interface operations {
+  LicenseAdminService_GetPlatformPaymentSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformPaymentSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_UpdatePlatformPaymentSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1PlatformPaymentSettings']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformPaymentSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_UploadPaymentQr: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1UploadPaymentQrRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformPaymentSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_ListPlanPaymentRequests: {
+    parameters: {
+      query?: {
         /**
-         * @description Message that represents an arbitrary HTTP body. It should only be used for
-         *     payload formats that can't be represented as JSON, such as raw binary or
-         *     an HTML page.
-         *
-         *
-         *     This message can be used both in streaming and non-streaming API methods in
-         *     the request as well as the response.
-         *
-         *     It can be used as a top-level request field, which is convenient if one
-         *     wants to extract parameters from either the URL or HTTP template into the
-         *     request fields and also want access to the raw HTTP body.
-         *
-         *     Example:
-         *
-         *         message GetResourceRequest {
-         *           // A unique request id.
-         *           string request_id = 1;
-         *
-         *           // The raw HTTP body is bound to this field.
-         *           google.api.HttpBody http_body = 2;
-         *
-         *         }
-         *
-         *         service ResourceService {
-         *           rpc GetResource(GetResourceRequest)
-         *             returns (google.api.HttpBody);
-         *           rpc UpdateResource(google.api.HttpBody)
-         *             returns (google.protobuf.Empty);
-         *
-         *         }
-         *
-         *     Example with streaming methods:
-         *
-         *         service CaldavService {
-         *           rpc GetCalendar(stream google.api.HttpBody)
-         *             returns (stream google.api.HttpBody);
-         *           rpc UpdateCalendar(stream google.api.HttpBody)
-         *             returns (stream google.api.HttpBody);
-         *
-         *         }
-         *
-         *     Use of this type only changes how the request and response bodies are
-         *     handled, all other features will continue to work unchanged.
-         */
-        apiHttpBody: {
-            /** @description The HTTP Content-Type header value specifying the content type of the body. */
-            contentType?: string;
-            /**
-             * Format: byte
-             * @description The HTTP request/response body as raw binary.
-             */
-            data?: string;
-            /**
-             * @description Application specific response metadata. Must be set in the first response
-             *     for streaming APIs.
-             */
-            extensions?: components["schemas"]["protobufAny"][];
-        };
-        /**
-         * @description `Any` contains an arbitrary serialized protocol buffer message along with a
-         *     URL that describes the type of the serialized message.
-         *
-         *     Protobuf library provides support to pack/unpack Any values in the form
-         *     of utility functions or additional generated methods of the Any type.
-         *
-         *     Example 1: Pack and unpack a message in C++.
-         *
-         *         Foo foo = ...;
-         *         Any any;
-         *         any.PackFrom(foo);
-         *         ...
-         *         if (any.UnpackTo(&foo)) {
-         *           ...
-         *         }
-         *
-         *     Example 2: Pack and unpack a message in Java.
-         *
-         *         Foo foo = ...;
-         *         Any any = Any.pack(foo);
-         *         ...
-         *         if (any.is(Foo.class)) {
-         *           foo = any.unpack(Foo.class);
-         *         }
-         *         // or ...
-         *         if (any.isSameTypeAs(Foo.getDefaultInstance())) {
-         *           foo = any.unpack(Foo.getDefaultInstance());
-         *         }
-         *
-         *      Example 3: Pack and unpack a message in Python.
-         *
-         *         foo = Foo(...)
-         *         any = Any()
-         *         any.Pack(foo)
-         *         ...
-         *         if any.Is(Foo.DESCRIPTOR):
-         *           any.Unpack(foo)
-         *           ...
-         *
-         *      Example 4: Pack and unpack a message in Go
-         *
-         *          foo := &pb.Foo{...}
-         *          any, err := anypb.New(foo)
-         *          if err != nil {
-         *            ...
-         *          }
-         *          ...
-         *          foo := &pb.Foo{}
-         *          if err := any.UnmarshalTo(foo); err != nil {
-         *            ...
-         *          }
-         *
-         *     The pack methods provided by protobuf library will by default use
-         *     'type.googleapis.com/full.type.name' as the type URL and the unpack
-         *     methods only use the fully qualified type name after the last '/'
-         *     in the type URL, for example "foo.bar.com/x/y.z" will yield type
-         *     name "y.z".
-         *
-         *     JSON
-         *     ====
-         *     The JSON representation of an `Any` value uses the regular
-         *     representation of the deserialized, embedded message, with an
-         *     additional field `@type` which contains the type URL. Example:
-         *
-         *         package google.profile;
-         *         message Person {
-         *           string first_name = 1;
-         *           string last_name = 2;
-         *         }
-         *
-         *         {
-         *           "@type": "type.googleapis.com/google.profile.Person",
-         *           "firstName": <string>,
-         *           "lastName": <string>
-         *         }
-         *
-         *     If the embedded message type is well-known and has a custom JSON
-         *     representation, that representation will be embedded adding a field
-         *     `value` which holds the custom JSON in addition to the `@type`
-         *     field. Example (for message [google.protobuf.Duration][]):
-         *
-         *         {
-         *           "@type": "type.googleapis.com/google.protobuf.Duration",
-         *           "value": "1.212s"
-         *         }
-         */
-        protobufAny: {
-            /**
-             * @description A URL/resource name that uniquely identifies the type of the serialized
-             *     protocol buffer message. This string must contain at least
-             *     one "/" character. The last segment of the URL's path must represent
-             *     the fully qualified name of the type (as in
-             *     `path/google.protobuf.Duration`). The name should be in a canonical form
-             *     (e.g., leading "." is not accepted).
-             *
-             *     In practice, teams usually precompile into the binary all types that they
-             *     expect it to use in the context of Any. However, for URLs which use the
-             *     scheme `http`, `https`, or no scheme, one can optionally set up a type
-             *     server that maps type URLs to message definitions as follows:
-             *
-             *     * If no scheme is provided, `https` is assumed.
-             *     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-             *       value in binary format, or produce an error.
-             *     * Applications are allowed to cache lookup results based on the
-             *       URL, or have them precompiled into a binary to avoid any
-             *       lookup. Therefore, binary compatibility needs to be preserved
-             *       on changes to types. (Use versioned type names to manage
-             *       breaking changes.)
-             *
-             *     Note: this functionality is not currently available in the official
-             *     protobuf release, and it is not used for type URLs beginning with
-             *     type.googleapis.com. As of May 2023, there are no widely used type server
-             *     implementations and no plans to implement one.
-             *
-             *     Schemes other than `http`, `https` (or the empty scheme) might be
-             *     used with implementation specific semantics.
-             */
-            "@type"?: string;
-        } & {
-            [key: string]: unknown;
-        };
-        /**
-         * @description Represents a day of the week.
-         *
-         *      - MONDAY: Monday
-         *      - TUESDAY: Tuesday
-         *      - WEDNESDAY: Wednesday
-         *      - THURSDAY: Thursday
-         *      - FRIDAY: Friday
-         *      - SATURDAY: Saturday
-         *      - SUNDAY: Sunday
-         * @enum {string}
-         */
-        typeDayOfWeek: "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY";
-        v1AcceptGarageLinkResponse: {
-            link?: components["schemas"]["v1GarageLink"];
-        };
-        v1AcceptInvitationResponse: {
-            invitation?: components["schemas"]["v1Invitation"];
-        };
-        v1ActivateCustomerResponse: {
-            customer?: components["schemas"]["v1Customer"];
-        };
-        v1ActivateCustomerTaxProfileResponse: {
-            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
-        };
-        v1ActivateSupplierResponse: {
-            supplier?: components["schemas"]["v1Supplier"];
-        };
-        v1ActivateVehicleResponse: {
-            vehicle?: components["schemas"]["v1Vehicle"];
-        };
-        v1AdjustCreditResponse: {
-            entry?: components["schemas"]["v1CreditLedgerEntry"];
-        };
-        /** @description AdminPlanPaymentRequest is one row of the platform admin's review queue. */
-        v1AdminPlanPaymentRequest: {
-            request?: components["schemas"]["v1PlanPaymentRequest"];
-            subscriptionId?: string;
-            userEmail?: string;
-            userName?: string;
-            currentPlan?: components["schemas"]["v1Plan"];
-            usage?: components["schemas"]["v1Usage"];
-        };
-        v1ApprovePlanPaymentResponse: {
-            subscription?: components["schemas"]["v1Subscription"];
-        };
-        /**
-         * @description AuthProvider is how the user signed up (FR-IAM-01).
-         * @enum {string}
-         */
-        v1AuthProvider: "AUTH_PROVIDER_EMAIL" | "AUTH_PROVIDER_GOOGLE";
-        /**
-         * @description BankDetails is a bank account that money is paid into. Shared by every
-         *     record that carries one (suppliers today; the garage's legal profile and
-         *     customers' tax profiles later).
-         */
-        v1BankDetails: {
-            bankName?: string;
-            accountNumber?: string;
-            /** @description Name the account is registered under. */
-            accountHolder?: string;
-        };
-        /** @enum {string} */
-        v1BillingCycle: "BILLING_CYCLE_MONTHLY" | "BILLING_CYCLE_YEARLY";
-        /**
-         * @description BillingParty is who a quote or settlement is billed to (FR-CUS-07). A
-         *     client sends only tax_profile_id; the other fields are the snapshot kept
-         *     on the document, so later edits of the profile never change a document
-         *     already issued. Without a tax_profile_id the customer is billed under
-         *     their own name as a retail receipt.
-         */
-        v1BillingParty: {
-            taxProfileId?: string;
-            kind?: components["schemas"]["v1TaxProfileKind"];
-            readonly legalName?: string;
-            readonly taxId?: string;
-            readonly address?: string;
-            /** @description Where an e-invoice is sent. */
-            readonly invoiceEmail?: string;
-        };
-        v1CancelPlanPaymentResponse: {
-            request?: components["schemas"]["v1PlanPaymentRequest"];
-        };
-        /**
-         * @description CandidateMembership is where a looked-up user stands with the garage.
-         * @enum {string}
-         */
-        v1CandidateMembership: "CANDIDATE_MEMBERSHIP_NONE" | "CANDIDATE_MEMBERSHIP_MEMBER" | "CANDIDATE_MEMBERSHIP_INVITED";
-        v1ChangeVehicleOwnerResponse: {
-            vehicle?: components["schemas"]["v1Vehicle"];
-        };
-        v1CloseRepairOrderResponse: {
-            repairOrder?: components["schemas"]["v1RepairOrder"];
-        };
-        v1ConfirmCustomerUserLinkResponse: {
-            link?: components["schemas"]["v1CustomerUserLink"];
-        };
-        v1ConvertQuoteResponse: {
-            quote?: components["schemas"]["v1Quote"];
-            /**
-             * @description The draft repair order created from the quote's approved lines
-             *     (FR-QUO-04); managed further by the Repair Order module (Release 1.3).
-             */
-            repairOrderId?: string;
-        };
-        v1CorrectVehicleResponse: {
-            vehicle?: components["schemas"]["v1Vehicle"];
-        };
-        v1CreateCustomerResponse: {
-            customer?: components["schemas"]["v1Customer"];
-        };
-        v1CreateCustomerTaxProfileResponse: {
-            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
-        };
-        v1CreateGarageResponse: {
-            garage?: components["schemas"]["v1Garage"];
-        };
-        v1CreateInvitationResponse: {
-            invitation?: components["schemas"]["v1Invitation"];
-        };
-        v1CreateItemResponse: {
-            item?: components["schemas"]["v1Item"];
-        };
-        v1CreatePlanPaymentRequestRequest: {
-            planId: string;
-            kind: components["schemas"]["v1PlanPaymentKind"];
-        };
-        v1CreatePlanPaymentRequestResponse: {
-            request?: components["schemas"]["v1PlanPaymentRequest"];
-        };
-        v1CreatePlanResponse: {
-            plan?: components["schemas"]["v1Plan"];
-        };
-        v1CreateQuoteResponse: {
-            quote?: components["schemas"]["v1Quote"];
-        };
-        v1CreateRepairOrderResponse: {
-            repairOrder?: components["schemas"]["v1RepairOrder"];
-        };
-        v1CreateRoleResponse: {
-            role?: components["schemas"]["v1Role"];
-        };
-        v1CreateSettlementResponse: {
-            settlement?: components["schemas"]["v1Settlement"];
-        };
-        v1CreateStaffGroupResponse: {
-            group?: components["schemas"]["v1StaffGroup"];
-        };
-        v1CreateStockReceiptResponse: {
-            transaction?: components["schemas"]["v1StockTransaction"];
-            item?: components["schemas"]["v1Item"];
-        };
-        v1CreateSupplierResponse: {
-            supplier?: components["schemas"]["v1Supplier"];
-        };
-        v1CreateVehicleResponse: {
-            vehicle?: components["schemas"]["v1Vehicle"];
-        };
-        /**
-         * @description CreditEntryKind is why the account credit changed (FR-LIC-09).
-         *
-         *      - CREDIT_ENTRY_KIND_EARNED: A downgrade's surplus.
-         *      - CREDIT_ENTRY_KIND_APPLIED: Credit used by a payment.
-         *      - CREDIT_ENTRY_KIND_ADJUSTMENT: A correction by a platform admin.
-         * @enum {string}
-         */
-        v1CreditEntryKind: "CREDIT_ENTRY_KIND_EARNED" | "CREDIT_ENTRY_KIND_APPLIED" | "CREDIT_ENTRY_KIND_ADJUSTMENT";
-        /** @description CreditLedgerEntry is one change of the owner's account credit. */
-        v1CreditLedgerEntry: {
-            kind?: components["schemas"]["v1CreditEntryKind"];
-            /**
-             * Format: int64
-             * @description Signed VND: positive adds credit, negative uses it.
-             */
-            amount?: string;
-            /** Format: int64 */
-            balanceAfter?: string;
-            planPaymentRequestId?: string;
-            note?: string;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        /**
-         * @description Customer is a vehicle owner served by one garage (FR-CUS-01). It needs no
-         *     VietGara user: a walk-in customer is just a profile the garage keeps.
-         */
-        v1Customer: {
-            readonly id?: string;
-            readonly garageId?: string;
-            fullName: string;
-            /** @description Unique per garage among live customers; stored normalized. */
-            phone?: string;
-            email?: string;
-            address?: string;
-            /** @description Personal-data consent (Decree 13/2023/ND-CP); every change is logged. */
-            personalDataConsent?: boolean;
-            /** Format: date-time */
-            readonly personalDataConsentAt?: string;
-            /** Format: int32 */
-            readonly vehicleCount?: number;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            /**
-             * @description False once the customer was deactivated instead of deleted (FR-CAT-07);
-             *     an inactive customer is left out of pickers.
-             */
-            readonly isActive?: boolean;
-            linkStatus?: components["schemas"]["v1CustomerUserLinkStatus"];
-        };
-        /**
-         * @description CustomerTaxProfile is a legal identity a customer can be billed under
-         *     (FR-CUS-07): at most one personal profile and any number of company
-         *     profiles.
-         */
-        v1CustomerTaxProfile: {
-            readonly id?: string;
-            readonly garageId?: string;
-            readonly customerId?: string;
-            kind: components["schemas"]["v1TaxProfileKind"];
-            /** @description The company's legal name, or the person's name. */
-            legalName: string;
-            /** @description 10 digits, or 13 with the branch suffix. */
-            taxId?: string;
-            address?: string;
-            /** @description Where an e-invoice is sent. */
-            invoiceEmail?: string;
-            /** @description The profile a document is billed to when none is chosen. */
-            isDefault?: boolean;
-            /** @description False once deactivated instead of deleted (FR-CAT-07). */
-            readonly isActive?: boolean;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
-        /**
-         * @description CustomerUserLink is the link between one customer profile and a user.
-         *     The garage never sees which user it is, only the state of the link.
-         */
-        v1CustomerUserLink: {
-            readonly id?: string;
-            readonly garageId?: string;
-            readonly customerId?: string;
-            status?: components["schemas"]["v1CustomerUserLinkStatus"];
-            channel?: components["schemas"]["v1CustomerUserLinkChannel"];
-            /** Format: date-time */
-            readonly requestedAt?: string;
-            /** Format: date-time */
-            readonly linkedAt?: string;
-        };
-        /**
-         * @description CustomerUserLinkChannel is how a link was confirmed (FR-CUS-06).
-         *
-         *      - CUSTOMER_USER_LINK_CHANNEL_OTP: The user told the garage a one-time code.
-         *      - CUSTOMER_USER_LINK_CHANNEL_APP: The user accepted in the Customer App.
-         *      - CUSTOMER_USER_LINK_CHANNEL_AUTO_EMAIL: A verified user e-mail matched the profile at sign-in.
-         * @enum {string}
-         */
-        v1CustomerUserLinkChannel: "CUSTOMER_USER_LINK_CHANNEL_OTP" | "CUSTOMER_USER_LINK_CHANNEL_APP" | "CUSTOMER_USER_LINK_CHANNEL_AUTO_EMAIL";
-        /**
-         * @description CustomerUserLinkStatus is the state of the link between a garage's
-         *     customer profile and a VietGara user (FR-CUS-06). A customer needs no
-         *     user; UNSPECIFIED means the profile has never been linked.
-         *
-         *      - CUSTOMER_USER_LINK_STATUS_REQUESTED: The garage asked; the user has not answered yet.
-         *      - CUSTOMER_USER_LINK_STATUS_UNLINKED: Ended by either side.
-         * @enum {string}
-         */
-        v1CustomerUserLinkStatus: "CUSTOMER_USER_LINK_STATUS_REQUESTED" | "CUSTOMER_USER_LINK_STATUS_LINKED" | "CUSTOMER_USER_LINK_STATUS_DECLINED" | "CUSTOMER_USER_LINK_STATUS_UNLINKED";
-        /** @description DailyHours is the opening time of one weekday (FR-TEN-05). */
-        v1DailyHours: {
-            day?: components["schemas"]["typeDayOfWeek"];
-            /** @description True when the garage does not open that day. */
-            closed?: boolean;
-            /** @description "HH:MM", 24-hour clock, garage timezone. */
-            open?: string;
-            close?: string;
-        };
-        v1DecidePublicQuoteResponse: {
-            quote?: components["schemas"]["v1PublicQuote"];
-        };
-        v1DeclineGarageLinkResponse: {
-            link?: components["schemas"]["v1GarageLink"];
-        };
-        v1DeclineInvitationResponse: {
-            invitation?: components["schemas"]["v1Invitation"];
-        };
-        v1DeleteCustomerResponse: {
-            outcome?: components["schemas"]["v1DeleteOutcome"];
-        };
-        v1DeleteCustomerTaxProfileResponse: {
-            outcome?: components["schemas"]["v1DeleteOutcome"];
-        };
-        v1DeleteFileResponse: {
-            outcome?: components["schemas"]["v1DeleteOutcome"];
-        };
-        v1DeleteGarageLogoResponse: {
-            garage?: components["schemas"]["v1Garage"];
-        };
-        v1DeleteItemResponse: Record<string, never>;
-        /**
-         * @description DeleteOutcome is what a DELETE did (FR-CAT-07, the delete-or-deactivate
-         *     rule). An object that nothing references is soft-deleted; one that is
-         *     still in use is only deactivated: it disappears from pickers, stays on
-         *     the documents that use it, and staff can reactivate it.
-         *
-         *     Every deletable resource takes a `dry_run` flag (`?dryRun=true`) that
-         *     answers with the outcome without changing anything, so a confirmation
-         *     dialog can tell the user which one will happen.
-         * @enum {string}
-         */
-        v1DeleteOutcome: "DELETE_OUTCOME_DELETED" | "DELETE_OUTCOME_DEACTIVATED";
-        v1DeleteQuoteResponse: Record<string, never>;
-        v1DeleteRoleResponse: Record<string, never>;
-        v1DeleteStaffGroupResponse: Record<string, never>;
-        v1DeleteStaffResponse: Record<string, never>;
-        v1DeleteSupplierResponse: {
-            outcome?: components["schemas"]["v1DeleteOutcome"];
-        };
-        v1DeleteVehicleResponse: {
-            outcome?: components["schemas"]["v1DeleteOutcome"];
-        };
-        /**
-         * @description Entitlements is what a garage may currently use, derived from its
-         *     owner's subscription; the web admin uses it to lock UI.
-         */
-        v1Entitlements: {
-            garageId?: string;
-            status?: components["schemas"]["v1SubscriptionStatus"];
-            planCode?: string;
-            features?: components["schemas"]["v1Feature"][];
-            limits?: components["schemas"]["v1PlanLimits"];
-            readOnly?: boolean;
-            /** Format: date-time */
-            currentPeriodEnd?: string;
-        };
-        /** @description Error describes why a request failed. */
-        v1Error: {
-            /**
-             * @description Stable, machine-readable code the client translates, e.g.
-             *     VALIDATION_ERROR, EMAIL_NOT_VERIFIED, OTP_EXPIRED, PLAN_LIMIT_REACHED.
-             */
-            code?: string;
-            /**
-             * @description English, developer-facing description; clients show a localized text
-             *     for `code` instead.
-             */
-            message?: string;
-            /** @description Field-level problems for VALIDATION_ERROR. */
-            details?: components["schemas"]["v1ErrorDetail"][];
-        };
-        /** @description ErrorDetail is one invalid request field. */
-        v1ErrorDetail: {
-            /** @description JSON name of the field, e.g. "email" or "garage.name". */
-            field?: string;
-            /** @description Machine-readable problem: required, invalid, too_long, taken, ... */
-            issue?: string;
-        };
-        /**
-         * @description ErrorResponse is the body of every non-2xx REST response:
-         *     `{"error": {"code", "message", "details"}}`.
-         */
-        v1ErrorResponse: {
-            error?: components["schemas"]["v1Error"];
-        };
-        v1ExtendSubscriptionResponse: {
-            subscription?: components["schemas"]["v1Subscription"];
-        };
-        /**
-         * @description Feature is a module a plan may include.
-         * @enum {string}
-         */
-        v1Feature: "FEATURE_CUSTOMERS" | "FEATURE_QUOTES" | "FEATURE_REPAIR_ORDERS" | "FEATURE_INVENTORY" | "FEATURE_BILLING" | "FEATURE_DOCUMENTS" | "FEATURE_REPORTS";
-        /**
-         * @description File is one uploaded object registered in the garage's file registry.
-         *     Business records refer to a file by id, never by URL, so a CDN or bucket
-         *     change breaks nothing.
-         */
-        v1File: {
-            readonly id?: string;
-            readonly garageId?: string;
-            kind: components["schemas"]["v1FileKind"];
-            /** @description What the file belongs to, e.g. "garage" or "part". */
-            entityType: string;
-            entityId: string;
-            readonly contentType?: string;
-            /** Format: int64 */
-            readonly size?: string;
-            /** @description Hex-encoded SHA-256 of the content. */
-            readonly sha256?: string;
-            /** @description Set for public kinds only; private files use GetFileUrl. */
-            readonly url?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-        };
-        /**
-         * @description FileKind says what a file is for, and so whether it is public. Every kind
-         *     added later (repair photo, customer document, claim document, export) is
-         *     private and served through short-lived signed URLs.
-         *
-         *      - FILE_KIND_LOGO: A garage logo (public).
-         *      - FILE_KIND_PAYMENT_EVIDENCE: The screenshot of a subscription transfer (private).
-         *      - FILE_KIND_PLATFORM_QR: The platform's bank QR code (private, read through a signed URL).
-         * @enum {string}
-         */
-        v1FileKind: "FILE_KIND_LOGO" | "FILE_KIND_PAYMENT_EVIDENCE" | "FILE_KIND_PLATFORM_QR";
-        /** @description Garage is one tenant (branch) owned by a user (FR-TEN-01/02). */
-        v1Garage: {
-            readonly id?: string;
-            readonly ownerUserId?: string;
-            name: string;
-            taxCode?: string;
-            address?: string;
-            phone?: string;
-            email?: string;
-            /** @description Set through UploadGarageLogo; the logo is a file of the file registry. */
-            readonly logoUrl?: string;
-            /** @description IANA timezone, default Asia/Ho_Chi_Minh. */
-            timezone?: string;
-            /** @description ISO 4217, default VND. */
-            currency?: string;
-            status?: components["schemas"]["v1GarageStatus"];
-            operatingHours?: components["schemas"]["v1DailyHours"][];
-            numbering?: components["schemas"]["v1NumberingTemplates"];
-            access?: components["schemas"]["v1GarageAccess"];
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            defaultQuoteApprovalMode?: components["schemas"]["v1QuoteApprovalMode"];
-            /**
-             * @description The garage's legal identity, printed in the header of every document
-             *     with the logo and tax_code (FR-TEN-06). Changing it never rewrites a
-             *     document already issued: each document keeps a snapshot.
-             */
-            legalName?: string;
-            legalAddress?: string;
-            /** @description The legal representative. */
-            representative?: string;
-            bank?: components["schemas"]["v1BankDetails"];
-        };
-        /** @description GarageAccess is what the signed-in user may do in the garage. */
-        v1GarageAccess: {
-            owner?: boolean;
-            permissions?: components["schemas"]["v1Permission"][];
-        };
-        /**
-         * @description GarageLink is a garage's customer profile that is linked, or is waiting to
-         *     be linked, to the signed-in user (FR-CUS-06, FR-CAPP-05). Suppliers never
-         *     appear here.
-         */
-        v1GarageLink: {
-            readonly id?: string;
-            readonly garageId?: string;
-            readonly garageName?: string;
-            readonly garageAddress?: string;
-            readonly garagePhone?: string;
-            readonly customerId?: string;
-            readonly customerName?: string;
-            status?: components["schemas"]["v1CustomerUserLinkStatus"];
-            /** Format: date-time */
-            readonly requestedAt?: string;
-            /** Format: date-time */
-            readonly linkedAt?: string;
-        };
-        /**
-         * @description GarageStatus: an inactive garage is hidden from staff and read-only for
-         *     its owner until reactivated (FR-TEN-02).
-         * @enum {string}
-         */
-        v1GarageStatus: "GARAGE_STATUS_ACTIVE" | "GARAGE_STATUS_INACTIVE";
-        v1GetCustomerResponse: {
-            customer?: components["schemas"]["v1Customer"];
-        };
-        v1GetCustomerTaxProfileResponse: {
-            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
-        };
-        v1GetFileUrlResponse: {
-            /** @description A short-lived signed URL for a private file, or the public URL. */
-            url?: string;
-            /** Format: date-time */
-            expiresAt?: string;
-        };
-        v1GetGarageEntitlementsResponse: {
-            entitlements?: components["schemas"]["v1Entitlements"];
-        };
-        v1GetGarageResponse: {
-            garage?: components["schemas"]["v1Garage"];
-        };
-        v1GetItemResponse: {
-            item?: components["schemas"]["v1Item"];
-        };
-        v1GetMeResponse: {
-            user?: components["schemas"]["v1User"];
-        };
-        v1GetMyInvitationResponse: {
-            invitation?: components["schemas"]["v1Invitation"];
-        };
-        v1GetMyPlanPaymentRequestResponse: {
-            request?: components["schemas"]["v1PlanPaymentRequest"];
-        };
-        v1GetMySubscriptionResponse: {
-            subscription?: components["schemas"]["v1Subscription"];
-        };
-        v1GetMyVehicleHistoryResponse: {
-            /** @description Quotes, repair orders and settlements of the vehicle, newest first. */
-            data?: components["schemas"]["v1VehicleHistoryEntry"][];
-        };
-        v1GetPaymentInstructionsResponse: {
-            instructions?: components["schemas"]["v1PaymentInstructions"];
-        };
-        v1GetPlanPaymentRequestResponse: {
-            request?: components["schemas"]["v1AdminPlanPaymentRequest"];
-        };
-        v1GetPlatformPaymentSettingsResponse: {
-            settings?: components["schemas"]["v1PlatformPaymentSettings"];
-        };
-        v1GetPublicQuoteResponse: {
-            quote?: components["schemas"]["v1PublicQuote"];
-        };
-        v1GetQuoteResponse: {
-            quote?: components["schemas"]["v1Quote"];
-        };
-        v1GetRepairOrderResponse: {
-            repairOrder?: components["schemas"]["v1RepairOrder"];
-        };
-        v1GetRevenueReportResponse: {
-            points?: components["schemas"]["v1RevenuePoint"][];
-            /**
-             * Format: int64
-             * @description Sum of every point's amount, over the requested range.
-             */
-            totalAmount?: string;
-        };
-        v1GetRoleResponse: {
-            role?: components["schemas"]["v1Role"];
-        };
-        v1GetSettlementResponse: {
-            settlement?: components["schemas"]["v1Settlement"];
-        };
-        v1GetSupplierResponse: {
-            supplier?: components["schemas"]["v1Supplier"];
-        };
-        v1GetVehicleHistoryResponse: {
-            data?: components["schemas"]["v1VehicleHistoryEntry"][];
-        };
-        v1GetVehicleResponse: {
-            vehicle?: components["schemas"]["v1Vehicle"];
-        };
-        /**
-         * @description Invitation asks an existing user to join a garage (FR-TEN-04). It is
-         *     e-mailed to the user and expires after 7 days.
-         */
-        v1Invitation: {
-            readonly id?: string;
-            readonly garageId?: string;
-            readonly garageName?: string;
-            userId?: string;
-            readonly fullName?: string;
-            readonly email?: string;
-            /** @description Staff groups the member joins on acceptance. */
-            groupIds?: string[];
-            status?: components["schemas"]["v1InvitationStatus"];
-            readonly invitedByName?: string;
-            /** Format: date-time */
-            readonly expiresAt?: string;
-            /** Format: date-time */
-            readonly respondedAt?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-        };
-        /** @enum {string} */
-        v1InvitationStatus: "INVITATION_STATUS_PENDING" | "INVITATION_STATUS_ACCEPTED" | "INVITATION_STATUS_DECLINED" | "INVITATION_STATUS_REVOKED" | "INVITATION_STATUS_EXPIRED";
-        /** @description Item is one part code a garage stocks (FR-INV-01..03). */
-        v1Item: {
-            readonly id?: string;
-            readonly garageId?: string;
-            sku: string;
-            name: string;
-            /** @description e.g. "piece", "liter"; free text. */
-            unit?: string;
-            /**
-             * Format: int32
-             * @description A quantityOnHand at or below this triggers the low-stock badge
-             *     (FR-INV-04's UI half; the notification itself is Release 2).
-             */
-            reorderThreshold?: number;
-            /**
-             * @description Decimal string; derived from stock_transactions, never written
-             *     directly (FR-INV-03).
-             */
-            readonly quantityOnHand?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
-        v1ListAllPlansResponse: {
-            data?: components["schemas"]["v1Plan"][];
-        };
-        v1ListCustomerTaxProfilesResponse: {
-            data?: components["schemas"]["v1CustomerTaxProfile"][];
-        };
-        v1ListCustomersResponse: {
-            data?: components["schemas"]["v1Customer"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListGaragesResponse: {
-            /**
-             * @description Garages the user owns or is an active member of; staff do not see
-             *     inactive garages.
-             */
-            data?: components["schemas"]["v1Garage"][];
-        };
-        v1ListInvitationsResponse: {
-            data?: components["schemas"]["v1Invitation"][];
-        };
-        v1ListItemsResponse: {
-            data?: components["schemas"]["v1Item"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListMyCreditLedgerResponse: {
-            data?: components["schemas"]["v1CreditLedgerEntry"][];
-        };
-        v1ListMyGarageLinksResponse: {
-            /** @description Link requests waiting for an answer and the garages already linked. */
-            data?: components["schemas"]["v1GarageLink"][];
-        };
-        v1ListMyInvitationsResponse: {
-            data?: components["schemas"]["v1Invitation"][];
-        };
-        v1ListMyPlanPaymentRequestsResponse: {
-            data?: components["schemas"]["v1PlanPaymentRequest"][];
-        };
-        v1ListMyVehiclesResponse: {
-            /**
-             * @description One entry per garage whose customer record carries the user's
-             *     verified e-mail, by garage name.
-             */
-            data?: components["schemas"]["v1MyGarage"][];
-        };
-        v1ListMyWorkResponse: {
-            /**
-             * @description Open repair orders (not closed) with at least one line assigned to the
-             *     technician, across every garage where they are an active member
-             *     allowed to read repair orders; oldest first.
-             */
-            data?: components["schemas"]["v1WorkOrder"][];
-        };
-        v1ListPermissionsResponse: {
-            data?: components["schemas"]["v1PermissionInfo"][];
-        };
-        v1ListPlanPaymentRequestsResponse: {
-            data?: components["schemas"]["v1AdminPlanPaymentRequest"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListPlansResponse: {
-            /** @description Public, active plans, cheapest first. */
-            data?: components["schemas"]["v1Plan"][];
-        };
-        v1ListQuotesResponse: {
-            data?: components["schemas"]["v1Quote"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListRepairOrdersResponse: {
-            data?: components["schemas"]["v1RepairOrder"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListRolesResponse: {
-            data?: components["schemas"]["v1Role"][];
-        };
-        v1ListSettlementsResponse: {
-            data?: components["schemas"]["v1Settlement"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListStaffGroupsResponse: {
-            data?: components["schemas"]["v1StaffGroup"][];
-        };
-        v1ListStaffResponse: {
-            data?: components["schemas"]["v1Staff"][];
-        };
-        v1ListStockTransactionsResponse: {
-            data?: components["schemas"]["v1StockTransaction"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListSubscriptionsResponse: {
-            data?: components["schemas"]["v1SubscriptionSummary"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListSuppliersResponse: {
-            data?: components["schemas"]["v1Supplier"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        v1ListVehiclesResponse: {
-            data?: components["schemas"]["v1Vehicle"][];
-            pagination?: components["schemas"]["v1Pagination"];
-        };
-        /**
-         * @description Locale is the user's interface and e-mail language. Vietnamese is the
-         *     default (NFR-US-01).
-         * @enum {string}
-         */
-        v1Locale: "LOCALE_VI" | "LOCALE_EN";
-        v1LoginRequest: {
-            email: string;
-            password: string;
-        };
-        v1LoginResponse: {
-            session?: components["schemas"]["v1Session"];
-        };
-        v1LogoutRequest: {
-            refreshToken: string;
-        };
-        v1LogoutResponse: Record<string, never>;
-        v1LookupCustomersResponse: {
-            /** @description The garage's own customers matching the contact. */
-            data?: components["schemas"]["v1Customer"][];
-            /**
-             * @description Whether a VietGara user has this verified phone or e-mail. Nothing else
-             *     about the user is ever returned.
-             */
-            userExists?: boolean;
-        };
-        v1LookupStaffCandidateResponse: {
-            candidate?: components["schemas"]["v1StaffCandidate"];
-        };
-        /** @description MyGarage is a garage where the signed-in person is a customer. */
-        v1MyGarage: {
-            readonly garageId?: string;
-            readonly name?: string;
-            readonly address?: string;
-            readonly phone?: string;
-            /** @description The garage's customer record matched to the signed-in person. */
-            readonly customerId?: string;
-            readonly customerName?: string;
-            /** @description The vehicles on that customer record. */
-            readonly vehicles?: components["schemas"]["v1Vehicle"][];
-        };
-        /**
-         * @description NumberingTemplates configures document numbers (FR-TEN-05). Placeholders:
-         *     {YYYY}, {YY}, {MM}, {DD} and {SEQ:n} (sequence padded to n digits),
-         *     e.g. "BG-{YYYY}{MM}-{SEQ:4}".
-         */
-        v1NumberingTemplates: {
-            quote?: string;
-            repairOrder?: string;
-            /** @description Settlement document numbers (Release 1.4). */
-            settlement?: string;
-            /** @description Payment voucher (phiếu thu) numbers (FR-BIL-05, Release 5.0). */
-            paymentVoucher?: string;
-        };
-        /** @description OtpChallenge tells the client how long the e-mailed OTP is valid. */
-        v1OtpChallenge: {
-            /** Format: date-time */
-            expiresAt?: string;
-            /**
-             * Format: date-time
-             * @description A new OTP cannot be requested before this time.
-             */
-            resendAvailableAt?: string;
-        };
-        /**
-         * @description Pagination describes the page returned by every List call (API
-         *     Specification Section 1.1): lists are requested with `page` (1-based,
-         *     default 1) and `page_size` (default 20, max 100).
-         */
-        v1Pagination: {
-            /**
-             * Format: int32
-             * @description Total number of items matching the query, across all pages.
-             */
-            total?: number;
-            /**
-             * Format: int32
-             * @description The 1-based page that was returned.
-             */
-            page?: number;
-            /**
-             * Format: int32
-             * @description The page size that was applied.
-             */
-            pageSize?: number;
-        };
-        /** @description PaymentEvidence is the screenshot of the transfer. */
-        v1PaymentEvidence: {
-            /** Format: byte */
-            content: string;
-            /** @description image/png, image/jpeg, image/webp or application/pdf, at most 5 MB. */
-            contentType: string;
-        };
-        /**
-         * @description PaymentInstructions are the platform's payment details shown with a
-         *     payment request (FR-LIC-10).
-         */
-        v1PaymentInstructions: {
-            bankName?: string;
-            accountNumber?: string;
-            accountHolder?: string;
-            branch?: string;
-            transferInstructions?: string;
-            /** @description The QR code image, a signed URL valid for 5 minutes; empty when none. */
-            readonly qrUrl?: string;
-        };
-        /**
-         * @description PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE
-         *     is recorded manually in Release 1.4 (staff sees a bank app or gateway
-         *     dashboard confirmation and records it); automatic confirmation via a
-         *     payment gateway webhook is Release 2.0 (FR-PAY-02).
-         * @enum {string}
-         */
-        v1PaymentMethod: "PAYMENT_METHOD_CASH" | "PAYMENT_METHOD_BANK_TRANSFER" | "PAYMENT_METHOD_ONLINE";
-        /**
-         * @description Permission is one action a staff member may perform in a garage
-         *     (FR-IAM-03). The catalog is fixed by the platform and grouped by module,
-         *     each module offering a read and/or a write action; garage owners combine
-         *     permissions into roles. A write permission includes the read permission
-         *     of its module. Owners always hold every permission; every active member
-         *     may read the garage profile.
-         *
-         *      - PERMISSION_GARAGE_WRITE: Edit the garage profile, configuration and logo.
-         *      - PERMISSION_STAFF_WRITE: Invite, activate/deactivate and remove staff, and change their groups.
-         *      - PERMISSION_CUSTOMER_READ: Customers and their vehicles.
-         *      - PERMISSION_SUPPLIER_READ: The garage's suppliers (FR-SUP-01).
-         *      - PERMISSION_CUSTOMER_CORRECT: Correct a locked vehicle identity field and move a vehicle to another
-         *     customer (FR-CUS-09). Held by the manager role by default.
-         * @enum {string}
-         */
-        v1Permission: "PERMISSION_GARAGE_WRITE" | "PERMISSION_STAFF_READ" | "PERMISSION_STAFF_WRITE" | "PERMISSION_CUSTOMER_READ" | "PERMISSION_CUSTOMER_WRITE" | "PERMISSION_SUPPLIER_READ" | "PERMISSION_SUPPLIER_WRITE" | "PERMISSION_SUBSCRIPTION_READ" | "PERMISSION_QUOTE_READ" | "PERMISSION_QUOTE_WRITE" | "PERMISSION_REPAIR_ORDER_READ" | "PERMISSION_REPAIR_ORDER_WRITE" | "PERMISSION_INVENTORY_READ" | "PERMISSION_INVENTORY_WRITE" | "PERMISSION_BILLING_READ" | "PERMISSION_BILLING_WRITE" | "PERMISSION_REPORT_READ" | "PERMISSION_CUSTOMER_CORRECT";
-        /** @description PermissionInfo describes one catalog entry. */
-        v1PermissionInfo: {
-            permission?: components["schemas"]["v1Permission"];
-            /**
-             * @description Module the permission belongs to, e.g. "customer", used to group the
-             *     role editor.
-             */
-            module?: string;
-            /** @description "read" or "write": the permission's column in the role editor. */
-            action?: string;
-        };
-        /** @description Plan is a subscription offer (FR-LIC-05). */
-        v1Plan: {
-            readonly id?: string;
-            /** @description Unique, e.g. "pro"; "trial" is the plan every new owner starts on. */
-            code: string;
-            name: string;
-            description?: string;
-            /**
-             * Format: int64
-             * @description Price per billing cycle in the smallest currency unit (VND).
-             */
-            price?: string;
-            currency?: string;
-            billingCycle?: components["schemas"]["v1BillingCycle"];
-            limits: components["schemas"]["v1PlanLimits"];
-            features?: components["schemas"]["v1Feature"][];
-            /** @description Shown to garage owners. */
-            isPublic?: boolean;
-            /** @description Inactive plans cannot be chosen; existing subscribers keep them. */
-            isActive?: boolean;
-            /** Format: int32 */
-            sortOrder?: number;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
-        /** @description PlanLimits caps usage across all garages of the subscribing owner. */
-        v1PlanLimits: {
-            /** Format: int32 */
-            maxGarages?: number;
-            /**
-             * Format: int32
-             * @description Staff members across all garages, excluding the owner and counting
-             *     pending invitations.
-             */
-            maxStaff?: number;
-            /**
-             * Format: int32
-             * @description Business documents (quotes, repair orders, settlements) created per
-             *     calendar day (Asia/Ho_Chi_Minh).
-             */
-            maxTransactionsPerDay?: number;
-        };
-        /**
-         * @description PlanPaymentKind says what a payment request pays for (FR-LIC-07).
-         *
-         *      - PLAN_PAYMENT_KIND_CHANGE: Another plan.
-         *      - PLAN_PAYMENT_KIND_RENEW: The current plan for another period.
-         * @enum {string}
-         */
-        v1PlanPaymentKind: "PLAN_PAYMENT_KIND_CHANGE" | "PLAN_PAYMENT_KIND_RENEW";
-        /**
-         * @description PlanPaymentRequest is an owner's request to switch to a plan, or to renew
-         *     the current one, paid by a manual bank transfer (FR-LIC-07). The amounts
-         *     are fixed when it is quoted and honoured at approval.
-         */
-        v1PlanPaymentRequest: {
-            readonly id?: string;
-            kind?: components["schemas"]["v1PlanPaymentKind"];
-            plan?: components["schemas"]["v1Plan"];
-            status?: components["schemas"]["v1PlanPaymentStatus"];
-            /** @description The code the owner puts in the transfer note, e.g. "VG-7K2M9Q". */
-            reference?: string;
-            /**
-             * Format: int64
-             * @description New plan price, account credit applied, amount to transfer and any
-             *     surplus that becomes credit (VND, FR-LIC-09).
-             */
-            quotedAmount?: string;
-            /** Format: int64 */
-            creditApplied?: string;
-            /** Format: int64 */
-            amountDue?: string;
-            /** Format: int64 */
-            creditSurplus?: string;
-            /**
-             * Format: int32
-             * @description Days of the current period and how many are unused (0 after expiry).
-             */
-            periodDays?: number;
-            /** Format: int32 */
-            unusedDays?: number;
-            instructions?: components["schemas"]["v1PaymentInstructions"];
-            /** @description The owner's declaration, set once submitted. */
-            payerName?: string;
-            payerBank?: string;
-            payerAccount?: string;
-            /** Format: int64 */
-            transferredAmount?: string;
-            bankTransactionRef?: string;
-            /** Format: date-time */
-            paidAt?: string;
-            /** @description The evidence screenshot, a signed URL valid for 5 minutes. */
-            readonly evidenceUrl?: string;
-            /** @description True when the transferred amount differs from amount_due. */
-            amountMismatch?: boolean;
-            /** @description The admin's note on approval (required when amount_mismatch). */
-            reviewNote?: string;
-            rejectionReason?: string;
-            /** Format: date-time */
-            submittedAt?: string;
-            /** Format: date-time */
-            reviewedAt?: string;
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        /**
-         * @description PlanPaymentStatus is the state of a payment request (LLD 3.3).
+         * @description Defaults to SUBMITTED, oldest first.
          *
          *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
          *     transfer yet. A new request replaces it.
          *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
          *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
-         * @enum {string}
          */
-        v1PlanPaymentStatus: "PLAN_PAYMENT_STATUS_AWAITING_PAYMENT" | "PLAN_PAYMENT_STATUS_SUBMITTED" | "PLAN_PAYMENT_STATUS_APPROVED" | "PLAN_PAYMENT_STATUS_REJECTED" | "PLAN_PAYMENT_STATUS_CANCELLED";
-        /** @description PlatformPaymentSettings are the details owners transfer to (FR-LIC-10). */
-        v1PlatformPaymentSettings: {
-            bankName?: string;
-            accountNumber?: string;
-            accountHolder?: string;
-            branch?: string;
-            transferInstructions?: string;
-            /** @description The QR code, a signed URL valid for 5 minutes; empty when none. */
-            readonly qrUrl?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
+        status?:
+          | 'PLAN_PAYMENT_STATUS_AWAITING_PAYMENT'
+          | 'PLAN_PAYMENT_STATUS_SUBMITTED'
+          | 'PLAN_PAYMENT_STATUS_APPROVED'
+          | 'PLAN_PAYMENT_STATUS_REJECTED'
+          | 'PLAN_PAYMENT_STATUS_CANCELLED'
+        /** @description Matches the owner's e-mail or name, or the transfer reference. */
+        query?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlanPaymentRequestsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_GetPlanPaymentRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1AdminPlanPaymentRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_ApprovePlanPayment: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LicenseAdminServiceApprovePlanPaymentBody']
+      }
+    }
+    responses: {
+      /** @description The owner's subscription with the new plan and period. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Subscription']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_RejectPlanPayment: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LicenseAdminServiceRejectPlanPaymentBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlanPaymentRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_ListAllPlans: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListAllPlansResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_CreatePlan: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Plan']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Plan']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_UpdatePlan: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        planId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Plan']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Plan']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_ListSubscriptions: {
+    parameters: {
+      query?: {
+        /** @description Matches the owner's e-mail or name. */
+        query?: string
+        status?:
+          | 'SUBSCRIPTION_STATUS_TRIAL'
+          | 'SUBSCRIPTION_STATUS_ACTIVE'
+          | 'SUBSCRIPTION_STATUS_PAST_DUE'
+          | 'SUBSCRIPTION_STATUS_SUSPENDED'
+          | 'SUBSCRIPTION_STATUS_CANCELLED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSubscriptionsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_AdjustCredit: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        subscriptionId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LicenseAdminServiceAdjustCreditBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CreditLedgerEntry']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseAdminService_ExtendSubscription: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        subscriptionId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LicenseAdminServiceExtendSubscriptionBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Subscription']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_VerifyEmail: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1VerifyEmailRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_SendEmailVerificationOtp: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1SendEmailVerificationOtpRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1OtpChallenge']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_SignInWithGoogleIdToken: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1SignInWithGoogleIdTokenRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_Login: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1LoginRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_Logout: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1LogoutRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1LogoutResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_ResetPassword: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1ResetPasswordRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ResetPasswordResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_RequestPasswordReset: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RequestPasswordResetRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1OtpChallenge']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_VerifyPasswordResetOtp: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1VerifyPasswordResetOtpRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1VerifyPasswordResetOtpResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_RefreshToken: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RefreshTokenRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_Register: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RegisterRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerPortalService_GetMyVehicleHistory: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetMyVehicleHistoryResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerPortalService_ListMyVehicles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyVehiclesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageService_ListGarages: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListGaragesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageService_CreateGarage: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Garage']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Garage']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageService_GetGarage: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Garage']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageService_UpdateGarage: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Garage']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Garage']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_ListCustomers: {
+    parameters: {
+      query?: {
+        /** @description Fuzzy match on name, phone or e-mail. */
+        query?: string
+        page?: number
+        pageSize?: number
+        /** @description Also list deactivated customers (staff screens); pickers leave it off. */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListCustomersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_CreateCustomer: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Customer']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Customer']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_LookupCustomers: {
+    parameters: {
+      query?: {
+        /** @description Either or both; the garage's customers matching any of them are listed. */
+        phone?: string
+        email?: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1LookupCustomersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_GetCustomer: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Customer']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_DeleteCustomer: {
+    parameters: {
+      query?: {
+        /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteCustomerResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_UpdateCustomer: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Customer']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Customer']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerTaxProfileService_ListCustomerTaxProfiles: {
+    parameters: {
+      query?: {
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListCustomerTaxProfilesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerTaxProfileService_CreateCustomerTaxProfile: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1CustomerTaxProfile']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerTaxProfile']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerTaxProfileService_GetCustomerTaxProfile: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+        taxProfileId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerTaxProfile']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerTaxProfileService_DeleteCustomerTaxProfile: {
+    parameters: {
+      query?: {
+        /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+        taxProfileId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteCustomerTaxProfileResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerTaxProfileService_UpdateCustomerTaxProfile: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+        taxProfileId: string
+      }
+      cookie?: never
+    }
+    /** @description The kind cannot change. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1CustomerTaxProfile']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerTaxProfile']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerTaxProfileService_ActivateCustomerTaxProfile: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+        taxProfileId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerTaxProfileServiceActivateCustomerTaxProfileBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerTaxProfile']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerLinkService_RequestCustomerUserLink: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerLinkServiceRequestCustomerUserLinkBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerUserLink']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerLinkService_UnlinkCustomerUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerUserLink']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerLinkService_ConfirmCustomerUserLink: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerLinkServiceConfirmCustomerUserLinkBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CustomerUserLink']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerService_ActivateCustomer: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerServiceActivateCustomerBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Customer']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_GetGarageEntitlements: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Entitlements']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  FileService_UploadFile: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['FileServiceUploadFileBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1File']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  FileService_DeleteFile: {
+    parameters: {
+      query?: {
+        /** @description Answer the outcome without changing anything. */
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        fileId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteFileResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  FileService_GetFileUrl: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        fileId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetFileUrlResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_ListStockLevels: {
+    parameters: {
+      query?: {
+        /** @description Matches SKU, name or brand (answered by Catalogue). */
+        query?: string
+        /** @description Also matches the sub-categories of this category. */
+        categoryId?: string
+        brand?: string
+        /** @description Only parts at or below their reorder threshold. */
+        lowStock?: boolean
+        includeInactive?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListStockLevelsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetStockLevel: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockLevel']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_ListInvitations: {
+    parameters: {
+      query?: {
+        /** @description Unspecified lists every status. */
+        status?:
+          | 'INVITATION_STATUS_PENDING'
+          | 'INVITATION_STATUS_ACCEPTED'
+          | 'INVITATION_STATUS_DECLINED'
+          | 'INVITATION_STATUS_REVOKED'
+          | 'INVITATION_STATUS_EXPIRED'
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListInvitationsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_CreateInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InvitationServiceCreateInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Invitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_RevokeInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InvitationServiceRevokeInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Invitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageService_UploadGarageLogo: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GarageServiceUploadGarageLogoBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Garage']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageService_DeleteGarageLogo: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Garage']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_ListPartCategories: {
+    parameters: {
+      query?: {
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPartCategoriesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_CreatePartCategory: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PartCategory']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PartCategory']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_DeletePartCategory: {
+    parameters: {
+      query?: {
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeletePartCategoryResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_UpdatePartCategory: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PartCategory']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PartCategory']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_ListParts: {
+    parameters: {
+      query?: {
+        /** @description Matches SKU, name or brand. */
+        query?: string
+        /** @description Also matches the sub-categories of this category. */
+        categoryId?: string
+        brand?: string
+        includeInactive?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPartsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_CreatePart: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Part']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_GetPart: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_DeletePart: {
+    parameters: {
+      query?: {
+        /** @description Answer the outcome without changing anything. */
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeletePartResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_UpdatePart: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Part']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_AddPartImage: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CatalogueServiceAddPartImageBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_RemovePartImage: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+        fileId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_SetPartUnits: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CatalogueServiceSetPartUnitsBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_ActivatePart: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CatalogueServiceActivatePartBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_ListQuotes: {
+    parameters: {
+      query?: {
+        customerId?: string
+        vehicleId?: string
         /**
-         * @description PublicQuote is what an unauthenticated customer sees through the
-         *     approval link: no internal identifiers, only what they need to decide.
-         */
-        v1PublicQuote: {
-            number?: string;
-            status?: components["schemas"]["v1QuoteStatus"];
-            garageName?: string;
-            customerName?: string;
-            vehicleLicensePlate?: string;
-            lines?: components["schemas"]["v1QuoteLine"][];
-            /** Format: int64 */
-            totalAmount?: string;
-            notes?: string;
-            /**
-             * Format: date-time
-             * @description The link stops working after this time or once decided.
-             */
-            expiresAt?: string;
-        };
-        /** @description Quote is a price estimate awaiting the customer's approval (FR-QUO-01). */
-        v1Quote: {
-            readonly id?: string;
-            readonly garageId?: string;
-            customerId: string;
-            readonly customerName?: string;
-            vehicleId: string;
-            readonly vehicleLicensePlate?: string;
-            /**
-             * @description Assigned from the garage's quote numbering template (FR-TEN-05) when
-             *     the quote is first created.
-             */
-            readonly number?: string;
-            status?: components["schemas"]["v1QuoteStatus"];
-            approvalMode?: components["schemas"]["v1QuoteApprovalMode"];
-            lines?: components["schemas"]["v1QuoteLine"][];
-            /** Format: int64 */
-            readonly totalAmount?: string;
-            notes?: string;
-            /** Format: date-time */
-            readonly sentAt?: string;
-            /** Format: date-time */
-            readonly decidedAt?: string;
-            /** Format: date-time */
-            readonly convertedAt?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            billingParty?: components["schemas"]["v1BillingParty"];
-        };
-        /**
-         * @description QuoteApprovalMode selects how a quote is approved by the customer
-         *     (FR-QUO-02). Used by both Tenant (a garage's default, FR-TEN-05) and
-         *     Quote & Pricing (the mode of one quote), so it lives here rather than in
-         *     either module's package.
-         *
-         *      - QUOTE_APPROVAL_MODE_LINK: A public approval link is generated; it is e-mailed to the customer
-         *     automatically when they have an e-mail on file (so they are notified
-         *     of the proposed work even if they decide over the phone), and they may
-         *     approve or reject each line online with no login.
-         *      - QUOTE_APPROVAL_MODE_MANUAL: No link is generated or sent. A staff member records the customer's
-         *     decision directly (e.g. approved face to face at the counter), for
-         *     garages that prefer not to depend on the customer's e-mail or a link.
-         * @enum {string}
-         */
-        v1QuoteApprovalMode: "QUOTE_APPROVAL_MODE_LINK" | "QUOTE_APPROVAL_MODE_MANUAL";
-        /**
-         * @description QuoteItemType: a quote line is either labor or a part.
-         * @enum {string}
-         */
-        v1QuoteItemType: "QUOTE_ITEM_TYPE_LABOR" | "QUOTE_ITEM_TYPE_PART";
-        /** @description QuoteLine is one labor or part line of a quote. */
-        v1QuoteLine: {
-            readonly id?: string;
-            itemType: components["schemas"]["v1QuoteItemType"];
-            /**
-             * @description A parts-catalog reference once the Inventory module ships (Release
-             *     1.3); free text for now.
-             */
-            itemRefId?: string;
-            description: string;
-            /** @description Decimal string, e.g. "1" or "1.5". */
-            quantity: string;
-            /**
-             * Format: int64
-             * @description Integer VND.
-             */
-            unitPrice: string;
-            /** Format: int64 */
-            readonly lineTotal?: string;
-            decision?: components["schemas"]["v1QuoteLineDecision"];
-        };
-        /**
-         * @description QuoteLineDecision is the customer's decision on one line item
-         *     (FR-QUO-03), recorded either by the customer through the public link or
-         *     by a staff member on their behalf (manual approval mode).
-         * @enum {string}
-         */
-        v1QuoteLineDecision: "QUOTE_LINE_DECISION_PENDING" | "QUOTE_LINE_DECISION_APPROVED" | "QUOTE_LINE_DECISION_REJECTED";
-        v1QuoteLineDecisionInput: {
-            lineId: string;
-            approved?: boolean;
-        };
-        /**
-         * @description QuoteStatus is the lifecycle of a quote (FR-QUO-01..04).
+         * @description Unspecified lists every status.
          *
          *      - QUOTE_STATUS_DRAFT: Being edited by the service advisor; not visible to the customer yet.
          *      - QUOTE_STATUS_SENT: A LINK-mode quote waiting on the customer's decision.
          *      - QUOTE_STATUS_APPROVED: At least one line was approved.
          *      - QUOTE_STATUS_REJECTED: Every line was rejected.
          *      - QUOTE_STATUS_CONVERTED: Converted into a repair order (FR-QUO-04); no further edits.
-         * @enum {string}
          */
-        v1QuoteStatus: "QUOTE_STATUS_DRAFT" | "QUOTE_STATUS_SENT" | "QUOTE_STATUS_APPROVED" | "QUOTE_STATUS_REJECTED" | "QUOTE_STATUS_CONVERTED";
-        v1RecordQuoteDecisionResponse: {
-            quote?: components["schemas"]["v1Quote"];
-        };
-        v1RecordSettlementPaymentResponse: {
-            settlement?: components["schemas"]["v1Settlement"];
-        };
-        v1RefreshTokenRequest: {
-            refreshToken: string;
-        };
-        v1RefreshTokenResponse: {
-            session?: components["schemas"]["v1Session"];
-        };
-        v1RegisterRequest: {
-            email: string;
-            /** @description At least 8 characters. */
-            password: string;
-            fullName: string;
-            phone?: string;
-            locale?: components["schemas"]["v1Locale"];
-        };
-        v1RegisterResponse: {
-            session?: components["schemas"]["v1Session"];
-        };
-        v1RejectPlanPaymentResponse: {
-            request?: components["schemas"]["v1PlanPaymentRequest"];
-        };
+        status?: 'QUOTE_STATUS_DRAFT' | 'QUOTE_STATUS_SENT' | 'QUOTE_STATUS_APPROVED' | 'QUOTE_STATUS_REJECTED' | 'QUOTE_STATUS_CONVERTED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListQuotesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_CreateQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1Quote']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Quote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_GetQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Quote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_DeleteQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteQuoteResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_UpdateQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    /** @description Only while the quote is still a draft. "lines" replaces the whole set. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1Quote']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Quote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_ConvertQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['QuoteServiceConvertQuoteBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ConvertQuoteResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_RecordQuoteDecision: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['QuoteServiceRecordQuoteDecisionBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Quote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportQuotePdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  QuoteService_SendQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['QuoteServiceSendQuoteBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SendQuoteResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RepairOrderService_ListRepairOrders: {
+    parameters: {
+      query?: {
+        vehicleId?: string
         /**
-         * @description RepairOrder is a repair job for one vehicle (FR-REP-01), either
-         *     converted from an approved quote (Release 1.2's ConvertQuote) or
-         *     created directly for ad-hoc work.
-         */
-        v1RepairOrder: {
-            readonly id?: string;
-            readonly garageId?: string;
-            /** @description Set when converted from a quote; empty for ad-hoc repair orders. */
-            readonly quoteId?: string;
-            vehicleId: string;
-            readonly vehicleLicensePlate?: string;
-            readonly customerName?: string;
-            /** @description Rendered from the garage's repair_order_number_template (FR-TEN-05). */
-            readonly number?: string;
-            status?: components["schemas"]["v1RepairOrderStatus"];
-            lines?: components["schemas"]["v1RepairOrderLine"][];
-            /** Format: int64 */
-            readonly totalAmount?: string;
-            /** Format: date-time */
-            readonly closedAt?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
-        /**
-         * @description RepairOrderItemType: a repair order line is either labor or a part.
-         * @enum {string}
-         */
-        v1RepairOrderItemType: "REPAIR_ORDER_ITEM_TYPE_LABOR" | "REPAIR_ORDER_ITEM_TYPE_PART";
-        /** @description RepairOrderLine is one labor or part line of a repair order. */
-        v1RepairOrderLine: {
-            readonly id?: string;
-            itemType: components["schemas"]["v1RepairOrderItemType"];
-            /**
-             * @description An Inventory item id for PART lines (FR-INV-02 stock deduction on
-             *     close needs this); free text or empty for a part not carried in
-             *     stock. Validated against the garage's items when set.
-             */
-            itemRefId?: string;
-            description: string;
-            /** @description Decimal string, e.g. "1" or "1.5". */
-            quantity: string;
-            /**
-             * Format: int64
-             * @description Integer VND.
-             */
-            unitPrice: string;
-            /** Format: int64 */
-            readonly lineTotal?: string;
-            status?: components["schemas"]["v1RepairOrderLineStatus"];
-            /**
-             * @description Technician user ids assigned to this line (FR-REP-02); a line may
-             *     have more than one.
-             */
-            assignedTechnicianIds?: string[];
-        };
-        /**
-         * @description RepairOrderLineStatus is one line's own progress (FR-REP-03), tracked
-         *     separately from the repair order's overall status.
-         * @enum {string}
-         */
-        v1RepairOrderLineStatus: "REPAIR_ORDER_LINE_STATUS_NOT_STARTED" | "REPAIR_ORDER_LINE_STATUS_IN_PROGRESS" | "REPAIR_ORDER_LINE_STATUS_COMPLETED";
-        /**
-         * @description RepairOrderStatus is the lifecycle of a repair order (FR-REP-01..06),
-         *     shown as the Kanban board's columns (UI Design Spec Section 3.3).
-         *
-         *      - REPAIR_ORDER_STATUS_OPEN: "To Do": not yet started.
+         * @description - REPAIR_ORDER_STATUS_OPEN: "To Do": not yet started.
          *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock.
          *      - REPAIR_ORDER_STATUS_COMPLETED: Every line is done; ready for the advisor to close it.
          *      - REPAIR_ORDER_STATUS_CLOSED: Closed (FR-REP-06): no further edits; ready for settlement (Release
          *     1.4) and triggers stock deduction (Event Design, repair_order.closed).
-         * @enum {string}
          */
-        v1RepairOrderStatus: "REPAIR_ORDER_STATUS_OPEN" | "REPAIR_ORDER_STATUS_IN_PROGRESS" | "REPAIR_ORDER_STATUS_WAITING_ON_PARTS" | "REPAIR_ORDER_STATUS_COMPLETED" | "REPAIR_ORDER_STATUS_CLOSED";
-        v1RequestCustomerUserLinkResponse: {
-            link?: components["schemas"]["v1CustomerUserLink"];
-        };
-        v1RequestPasswordResetRequest: {
-            email: string;
-        };
-        v1RequestPasswordResetResponse: {
-            challenge?: components["schemas"]["v1OtpChallenge"];
-        };
-        v1ResetPasswordRequest: {
-            resetToken: string;
-            /** @description At least 8 characters. */
-            newPassword: string;
-        };
-        v1ResetPasswordResponse: Record<string, never>;
+        status?:
+          | 'REPAIR_ORDER_STATUS_OPEN'
+          | 'REPAIR_ORDER_STATUS_IN_PROGRESS'
+          | 'REPAIR_ORDER_STATUS_WAITING_ON_PARTS'
+          | 'REPAIR_ORDER_STATUS_COMPLETED'
+          | 'REPAIR_ORDER_STATUS_CLOSED'
+        /** @description Only repair orders with a line assigned to this technician. */
+        technicianId?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListRepairOrdersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RepairOrderService_CreateRepairOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    /** @description Ad-hoc creation (FR-REP-01): quote_id is never set through this RPC. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RepairOrder']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RepairOrderService_GetRepairOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RepairOrderService_CloseRepairOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RepairOrderServiceCloseRepairOrderBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RepairOrderService_UpdateRepairOrderLine: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+        lineId: string
+      }
+      cookie?: never
+    }
+    /** @description status and/or assigned_technician_ids (FR-REP-02/03). */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RepairOrderLine']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportRepairOrderPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReportingService_GetRevenueReport: {
+    parameters: {
+      query: {
+        period: 'REVENUE_PERIOD_DAY' | 'REVENUE_PERIOD_MONTH' | 'REVENUE_PERIOD_QUARTER' | 'REVENUE_PERIOD_YEAR'
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone (FR-TEN-05). */
+        from: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetRevenueReportResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportRevenueExcel: {
+    parameters: {
+      query: {
+        period: 'REVENUE_PERIOD_DAY' | 'REVENUE_PERIOD_MONTH' | 'REVENUE_PERIOD_QUARTER' | 'REVENUE_PERIOD_YEAR'
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone. */
+        from: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_ListStockTransactions: {
+    parameters: {
+      query?: {
+        itemId?: string
+        type?: 'STOCK_TRANSACTION_TYPE_IN' | 'STOCK_TRANSACTION_TYPE_OUT'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListStockTransactionsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportStockMovementsExcel: {
+    parameters: {
+      query?: {
+        /** @description Same optional filter as InventoryService.ListStockTransactions. */
+        itemId?: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SettlementService_ListSettlements: {
+    parameters: {
+      query?: {
         /**
-         * @description RevenuePeriod is the bucket granularity of a revenue report (FR-RPT-01).
-         * @enum {string}
-         */
-        v1RevenuePeriod: "REVENUE_PERIOD_DAY" | "REVENUE_PERIOD_MONTH" | "REVENUE_PERIOD_QUARTER" | "REVENUE_PERIOD_YEAR";
-        /** @description RevenuePoint is one bucket of a revenue report. */
-        v1RevenuePoint: {
-            /**
-             * @description The bucket's start, formatted for its granularity: "2026-09-30" (day),
-             *     "2026-09" (month), "2026-Q3" (quarter), "2026" (year).
-             */
-            readonly periodLabel?: string;
-            /**
-             * Format: int64
-             * @description Integer VND.
-             */
-            readonly amount?: string;
-        };
-        v1RevokeInvitationResponse: {
-            invitation?: components["schemas"]["v1Invitation"];
-        };
-        /**
-         * @description Role is a named set of permissions defined by a garage owner and shared
-         *     by all the owner's garages. Default roles are created when the owner
-         *     verifies their e-mail.
-         */
-        v1Role: {
-            readonly id?: string;
-            name: string;
-            description?: string;
-            permissions?: components["schemas"]["v1Permission"][];
-            /** @description Created by the platform; still editable. */
-            readonly isDefault?: boolean;
-            /**
-             * Format: int32
-             * @description Number of staff groups using the role.
-             */
-            readonly groupCount?: number;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            /**
-             * @description For a default role, the permissions the platform created it with: what
-             *     the role editor's "Reset to default" restores. Empty for other roles.
-             */
-            readonly defaultPermissions?: components["schemas"]["v1Permission"][];
-        };
-        v1SendEmailVerificationOtpRequest: Record<string, never>;
-        v1SendEmailVerificationOtpResponse: {
-            challenge?: components["schemas"]["v1OtpChallenge"];
-        };
-        v1SendQuoteResponse: {
-            quote?: components["schemas"]["v1Quote"];
-            /**
-             * @description The public approval URL, returned once for the advisor to copy or
-             *     share; set only for QUOTE_APPROVAL_MODE_LINK. Also e-mailed to the
-             *     customer automatically when they have an e-mail on file.
-             */
-            publicUrl?: string;
-            /**
-             * @description Whether the e-mail above was actually sent (false: no e-mail on file,
-             *     or approval_mode is MANUAL).
-             */
-            emailed?: boolean;
-        };
-        /** @description Session is what every successful sign-in returns. */
-        v1Session: {
-            accessToken?: string;
-            refreshToken?: string;
-            /** @description Always "Bearer". */
-            tokenType?: string;
-            /**
-             * Format: int64
-             * @description Access token lifetime in seconds.
-             */
-            expiresIn?: string;
-            user?: components["schemas"]["v1User"];
-        };
-        /**
-         * @description Settlement is the final bill of a closed repair order (FR-BIL-01),
-         *     paid by the customer. FR-REC-01's receivables view is this same list
-         *     filtered to not yet fully paid (ListSettlementsRequest.outstanding_only)
-         *     -- Release 1.4 has no separate receivables table; one arrives with
-         *     Release 2.2's reminders and reconciliation, which need their own
-         *     persisted state.
-         */
-        v1Settlement: {
-            readonly id?: string;
-            readonly garageId?: string;
-            readonly repairOrderId?: string;
-            /**
-             * @description Denormalized from the repair order at creation, the same pattern as
-             *     the repair order's own vehicle/customer fields.
-             */
-            readonly vehicleLicensePlate?: string;
-            readonly customerName?: string;
-            /** @description Rendered from the garage's settlement_number_template (FR-TEN-05). */
-            readonly number?: string;
-            /**
-             * Format: int64
-             * @description Copied from the repair order's total at creation time. Integer VND.
-             */
-            readonly totalAmount?: string;
-            /**
-             * Format: int64
-             * @description Running total of the payments that are not voided (FR-BIL-03). Integer
-             *     VND.
-             */
-            readonly paidAmount?: string;
-            status?: components["schemas"]["v1SettlementStatus"];
-            readonly payments?: components["schemas"]["v1SettlementPayment"][];
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            billingParty?: components["schemas"]["v1BillingParty"];
-            /**
-             * @description The customer asked for a VAT invoice; only possible while the billing
-             *     party's profile is complete, otherwise INVOICE_DATA_INCOMPLETE. When
-             *     false the document is a retail receipt.
-             */
-            invoiceRequested?: boolean;
-        };
-        /**
-         * @description SettlementPayment is one payment recorded against a settlement
-         *     (FR-BIL-03); a settlement may receive several. The customer is the only
-         *     payer. Every payment is a payment voucher (phiếu thu, FR-BIL-05).
-         */
-        v1SettlementPayment: {
-            readonly id?: string;
-            /**
-             * Format: int64
-             * @description Integer VND.
-             */
-            readonly amount?: string;
-            method?: components["schemas"]["v1PaymentMethod"];
-            readonly note?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** @description Numbered from the garage's payment voucher template (FR-BIL-05). */
-            readonly voucherNumber?: string;
-            /** @description Who paid: the billing party's name, or the customer's. */
-            readonly payerName?: string;
-            readonly payerAddress?: string;
-            /** @description Reason for payment printed on the voucher. */
-            readonly reason?: string;
-            /** @description The staff member who collected the money. */
-            readonly collectorName?: string;
-            /**
-             * @description A voided voucher stays on file and no longer counts towards paid_amount
-             *     (FR-BIL-06).
-             */
-            readonly voided?: boolean;
-            readonly voidReason?: string;
-            /** Format: date-time */
-            readonly voidedAt?: string;
-        };
-        /**
-         * @description SettlementStatus is a settlement's collection status, derived from the
-         *     amounts actually paid against the total (FR-BIL-01..03).
-         *
-         *      - SETTLEMENT_STATUS_PENDING: Nothing collected yet.
+         * @description - SETTLEMENT_STATUS_PENDING: Nothing collected yet.
          *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the total collected.
          *      - SETTLEMENT_STATUS_PAID: The full total collected.
-         * @enum {string}
          */
-        v1SettlementStatus: "SETTLEMENT_STATUS_PENDING" | "SETTLEMENT_STATUS_PARTIALLY_PAID" | "SETTLEMENT_STATUS_PAID";
-        v1SignInWithGoogleIdTokenRequest: {
-            /** @description The ID token (a JWT) returned by Google Sign-In on the device. */
-            idToken: string;
-            locale?: components["schemas"]["v1Locale"];
-        };
-        v1SignInWithGoogleIdTokenResponse: {
-            session?: components["schemas"]["v1Session"];
-        };
-        /** @description Staff is a user's membership of a garage (FR-TEN-04). */
-        v1Staff: {
-            readonly id?: string;
-            readonly garageId?: string;
-            readonly userId?: string;
-            readonly fullName?: string;
-            readonly email?: string;
-            readonly phone?: string;
-            /** @description The garage owner; cannot be deactivated, removed or grouped. */
-            readonly owner?: boolean;
-            status?: components["schemas"]["v1StaffStatus"];
-            /** @description Staff groups of this garage the member belongs to. */
-            groupIds?: string[];
-            /** @description Union of the permissions of the member's groups. */
-            readonly permissions?: components["schemas"]["v1Permission"][];
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
-        /** @description StaffCandidate is an existing user found by e-mail or phone. */
-        v1StaffCandidate: {
-            userId?: string;
-            fullName?: string;
-            email?: string;
-            phone?: string;
-            membership?: components["schemas"]["v1CandidateMembership"];
-        };
+        status?: 'SETTLEMENT_STATUS_PENDING' | 'SETTLEMENT_STATUS_PARTIALLY_PAID' | 'SETTLEMENT_STATUS_PAID'
         /**
-         * @description StaffGroup is a set of staff in one garage that all receive the
-         *     permissions of the group's role.
+         * @description FR-REC-01: settlements not yet fully paid (PENDING or
+         *     PARTIALLY_PAID), across every customer -- the receivables view.
+         *     Mutually exclusive with `status` in practice; `status` wins if both
+         *     are set.
          */
-        v1StaffGroup: {
-            readonly id?: string;
-            readonly garageId?: string;
-            name: string;
-            description?: string;
-            roleId: string;
-            readonly roleName?: string;
-            /** Format: int32 */
-            readonly memberCount?: number;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
+        outstandingOnly?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSettlementsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SettlementService_CreateSettlement: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SettlementServiceCreateSettlementBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Settlement']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SettlementService_GetSettlement: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Settlement']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SettlementService_UpdateSettlement: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+      }
+      cookie?: never
+    }
+    /** @description Only billing_party and invoice_requested can change. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1Settlement']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Settlement']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SettlementService_RecordSettlementPayment: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SettlementServiceRecordSettlementPaymentBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Settlement']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportPaymentVoucherPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+        paymentId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SettlementService_VoidSettlementPayment: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+        paymentId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SettlementServiceVoidSettlementPaymentBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Settlement']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportSettlementReceiptPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffService_ListStaff: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListStaffResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffService_LookupStaffCandidate: {
+    parameters: {
+      query: {
+        /** @description Exact e-mail address or phone number of an existing user. */
+        query: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StaffCandidate']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffGroupService_ListStaffGroups: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListStaffGroupsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffGroupService_CreateStaffGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1StaffGroup']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StaffGroup']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffGroupService_DeleteStaffGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        groupId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteStaffGroupResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffGroupService_UpdateStaffGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        groupId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1StaffGroup']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StaffGroup']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffService_DeleteStaff: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        staffId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteStaffResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  StaffService_UpdateStaff: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        staffId: string
+      }
+      cookie?: never
+    }
+    /** @description status and group_ids. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1Staff']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Staff']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CreateStockReceipt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCreateStockReceiptBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CreateStockReceiptResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupplierService_ListSuppliers: {
+    parameters: {
+      query?: {
+        /** @description Matches name, tax code or contact. */
+        query?: string
+        page?: number
+        pageSize?: number
+        /** @description Also list deactivated suppliers (staff screens); pickers leave it off. */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSuppliersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupplierService_CreateSupplier: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Supplier']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Supplier']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupplierService_GetSupplier: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        supplierId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Supplier']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupplierService_DeleteSupplier: {
+    parameters: {
+      query?: {
+        /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        supplierId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteSupplierResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupplierService_UpdateSupplier: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        supplierId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Supplier']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Supplier']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupplierService_ActivateSupplier: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        supplierId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SupplierServiceActivateSupplierBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Supplier']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_ListUnits: {
+    parameters: {
+      query?: {
+        includeInactive?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListUnitsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_CreateUnit: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Unit']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Unit']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_DeleteUnit: {
+    parameters: {
+      query?: {
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        unitId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteUnitResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_UpdateUnit: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        unitId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Unit']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Unit']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_ListVehicles: {
+    parameters: {
+      query?: {
+        /** @description Only this customer's vehicles. */
+        customerId?: string
+        /** @description Matches license plate, make or model. */
+        query?: string
+        page?: number
+        pageSize?: number
+        /** @description Also list deactivated vehicles (staff screens); pickers leave it off. */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListVehiclesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_CreateVehicle: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1Vehicle']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_GetVehicle: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_DeleteVehicle: {
+    parameters: {
+      query?: {
+        /** @description Answer the outcome without changing anything (`?dryRun=true`). */
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteVehicleResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_UpdateVehicle: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    /**
+     * @description Changing a locked identity field fails with VEHICLE_FIELD_LOCKED, and
+     *     the owner (customer_id) is never changed here: use ChangeVehicleOwner.
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1Vehicle']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_GetVehicleHistory: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetVehicleHistoryResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_ActivateVehicle: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VehicleServiceActivateVehicleBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_ChangeVehicleOwner: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VehicleServiceChangeVehicleOwnerBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  VehicleService_CorrectVehicle: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        vehicleId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VehicleServiceCorrectVehicleBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  UserService_GetMe: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1User']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  UserService_UpdateMe: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description Fields to change: full_name, phone, locale. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1User']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1User']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerPortalService_ListMyGarageLinks: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyGarageLinksResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerPortalService_AcceptGarageLink: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        linkId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerPortalServiceAcceptGarageLinkBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GarageLink']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerPortalService_DeclineGarageLink: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        linkId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerPortalServiceDeclineGarageLinkBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GarageLink']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CustomerPortalService_UnlinkGarageLink: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        linkId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CustomerPortalServiceUnlinkGarageLinkBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GarageLink']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_ListMyInvitations: {
+    parameters: {
+      query?: {
+        /** @description Unspecified lists every status. */
+        status?:
+          | 'INVITATION_STATUS_PENDING'
+          | 'INVITATION_STATUS_ACCEPTED'
+          | 'INVITATION_STATUS_DECLINED'
+          | 'INVITATION_STATUS_REVOKED'
+          | 'INVITATION_STATUS_EXPIRED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyInvitationsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_GetMyInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Invitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_AcceptInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InvitationServiceAcceptInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Invitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InvitationService_DeclineInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InvitationServiceDeclineInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Invitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_GetMySubscription: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Subscription']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_ListMyCreditLedger: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyCreditLedgerResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_ListMyPlanPaymentRequests: {
+    parameters: {
+      query?: {
         /**
-         * @description StaffStatus: inactive staff keep their record but lose access.
-         * @enum {string}
-         */
-        v1StaffStatus: "STAFF_STATUS_ACTIVE" | "STAFF_STATUS_INACTIVE";
-        /** @description StockTransaction is one recorded stock movement. */
-        v1StockTransaction: {
-            readonly id?: string;
-            readonly itemId?: string;
-            readonly itemSku?: string;
-            readonly itemName?: string;
-            type?: components["schemas"]["v1StockTransactionType"];
-            /** @description Decimal string, always positive; type says the direction. */
-            readonly quantity?: string;
-            /**
-             * Format: int64
-             * @description Integer VND; set on IN transactions from a purchase.
-             */
-            readonly unitCost?: string;
-            refType?: components["schemas"]["v1StockTransactionRefType"];
-            /** @description The repair order id, for an OUT transaction caused by one. */
-            readonly refId?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-        };
-        /**
-         * @description StockTransactionRefType names what caused a stock movement.
+         * @description Optional filter.
          *
-         *      - STOCK_TRANSACTION_REF_TYPE_PURCHASE: A manual stock receipt from a supplier (FR-INV-01).
-         *      - STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER: Automatic deduction when a repair order with part lines closes
-         *     (FR-INV-02).
-         * @enum {string}
+         *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
+         *     transfer yet. A new request replaces it.
+         *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
+         *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
          */
-        v1StockTransactionRefType: "STOCK_TRANSACTION_REF_TYPE_PURCHASE" | "STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER";
-        /**
-         * @description StockTransactionType: a movement either adds to stock or removes from it.
-         * @enum {string}
-         */
-        v1StockTransactionType: "STOCK_TRANSACTION_TYPE_IN" | "STOCK_TRANSACTION_TYPE_OUT";
-        v1SubmitPlanPaymentResponse: {
-            request?: components["schemas"]["v1PlanPaymentRequest"];
-        };
-        /**
-         * @description Subscription belongs to an owner user and covers all their garages
-         *     (FR-LIC-01..04).
-         */
-        v1Subscription: {
-            id?: string;
-            userId?: string;
-            status?: components["schemas"]["v1SubscriptionStatus"];
-            plan?: components["schemas"]["v1Plan"];
-            /** Format: date-time */
-            trialEndAt?: string;
-            /** Format: date-time */
-            currentPeriodStart?: string;
-            /** Format: date-time */
-            currentPeriodEnd?: string;
-            /** Format: date-time */
-            gracePeriodEnd?: string;
-            autoRenew?: boolean;
-            usage?: components["schemas"]["v1Usage"];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-            /**
-             * Format: int64
-             * @description Account credit in VND (FR-LIC-09), applied to the next payment.
-             */
-            creditBalance?: string;
-            /**
-             * Format: int64
-             * @description What was paid for the current period (0 for a trial); the basis of the
-             *     credit when the plan is changed.
-             */
-            periodPaidAmount?: string;
-            openRequest?: components["schemas"]["v1PlanPaymentRequest"];
-        };
-        /**
-         * @description SubscriptionStatus (LLD 3.1): past_due is read-only during the grace
-         *     period, suspended and cancelled are locked.
-         * @enum {string}
-         */
-        v1SubscriptionStatus: "SUBSCRIPTION_STATUS_TRIAL" | "SUBSCRIPTION_STATUS_ACTIVE" | "SUBSCRIPTION_STATUS_PAST_DUE" | "SUBSCRIPTION_STATUS_SUSPENDED" | "SUBSCRIPTION_STATUS_CANCELLED";
-        /** @description SubscriptionSummary is one row of the platform admin's subscription list. */
-        v1SubscriptionSummary: {
-            subscription?: components["schemas"]["v1Subscription"];
-            userEmail?: string;
-            userName?: string;
-        };
-        /**
-         * @description Supplier is a business that sells parts to the garage, kept in the
-         *     garage's directory (FR-SUP-01). It is not a customer; insurers are not
-         *     suppliers either and come back in their own record in Phase 17.
-         */
-        v1Supplier: {
-            readonly id?: string;
-            readonly garageId?: string;
-            /** @description Unique per garage (case-insensitive). */
-            name: string;
-            taxCode?: string;
-            contact?: components["schemas"]["v1SupplierContact"];
-            bank?: components["schemas"]["v1BankDetails"];
-            note?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            /** @description False once the supplier was deactivated instead of deleted (FR-CAT-07). */
-            readonly isActive?: boolean;
-        };
-        v1SupplierContact: {
-            contactPerson?: string;
-            phone?: string;
-            email?: string;
-            address?: string;
-        };
-        /**
-         * @description TaxProfileKind: a customer has at most one personal tax profile and any
-         *     number of company tax profiles (FR-CUS-07).
-         * @enum {string}
-         */
-        v1TaxProfileKind: "TAX_PROFILE_KIND_PERSONAL" | "TAX_PROFILE_KIND_COMPANY";
-        v1UnlinkCustomerUserResponse: {
-            link?: components["schemas"]["v1CustomerUserLink"];
-        };
-        v1UnlinkGarageLinkResponse: {
-            link?: components["schemas"]["v1GarageLink"];
-        };
-        v1UpdateCustomerResponse: {
-            customer?: components["schemas"]["v1Customer"];
-        };
-        v1UpdateCustomerTaxProfileResponse: {
-            taxProfile?: components["schemas"]["v1CustomerTaxProfile"];
-        };
-        v1UpdateGarageResponse: {
-            garage?: components["schemas"]["v1Garage"];
-        };
-        v1UpdateItemResponse: {
-            item?: components["schemas"]["v1Item"];
-        };
-        v1UpdateMeResponse: {
-            user?: components["schemas"]["v1User"];
-        };
-        v1UpdatePlanResponse: {
-            plan?: components["schemas"]["v1Plan"];
-        };
-        v1UpdatePlatformPaymentSettingsResponse: {
-            settings?: components["schemas"]["v1PlatformPaymentSettings"];
-        };
-        v1UpdateQuoteResponse: {
-            quote?: components["schemas"]["v1Quote"];
-        };
-        v1UpdateRepairOrderLineResponse: {
-            repairOrder?: components["schemas"]["v1RepairOrder"];
-        };
-        v1UpdateRoleResponse: {
-            role?: components["schemas"]["v1Role"];
-        };
-        v1UpdateSettlementResponse: {
-            settlement?: components["schemas"]["v1Settlement"];
-        };
-        v1UpdateStaffGroupResponse: {
-            group?: components["schemas"]["v1StaffGroup"];
-        };
-        v1UpdateStaffResponse: {
-            staff?: components["schemas"]["v1Staff"];
-        };
-        v1UpdateSupplierResponse: {
-            supplier?: components["schemas"]["v1Supplier"];
-        };
-        v1UpdateVehicleResponse: {
-            vehicle?: components["schemas"]["v1Vehicle"];
-        };
-        v1UploadFileResponse: {
-            file?: components["schemas"]["v1File"];
-        };
-        v1UploadGarageLogoResponse: {
-            garage?: components["schemas"]["v1Garage"];
-        };
-        v1UploadPaymentQrRequest: {
-            /** Format: byte */
-            content: string;
-            /** @description image/png, image/jpeg or image/webp, at most 1 MB. */
-            contentType: string;
-        };
-        v1UploadPaymentQrResponse: {
-            settings?: components["schemas"]["v1PlatformPaymentSettings"];
-        };
-        /** @description Usage is the owner's current consumption of the plan limits. */
-        v1Usage: {
-            /** Format: int32 */
-            garages?: number;
-            /** Format: int32 */
-            staff?: number;
-            /** Format: int32 */
-            transactionsToday?: number;
-        };
-        /** @description User is a person who can sign in to VietGara. */
-        v1User: {
-            readonly id?: string;
-            readonly email?: string;
-            /** @description Optional contact phone, unique across users; used to look staff up. */
-            phone?: string;
-            authProvider?: components["schemas"]["v1AuthProvider"];
-            fullName?: string;
-            status?: components["schemas"]["v1UserStatus"];
-            /**
-             * @description False until the e-mail OTP is confirmed; unverified users cannot use
-             *     garage, staff or business APIs.
-             */
-            readonly emailVerified?: boolean;
-            locale?: components["schemas"]["v1Locale"];
-            /** @description Platform operators manage subscription plans (FR-LIC-05). */
-            readonly platformAdmin?: boolean;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-        };
-        /**
-         * @description UserStatus is the lifecycle of a VietGara user (Database Design 2.1).
-         * @enum {string}
-         */
-        v1UserStatus: "USER_STATUS_ACTIVE" | "USER_STATUS_SUSPENDED";
-        /** @description Vehicle belongs to one customer of the garage (FR-CUS-02). */
-        v1Vehicle: {
-            readonly id?: string;
-            readonly garageId?: string;
-            customerId: string;
-            readonly customerName?: string;
-            /** @description Unique per garage (ignoring punctuation and case). */
-            licensePlate: string;
-            make?: string;
-            model?: string;
-            /** Format: int32 */
-            year?: number;
-            vin?: string;
-            engineNumber?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** Format: date-time */
-            readonly updatedAt?: string;
-            /** @description False once the vehicle was deactivated instead of deleted (FR-CAT-07). */
-            readonly isActive?: boolean;
-            /**
-             * @description False while a live quote, repair order, settlement, booking or claim
-             *     refers to the vehicle: its identity fields are then locked.
-             */
-            readonly editable?: boolean;
-            /**
-             * @description The identity fields that cannot be edited now (empty when editable).
-             *     Colour, notes and odometer are never locked.
-             */
-            readonly lockedFields?: components["schemas"]["v1VehicleIdentityField"][];
-        };
-        /**
-         * @description VehicleHistoryEntry is one quote, repair order or settlement of a
-         *     vehicle, newest first (FR-CUS-03).
-         */
-        v1VehicleHistoryEntry: {
-            type?: components["schemas"]["v1VehicleHistoryEntryType"];
-            entityId?: string;
-            /** @description The quote/repair-order/settlement's own document number. */
-            number?: string;
-            /** @description The status string of the originating entity (e.g. a QuoteStatus name). */
-            status?: string;
-            /** Format: int64 */
-            totalAmount?: string;
-            /** Format: date-time */
-            occurredAt?: string;
-        };
-        /**
-         * @description VehicleHistoryEntryType names which module produced a history entry
-         *     (FR-CUS-03). Repair order and settlement entries appear once those
-         *     modules ship (Releases 1.3, 1.4); only QUOTE is produced today.
-         * @enum {string}
-         */
-        v1VehicleHistoryEntryType: "VEHICLE_HISTORY_ENTRY_TYPE_QUOTE" | "VEHICLE_HISTORY_ENTRY_TYPE_REPAIR_ORDER" | "VEHICLE_HISTORY_ENTRY_TYPE_SETTLEMENT";
-        /**
-         * @description VehicleIdentityField names a field that identifies a vehicle (FR-CUS-02).
-         *     These fields are locked while a live document refers to the vehicle; a
-         *     locked field is changed by a correction (FR-CUS-09).
-         *
-         *      - VEHICLE_IDENTITY_FIELD_VIN: The chassis number.
-         * @enum {string}
-         */
-        v1VehicleIdentityField: "VEHICLE_IDENTITY_FIELD_LICENSE_PLATE" | "VEHICLE_IDENTITY_FIELD_VIN" | "VEHICLE_IDENTITY_FIELD_ENGINE_NUMBER" | "VEHICLE_IDENTITY_FIELD_MAKE" | "VEHICLE_IDENTITY_FIELD_MODEL" | "VEHICLE_IDENTITY_FIELD_YEAR";
-        v1VerifyEmailRequest: {
-            otpCode: string;
-            /**
-             * @description The refresh token of the current session; it is rotated so the new
-             *     session carries the verified claim.
-             */
-            refreshToken: string;
-        };
-        v1VerifyEmailResponse: {
-            session?: components["schemas"]["v1Session"];
-        };
-        v1VerifyPasswordResetOtpRequest: {
-            email: string;
-            otpCode: string;
-        };
-        v1VerifyPasswordResetOtpResponse: {
-            /** @description Single-use token for ResetPassword. */
-            resetToken?: string;
-            /** Format: date-time */
-            expiresAt?: string;
-        };
-        v1VoidSettlementPaymentResponse: {
-            settlement?: components["schemas"]["v1Settlement"];
-        };
-        /**
-         * @description WorkOrder is a repair order with the lines assigned to the signed-in
-         *     technician (FR-TAPP-01).
-         */
-        v1WorkOrder: {
-            readonly garageId?: string;
-            readonly garageName?: string;
-            readonly repairOrderId?: string;
-            /** @description The repair order's own document number. */
-            readonly number?: string;
-            status?: components["schemas"]["v1RepairOrderStatus"];
-            readonly vehicleLicensePlate?: string;
-            readonly customerName?: string;
-            /** Format: date-time */
-            readonly createdAt?: string;
-            /** @description Only the lines assigned to the technician, in the order's line order. */
-            readonly lines?: components["schemas"]["v1RepairOrderLine"][];
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: {
-        v1Item: {
-            content: {
-                "application/json": components["schemas"]["v1Item"];
-            };
-        };
-        v1Plan: {
-            content: {
-                "application/json": components["schemas"]["v1Plan"];
-            };
-        };
-        v1Garage: {
-            content: {
-                "application/json": components["schemas"]["v1Garage"];
-            };
-        };
-        v1Customer: {
-            content: {
-                "application/json": components["schemas"]["v1Customer"];
-            };
-        };
-        v1StaffGroup: {
-            content: {
-                "application/json": components["schemas"]["v1StaffGroup"];
-            };
-        };
-        v1Supplier: {
-            content: {
-                "application/json": components["schemas"]["v1Supplier"];
-            };
-        };
-        v1Role: {
-            content: {
-                "application/json": components["schemas"]["v1Role"];
-            };
-        };
-    };
-    headers: never;
-    pathItems: never;
-}
-export type $defs = Record<string, never>;
-export interface operations {
-    LicenseAdminService_GetPlatformPaymentSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlatformPaymentSettings"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_UpdatePlatformPaymentSettings: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1PlatformPaymentSettings"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlatformPaymentSettings"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_UploadPaymentQr: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1UploadPaymentQrRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlatformPaymentSettings"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_ListPlanPaymentRequests: {
-        parameters: {
-            query?: {
-                /**
-                 * @description Defaults to SUBMITTED, oldest first.
-                 *
-                 *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
-                 *     transfer yet. A new request replaces it.
-                 *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
-                 *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
-                 */
-                status?: "PLAN_PAYMENT_STATUS_AWAITING_PAYMENT" | "PLAN_PAYMENT_STATUS_SUBMITTED" | "PLAN_PAYMENT_STATUS_APPROVED" | "PLAN_PAYMENT_STATUS_REJECTED" | "PLAN_PAYMENT_STATUS_CANCELLED";
-                /** @description Matches the owner's e-mail or name, or the transfer reference. */
-                query?: string;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListPlanPaymentRequestsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_GetPlanPaymentRequest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1AdminPlanPaymentRequest"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_ApprovePlanPayment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LicenseAdminServiceApprovePlanPaymentBody"];
-            };
-        };
-        responses: {
-            /** @description The owner's subscription with the new plan and period. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Subscription"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_RejectPlanPayment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LicenseAdminServiceRejectPlanPaymentBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_ListAllPlans: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListAllPlansResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_CreatePlan: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Plan"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Plan"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_UpdatePlan: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                planId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Plan"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Plan"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_ListSubscriptions: {
-        parameters: {
-            query?: {
-                /** @description Matches the owner's e-mail or name. */
-                query?: string;
-                status?: "SUBSCRIPTION_STATUS_TRIAL" | "SUBSCRIPTION_STATUS_ACTIVE" | "SUBSCRIPTION_STATUS_PAST_DUE" | "SUBSCRIPTION_STATUS_SUSPENDED" | "SUBSCRIPTION_STATUS_CANCELLED";
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListSubscriptionsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_AdjustCredit: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                subscriptionId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LicenseAdminServiceAdjustCreditBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CreditLedgerEntry"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseAdminService_ExtendSubscription: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                subscriptionId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LicenseAdminServiceExtendSubscriptionBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Subscription"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_VerifyEmail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1VerifyEmailRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Session"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_SendEmailVerificationOtp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1SendEmailVerificationOtpRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1OtpChallenge"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_SignInWithGoogleIdToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1SignInWithGoogleIdTokenRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Session"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_Login: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1LoginRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Session"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_Logout: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1LogoutRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1LogoutResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_ResetPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1ResetPasswordRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ResetPasswordResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_RequestPasswordReset: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1RequestPasswordResetRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1OtpChallenge"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_VerifyPasswordResetOtp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1VerifyPasswordResetOtpRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1VerifyPasswordResetOtpResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_RefreshToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1RefreshTokenRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Session"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    AuthService_Register: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1RegisterRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Session"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerPortalService_GetMyVehicleHistory: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GetMyVehicleHistoryResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerPortalService_ListMyVehicles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListMyVehiclesResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    GarageService_ListGarages: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListGaragesResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    GarageService_CreateGarage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Garage"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Garage"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    GarageService_GetGarage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Garage"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    GarageService_UpdateGarage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Garage"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Garage"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_ListCustomers: {
-        parameters: {
-            query?: {
-                /** @description Fuzzy match on name, phone or e-mail. */
-                query?: string;
-                page?: number;
-                pageSize?: number;
-                /** @description Also list deactivated customers (staff screens); pickers leave it off. */
-                includeInactive?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListCustomersResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_CreateCustomer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Customer"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Customer"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_LookupCustomers: {
-        parameters: {
-            query?: {
-                /** @description Either or both; the garage's customers matching any of them are listed. */
-                phone?: string;
-                email?: string;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1LookupCustomersResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_GetCustomer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Customer"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_DeleteCustomer: {
-        parameters: {
-            query?: {
-                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
-                dryRun?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteCustomerResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_UpdateCustomer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Customer"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Customer"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerTaxProfileService_ListCustomerTaxProfiles: {
-        parameters: {
-            query?: {
-                includeInactive?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListCustomerTaxProfilesResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerTaxProfileService_CreateCustomerTaxProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1CustomerTaxProfile"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerTaxProfileService_GetCustomerTaxProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-                taxProfileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerTaxProfileService_DeleteCustomerTaxProfile: {
-        parameters: {
-            query?: {
-                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
-                dryRun?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-                taxProfileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteCustomerTaxProfileResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerTaxProfileService_UpdateCustomerTaxProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-                taxProfileId: string;
-            };
-            cookie?: never;
-        };
-        /** @description The kind cannot change. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1CustomerTaxProfile"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerTaxProfileService_ActivateCustomerTaxProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-                taxProfileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerTaxProfileServiceActivateCustomerTaxProfileBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerTaxProfile"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerLinkService_RequestCustomerUserLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerLinkServiceRequestCustomerUserLinkBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerUserLink"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerLinkService_UnlinkCustomerUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerUserLink"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerLinkService_ConfirmCustomerUserLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerLinkServiceConfirmCustomerUserLinkBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CustomerUserLink"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerService_ActivateCustomer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                customerId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerServiceActivateCustomerBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Customer"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_GetGarageEntitlements: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Entitlements"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    FileService_UploadFile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FileServiceUploadFileBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1File"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    FileService_DeleteFile: {
-        parameters: {
-            query?: {
-                /** @description Answer the outcome without changing anything. */
-                dryRun?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-                fileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteFileResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    FileService_GetFileUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                fileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GetFileUrlResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_ListItems: {
-        parameters: {
-            query?: {
-                /** @description Matches SKU or name. */
-                query?: string;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListItemsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_CreateItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Item"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Item"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_GetItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                itemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Item"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_DeleteItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                itemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteItemResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_UpdateItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                itemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Item"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Item"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_ListInvitations: {
-        parameters: {
-            query?: {
-                /** @description Unspecified lists every status. */
-                status?: "INVITATION_STATUS_PENDING" | "INVITATION_STATUS_ACCEPTED" | "INVITATION_STATUS_DECLINED" | "INVITATION_STATUS_REVOKED" | "INVITATION_STATUS_EXPIRED";
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListInvitationsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_CreateInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InvitationServiceCreateInvitationBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Invitation"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_RevokeInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                invitationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InvitationServiceRevokeInvitationBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Invitation"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    GarageService_UploadGarageLogo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GarageServiceUploadGarageLogoBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Garage"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    GarageService_DeleteGarageLogo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Garage"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_ListQuotes: {
-        parameters: {
-            query?: {
-                customerId?: string;
-                vehicleId?: string;
-                /**
-                 * @description Unspecified lists every status.
-                 *
-                 *      - QUOTE_STATUS_DRAFT: Being edited by the service advisor; not visible to the customer yet.
-                 *      - QUOTE_STATUS_SENT: A LINK-mode quote waiting on the customer's decision.
-                 *      - QUOTE_STATUS_APPROVED: At least one line was approved.
-                 *      - QUOTE_STATUS_REJECTED: Every line was rejected.
-                 *      - QUOTE_STATUS_CONVERTED: Converted into a repair order (FR-QUO-04); no further edits.
-                 */
-                status?: "QUOTE_STATUS_DRAFT" | "QUOTE_STATUS_SENT" | "QUOTE_STATUS_APPROVED" | "QUOTE_STATUS_REJECTED" | "QUOTE_STATUS_CONVERTED";
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListQuotesResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_CreateQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1Quote"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Quote"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_GetQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Quote"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_DeleteQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteQuoteResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_UpdateQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        /** @description Only while the quote is still a draft. "lines" replaces the whole set. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1Quote"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Quote"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_ConvertQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuoteServiceConvertQuoteBody"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ConvertQuoteResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_RecordQuoteDecision: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuoteServiceRecordQuoteDecisionBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Quote"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    DocumentService_ExportQuotePdf: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["apiHttpBody"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    QuoteService_SendQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                quoteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuoteServiceSendQuoteBody"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1SendQuoteResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RepairOrderService_ListRepairOrders: {
-        parameters: {
-            query?: {
-                vehicleId?: string;
-                /**
-                 * @description - REPAIR_ORDER_STATUS_OPEN: "To Do": not yet started.
-                 *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock.
-                 *      - REPAIR_ORDER_STATUS_COMPLETED: Every line is done; ready for the advisor to close it.
-                 *      - REPAIR_ORDER_STATUS_CLOSED: Closed (FR-REP-06): no further edits; ready for settlement (Release
-                 *     1.4) and triggers stock deduction (Event Design, repair_order.closed).
-                 */
-                status?: "REPAIR_ORDER_STATUS_OPEN" | "REPAIR_ORDER_STATUS_IN_PROGRESS" | "REPAIR_ORDER_STATUS_WAITING_ON_PARTS" | "REPAIR_ORDER_STATUS_COMPLETED" | "REPAIR_ORDER_STATUS_CLOSED";
-                /** @description Only repair orders with a line assigned to this technician. */
-                technicianId?: string;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListRepairOrdersResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RepairOrderService_CreateRepairOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        /** @description Ad-hoc creation (FR-REP-01): quote_id is never set through this RPC. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1RepairOrder"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1RepairOrder"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RepairOrderService_GetRepairOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                repairOrderId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1RepairOrder"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RepairOrderService_CloseRepairOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                repairOrderId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RepairOrderServiceCloseRepairOrderBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1RepairOrder"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RepairOrderService_UpdateRepairOrderLine: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                repairOrderId: string;
-                lineId: string;
-            };
-            cookie?: never;
-        };
-        /** @description status and/or assigned_technician_ids (FR-REP-02/03). */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1RepairOrderLine"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1RepairOrder"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    DocumentService_ExportRepairOrderPdf: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                repairOrderId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["apiHttpBody"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    ReportingService_GetRevenueReport: {
-        parameters: {
-            query: {
-                period: "REVENUE_PERIOD_DAY" | "REVENUE_PERIOD_MONTH" | "REVENUE_PERIOD_QUARTER" | "REVENUE_PERIOD_YEAR";
-                /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone (FR-TEN-05). */
-                from: string;
-                /** @description Exclusive, "YYYY-MM-DD". */
-                to: string;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GetRevenueReportResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_ListStockTransactions: {
-        parameters: {
-            query?: {
-                itemId?: string;
-                type?: "STOCK_TRANSACTION_TYPE_IN" | "STOCK_TRANSACTION_TYPE_OUT";
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListStockTransactionsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    DocumentService_ExportStockMovementsExcel: {
-        parameters: {
-            query?: {
-                /** @description Same optional filter as InventoryService.ListStockTransactions. */
-                itemId?: string;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["apiHttpBody"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SettlementService_ListSettlements: {
-        parameters: {
-            query?: {
-                /**
-                 * @description - SETTLEMENT_STATUS_PENDING: Nothing collected yet.
-                 *      - SETTLEMENT_STATUS_PARTIALLY_PAID: Some, but not all, of the total collected.
-                 *      - SETTLEMENT_STATUS_PAID: The full total collected.
-                 */
-                status?: "SETTLEMENT_STATUS_PENDING" | "SETTLEMENT_STATUS_PARTIALLY_PAID" | "SETTLEMENT_STATUS_PAID";
-                /**
-                 * @description FR-REC-01: settlements not yet fully paid (PENDING or
-                 *     PARTIALLY_PAID), across every customer -- the receivables view.
-                 *     Mutually exclusive with `status` in practice; `status` wins if both
-                 *     are set.
-                 */
-                outstandingOnly?: boolean;
-                page?: number;
-                pageSize?: number;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListSettlementsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SettlementService_CreateSettlement: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SettlementServiceCreateSettlementBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Settlement"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SettlementService_GetSettlement: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                settlementId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Settlement"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SettlementService_UpdateSettlement: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                settlementId: string;
-            };
-            cookie?: never;
-        };
-        /** @description Only billing_party and invoice_requested can change. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1Settlement"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Settlement"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SettlementService_RecordSettlementPayment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                settlementId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SettlementServiceRecordSettlementPaymentBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Settlement"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    DocumentService_ExportPaymentVoucherPdf: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                settlementId: string;
-                paymentId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["apiHttpBody"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SettlementService_VoidSettlementPayment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                settlementId: string;
-                paymentId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SettlementServiceVoidSettlementPaymentBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Settlement"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    DocumentService_ExportSettlementReceiptPdf: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                settlementId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["apiHttpBody"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffService_ListStaff: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListStaffResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffService_LookupStaffCandidate: {
-        parameters: {
-            query: {
-                /** @description Exact e-mail address or phone number of an existing user. */
-                query: string;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1StaffCandidate"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffGroupService_ListStaffGroups: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListStaffGroupsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffGroupService_CreateStaffGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1StaffGroup"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1StaffGroup"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffGroupService_DeleteStaffGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                groupId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteStaffGroupResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffGroupService_UpdateStaffGroup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                groupId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1StaffGroup"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1StaffGroup"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffService_DeleteStaff: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                staffId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteStaffResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    StaffService_UpdateStaff: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                staffId: string;
-            };
-            cookie?: never;
-        };
-        /** @description status and group_ids. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1Staff"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Staff"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InventoryService_CreateStockReceipt: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InventoryServiceCreateStockReceiptBody"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1CreateStockReceiptResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SupplierService_ListSuppliers: {
-        parameters: {
-            query?: {
-                /** @description Matches name, tax code or contact. */
-                query?: string;
-                page?: number;
-                pageSize?: number;
-                /** @description Also list deactivated suppliers (staff screens); pickers leave it off. */
-                includeInactive?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListSuppliersResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SupplierService_CreateSupplier: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Supplier"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Supplier"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SupplierService_GetSupplier: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                supplierId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Supplier"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SupplierService_DeleteSupplier: {
-        parameters: {
-            query?: {
-                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
-                dryRun?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-                supplierId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteSupplierResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SupplierService_UpdateSupplier: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                supplierId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Supplier"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Supplier"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    SupplierService_ActivateSupplier: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                supplierId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SupplierServiceActivateSupplierBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Supplier"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_ListVehicles: {
-        parameters: {
-            query?: {
-                /** @description Only this customer's vehicles. */
-                customerId?: string;
-                /** @description Matches license plate, make or model. */
-                query?: string;
-                page?: number;
-                pageSize?: number;
-                /** @description Also list deactivated vehicles (staff screens); pickers leave it off. */
-                includeInactive?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListVehiclesResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_CreateVehicle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1Vehicle"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Vehicle"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_GetVehicle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Vehicle"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_DeleteVehicle: {
-        parameters: {
-            query?: {
-                /** @description Answer the outcome without changing anything (`?dryRun=true`). */
-                dryRun?: boolean;
-            };
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteVehicleResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_UpdateVehicle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        /**
-         * @description Changing a locked identity field fails with VEHICLE_FIELD_LOCKED, and
-         *     the owner (customer_id) is never changed here: use ChangeVehicleOwner.
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1Vehicle"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Vehicle"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_GetVehicleHistory: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GetVehicleHistoryResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_ActivateVehicle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VehicleServiceActivateVehicleBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Vehicle"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_ChangeVehicleOwner: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VehicleServiceChangeVehicleOwnerBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Vehicle"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    VehicleService_CorrectVehicle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                garageId: string;
-                vehicleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VehicleServiceCorrectVehicleBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Vehicle"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    UserService_GetMe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1User"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    UserService_UpdateMe: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fields to change: full_name, phone, locale. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1User"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1User"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerPortalService_ListMyGarageLinks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListMyGarageLinksResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerPortalService_AcceptGarageLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                linkId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerPortalServiceAcceptGarageLinkBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GarageLink"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerPortalService_DeclineGarageLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                linkId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerPortalServiceDeclineGarageLinkBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GarageLink"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    CustomerPortalService_UnlinkGarageLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                linkId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerPortalServiceUnlinkGarageLinkBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1GarageLink"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_ListMyInvitations: {
-        parameters: {
-            query?: {
-                /** @description Unspecified lists every status. */
-                status?: "INVITATION_STATUS_PENDING" | "INVITATION_STATUS_ACCEPTED" | "INVITATION_STATUS_DECLINED" | "INVITATION_STATUS_REVOKED" | "INVITATION_STATUS_EXPIRED";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListMyInvitationsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_GetMyInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                invitationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Invitation"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_AcceptInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                invitationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InvitationServiceAcceptInvitationBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Invitation"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    InvitationService_DeclineInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                invitationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InvitationServiceDeclineInvitationBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Invitation"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_GetMySubscription: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Subscription"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_ListMyCreditLedger: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListMyCreditLedgerResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_ListMyPlanPaymentRequests: {
-        parameters: {
-            query?: {
-                /**
-                 * @description Optional filter.
-                 *
-                 *      - PLAN_PAYMENT_STATUS_AWAITING_PAYMENT: Quoted, with its transfer reference; the owner has not declared the
-                 *     transfer yet. A new request replaces it.
-                 *      - PLAN_PAYMENT_STATUS_SUBMITTED: The owner declared the transfer; a platform admin reviews it.
-                 *      - PLAN_PAYMENT_STATUS_APPROVED: Approved: the plan applied at once.
-                 */
-                status?: "PLAN_PAYMENT_STATUS_AWAITING_PAYMENT" | "PLAN_PAYMENT_STATUS_SUBMITTED" | "PLAN_PAYMENT_STATUS_APPROVED" | "PLAN_PAYMENT_STATUS_REJECTED" | "PLAN_PAYMENT_STATUS_CANCELLED";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListMyPlanPaymentRequestsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_CreatePlanPaymentRequest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["v1CreatePlanPaymentRequestRequest"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_GetMyPlanPaymentRequest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_CancelPlanPayment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LicenseServiceCancelPlanPaymentBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_SubmitPlanPayment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LicenseServiceSubmitPlanPaymentBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PlanPaymentRequest"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_GetPaymentInstructions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PaymentInstructions"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RoleService_ListPermissions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListPermissionsResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    LicenseService_ListPlans: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListPlansResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PublicQuoteService_GetPublicQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PublicQuote"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    PublicQuoteService_DecidePublicQuote: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PublicQuoteServiceDecidePublicQuoteBody"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1PublicQuote"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RoleService_ListRoles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListRolesResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RoleService_CreateRole: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Role"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Role"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RoleService_GetRole: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                roleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Role"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RoleService_DeleteRole: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                roleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1DeleteRoleResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    RoleService_UpdateRole: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                roleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["v1Role"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1Role"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
-    TechnicianService_ListMyWork: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ListMyWorkResponse"];
-                };
-            };
-            /** @description Error (API Specification Section 1.1). */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["v1ErrorResponse"];
-                };
-            };
-        };
-    };
+        status?:
+          | 'PLAN_PAYMENT_STATUS_AWAITING_PAYMENT'
+          | 'PLAN_PAYMENT_STATUS_SUBMITTED'
+          | 'PLAN_PAYMENT_STATUS_APPROVED'
+          | 'PLAN_PAYMENT_STATUS_REJECTED'
+          | 'PLAN_PAYMENT_STATUS_CANCELLED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyPlanPaymentRequestsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_CreatePlanPaymentRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1CreatePlanPaymentRequestRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlanPaymentRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_GetMyPlanPaymentRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlanPaymentRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_CancelPlanPayment: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LicenseServiceCancelPlanPaymentBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlanPaymentRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_SubmitPlanPayment: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LicenseServiceSubmitPlanPaymentBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlanPaymentRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_GetPaymentInstructions: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PaymentInstructions']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RoleService_ListPermissions: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPermissionsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  LicenseService_ListPlans: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlansResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PublicQuoteService_GetPublicQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        token: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PublicQuote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PublicQuoteService_DecidePublicQuote: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        token: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PublicQuoteServiceDecidePublicQuoteBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PublicQuote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RoleService_ListRoles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListRolesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RoleService_CreateRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Role']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Role']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RoleService_GetRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        roleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Role']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RoleService_DeleteRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        roleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteRoleResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RoleService_UpdateRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        roleId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Role']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Role']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  TechnicianService_ListMyWork: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyWorkResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
 }

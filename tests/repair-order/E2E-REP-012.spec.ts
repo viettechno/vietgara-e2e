@@ -31,7 +31,7 @@ test('E2E-REP-012 permissions: no access, view-only, and full access', async ({ 
   await createForm.createButton.click()
   // Wait for the creation to land: without this the URL below is still
   // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
-  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
+  await expect(page).toHaveURL(/\/repair-orders\/(?!new)[^/]+$/)
 
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!

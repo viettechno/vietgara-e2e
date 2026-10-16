@@ -6,6 +6,7 @@
 // garage access at all. Membership is set up over the API (invite +
 // accept); every permission assertion is the UI.
 import { expect, test } from '../../src/fixtures/index.js'
+import { CataloguePage } from '../../src/pages/catalogue/CataloguePage.js'
 import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'
 
 test('E2E-INV-010 permissions: view-only, and full access', async ({ page, signIn, freshOwner }) => {
@@ -13,7 +14,7 @@ test('E2E-INV-010 permissions: view-only, and full access', async ({ page, signI
   // the owner's locale at verification.
   const owner = await freshOwner('inv010owner', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara INV010' })
-  await owner.api.createItem(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30', unit: 'L' })
+  await owner.api.createSimplePart(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30' })
 
   const technician = await freshOwner('inv010tech')
   const groups = await owner.api.listStaffGroups(garage.id ?? '')
@@ -31,8 +32,13 @@ test('E2E-INV-010 permissions: view-only, and full access', async ({ page, signI
   const inventory = new InventoryPage(page)
   await inventory.goto()
   await expect(inventory.itemRow('OIL-5W30')).toBeVisible()
-  await expect(inventory.newItemButton).toBeHidden()
-  await expect(page.getByRole('button', { name: 'Receive stock' })).toBeHidden()
+  await expect(page.getByRole('button', { name: /^Receive stock/ })).toBeHidden()
+
+  // The Technician may look at the catalogue too, but not change it.
+  const catalogue = new CataloguePage(page)
+  await catalogue.goto()
+  await expect(catalogue.row('OIL-5W30')).toBeVisible()
+  await expect(catalogue.newPartButton).toBeHidden()
 
   // No access at all: without a garage membership the sidebar offers no
   // Inventory entry (module links need an active garage and its read

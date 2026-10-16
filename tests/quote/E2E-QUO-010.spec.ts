@@ -38,7 +38,7 @@ test('E2E-QUO-010 convert an approved quote into a repair order', async ({ page,
 
   await expect(page.getByText('A repair order was created from this quote.')).toBeVisible()
   await page.getByRole('link', { name: 'View repair order' }).click()
-  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
+  await expect(page).toHaveURL(/\/repair-orders\/(?!new)[^/]+$/)
   await expect(page.getByText(customer.fullName ?? '')).toBeVisible()
   await expect(page.getByText(vehicle.licensePlate ?? '')).toBeVisible()
   // Only the approved line survived the conversion.
