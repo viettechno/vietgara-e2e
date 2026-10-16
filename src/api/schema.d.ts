@@ -286,6 +286,27 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/auth/mfa/challenge': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Completes a sign-in that answered mfa_required (FR-IAM-09): exchanges the
+     *     challenge token and a TOTP code or an unused recovery code for the
+     *     session. Five wrong codes lock the challenge for 15 minutes.
+     */
+    post: operations['AuthService_VerifyMfaChallenge']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/auth/password-reset': {
     parameters: {
       query?: never
@@ -1786,6 +1807,101 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/me/mfa': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Returns whether MFA is on and how many recovery codes are left. */
+    get: operations['MfaService_GetMfaStatus']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/mfa/enroll': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Starts enrolment: creates a pending TOTP secret (replacing an earlier
+     *     pending one). MFA is not on until EnrollMfaConfirm succeeds. Refused for
+     *     Google-only users and when MFA is already on.
+     */
+    post: operations['MfaService_EnrollMfa']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/mfa/enroll:confirm': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Confirms enrolment with a code from the authenticator app, turns MFA on
+     *     and returns the recovery codes. They are shown only once.
+     */
+    post: operations['MfaService_ConfirmMfaEnrollment']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/mfa/recovery-codes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Replaces the recovery codes with a new set; the old ones stop working.
+     *     Needs a current TOTP code.
+     */
+    post: operations['MfaService_RegenerateRecoveryCodes']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/mfa:disable': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Turns MFA off. Needs a TOTP code or a recovery code. */
+    post: operations['MfaService_DisableMfa']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/me/subscription': {
     parameters: {
       query?: never
@@ -2471,6 +2587,14 @@ export interface components {
     v1ConfirmCustomerUserLinkResponse: {
       link?: components['schemas']['v1CustomerUserLink']
     }
+    v1ConfirmMfaEnrollmentRequest: {
+      /** @description A 6-digit code from the authenticator app. */
+      code: string
+    }
+    v1ConfirmMfaEnrollmentResponse: {
+      /** @description One-time recovery codes, shown only once. */
+      recoveryCodes?: string[]
+    }
     v1ConvertQuoteResponse: {
       quote?: components['schemas']['v1Quote']
       /**
@@ -2716,6 +2840,18 @@ export interface components {
     v1DeleteVehicleResponse: {
       outcome?: components['schemas']['v1DeleteOutcome']
     }
+    v1DisableMfaRequest: {
+      /** @description A 6-digit TOTP code or an unused recovery code. */
+      code: string
+    }
+    v1DisableMfaResponse: Record<string, never>
+    v1EnrollMfaRequest: Record<string, never>
+    v1EnrollMfaResponse: {
+      /** @description Base32 secret for manual entry. */
+      secret?: string
+      /** @description otpauth:// URI; clients draw it as a QR code. */
+      otpauthUri?: string
+    }
     /**
      * @description Entitlements is what a garage may currently use, derived from its
      *     owner's subscription; the web admin uses it to lock UI.
@@ -2893,6 +3029,13 @@ export interface components {
     }
     v1GetMeResponse: {
       user?: components['schemas']['v1User']
+    }
+    v1GetMfaStatusResponse: {
+      enabled?: boolean
+      /** Format: date-time */
+      enabledAt?: string
+      /** Format: int32 */
+      recoveryCodesRemaining?: number
     }
     v1GetMyInvitationResponse: {
       invitation?: components['schemas']['v1Invitation']
@@ -3609,6 +3752,13 @@ export interface components {
     v1RefreshTokenResponse: {
       session?: components['schemas']['v1Session']
     }
+    v1RegenerateRecoveryCodesRequest: {
+      /** @description A current 6-digit TOTP code. */
+      code: string
+    }
+    v1RegenerateRecoveryCodesResponse: {
+      recoveryCodes?: string[]
+    }
     v1RegisterRequest: {
       email: string
       /** @description At least 8 characters. */
@@ -3795,7 +3945,13 @@ export interface components {
        */
       emailed?: boolean
     }
-    /** @description Session is what every successful sign-in returns. */
+    /**
+     * @description Session is what every successful sign-in returns. When the user has MFA
+     *     enabled and signs in with e-mail and password, the sign-in answers with
+     *     mfa_required = true and a challenge_token instead of tokens (access_token
+     *     and refresh_token are empty); the client then calls VerifyMfaChallenge.
+     *     Google sign-in never asks for the second factor.
+     */
     v1Session: {
       accessToken?: string
       refreshToken?: string
@@ -3807,6 +3963,12 @@ export interface components {
        */
       expiresIn?: string
       user?: components['schemas']['v1User']
+      /** @description True when the sign-in is not complete: ask for the second factor. */
+      mfaRequired?: boolean
+      /** @description Single-use token for VerifyMfaChallenge; valid for 5 minutes. */
+      challengeToken?: string
+      /** Format: date-time */
+      challengeExpiresAt?: string
     }
     v1SetPartUnitsResponse: {
       part?: components['schemas']['v1Part']
@@ -4236,6 +4398,8 @@ export interface components {
       readonly createdAt?: string
       /** Format: date-time */
       readonly updatedAt?: string
+      /** @description True when the user has turned on a TOTP second factor (FR-IAM-09). */
+      readonly mfaEnabled?: boolean
     }
     /**
      * @description UserStatus is the lifecycle of a VietGara user (Database Design 2.1).
@@ -4321,6 +4485,14 @@ export interface components {
       refreshToken: string
     }
     v1VerifyEmailResponse: {
+      session?: components['schemas']['v1Session']
+    }
+    v1VerifyMfaChallengeRequest: {
+      challengeToken: string
+      /** @description A 6-digit TOTP code, or a recovery code (which works once). */
+      code: string
+    }
+    v1VerifyMfaChallengeResponse: {
       session?: components['schemas']['v1Session']
     }
     v1VerifyPasswordResetOtpRequest: {
@@ -4991,6 +5163,38 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1LogoutResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_VerifyMfaChallenge: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1VerifyMfaChallengeRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -8915,6 +9119,167 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1Invitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  MfaService_GetMfaStatus: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetMfaStatusResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  MfaService_EnrollMfa: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1EnrollMfaRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1EnrollMfaResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  MfaService_ConfirmMfaEnrollment: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1ConfirmMfaEnrollmentRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ConfirmMfaEnrollmentResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  MfaService_RegenerateRecoveryCodes: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RegenerateRecoveryCodesRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RegenerateRecoveryCodesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  MfaService_DisableMfa: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1DisableMfaRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DisableMfaResponse']
         }
       }
       /** @description Error (API Specification Section 1.1). */

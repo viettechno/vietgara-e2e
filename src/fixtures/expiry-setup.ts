@@ -14,11 +14,17 @@ export type ExpirySetup = {
 }
 
 export async function expirySetup(api: ApiClient, mailpit: MailpitClient, label: string): Promise<ExpirySetup> {
-  const owner = await registerAndVerify(api, mailpit, `${label}-owner`, { locale: 'LOCALE_EN', fullName: `QA Owner ${label.toUpperCase()}` })
+  const owner = await registerAndVerify(api, mailpit, `${label}-owner`, {
+    locale: 'LOCALE_EN',
+    fullName: `QA Owner ${label.toUpperCase()}`,
+  })
   const garage = await owner.api.createGarage({ name: `QA Gara ${label.toUpperCase()} Tan Binh` })
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer Em Vo', phone: '0911000010' })
 
-  const staff = await registerAndVerify(api, mailpit, `${label}-staff`, { locale: 'LOCALE_EN', fullName: `QA Staff ${label.toUpperCase()}` })
+  const staff = await registerAndVerify(api, mailpit, `${label}-staff`, {
+    locale: 'LOCALE_EN',
+    fullName: `QA Staff ${label.toUpperCase()}`,
+  })
   const groups = await owner.api.listStaffGroups(garage.id ?? '')
   const advisor = (groups.data ?? []).find((g) => g.name === 'Service Advisor')
   if (!advisor?.id) throw new Error('default Service Advisor group not found')

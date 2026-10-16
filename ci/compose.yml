@@ -76,6 +76,8 @@ services:
       APP_DB_PASSWORD: vietgara_local
       DATABASE_URL: postgres://vietgara_local:vietgara_local@pgsql:5432/vietgara?sslmode=disable
       JWT_SIGNING_KEY: e9566ea0d177b875acafa818ceece3dc86a98a2e827d2d9123eea9edc294347d # CI-only, never used outside this throw-away stack
+      # Encrypts the TOTP secrets of the optional two-step verification (E2E-IAM-022 to 025).
+      MFA_ENCRYPTION_KEY: 3c1f6a9b2d4e7081a5b6c7d8e9f0a1b2c3d4e5f60718293a4b5c6d7e8f9a0b1c # CI-only, never used outside this throw-away stack
       JWT_ACCESS_TTL: 20m
       JWT_REFRESH_TTL: 720h
       GRPC_PORT: 50051
