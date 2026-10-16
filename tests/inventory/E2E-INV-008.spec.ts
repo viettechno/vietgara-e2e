@@ -19,7 +19,7 @@ test(
     const garage = await owner.api.createGarage({ name: 'QA Gara INV008' })
     const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer An Nguyen' })
     const vehicle = await owner.api.createVehicle(garage.id ?? '', { customerId: customer.id ?? '', licensePlate: '51A-111.11' })
-    const item = await owner.api.createItem(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30', unit: 'L', reorderThreshold: 5 })
+    const item = await owner.api.createSimplePart(garage.id ?? '', { sku: 'OIL-5W30', name: 'Engine oil 5W-30', reorderThreshold: '5' })
     await owner.api.receiveStock(garage.id ?? '', item.id ?? '', { quantity: '10' })
 
     await signIn(owner.session, garage.id)
@@ -33,7 +33,7 @@ test(
     await createForm.fillLine(0, { itemType: 'Labor', description: 'Oil change service', quantity: '1', unitPrice: '250000' })
     await createForm.addLine({ itemType: 'Part', description: 'Engine oil 5W-30', quantity: '4', unitPrice: '180000', itemSku: 'OIL-5W30' })
     await createForm.createButton.click()
-    await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
+    await expect(page).toHaveURL(/\/repair-orders\/(?!new)[^/]+$/)
 
     const detail = new RepairOrderDetailPage(page)
     await detail.setLineStatus(0, 'Completed')

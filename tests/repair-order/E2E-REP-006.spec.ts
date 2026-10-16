@@ -20,7 +20,7 @@ test('E2E-REP-006 update line progress; order status derived', async ({ page, fr
   await form.createButton.click()
   // Wait for the creation to land: without this the URL below is still
   // /repair-orders/new on slow runners (E2E-REP-001 waits the same way).
-  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
+  await expect(page).toHaveURL(/\/repair-orders\/(?!new)[^/]+$/)
 
   const orderUrl = page.url()
   const orderId = orderUrl.split('/').pop()!

@@ -6,6 +6,8 @@ export type RepairOrderLineInput = {
   quantity: string
   unitPrice: string
   itemSku?: string
+  /** The abbreviation of the unit the quantity is typed in (a packaging unit of the picked part). */
+  unit?: string
 }
 
 /** The repair order create page at /repair-orders/new (E2E-REP-001/002). */
@@ -35,7 +37,10 @@ export class RepairOrderCreateForm {
 
   async fillLine(index: number, line: RepairOrderLineInput): Promise<void> {
     const row = this.lineRow(index)
-    await row.locator('select').selectOption(line.itemType === 'Part' ? 'REPAIR_ORDER_ITEM_TYPE_PART' : 'REPAIR_ORDER_ITEM_TYPE_LABOR')
+    await row
+      .locator('select')
+      .first()
+      .selectOption(line.itemType === 'Part' ? 'REPAIR_ORDER_ITEM_TYPE_PART' : 'REPAIR_ORDER_ITEM_TYPE_LABOR')
     if (line.itemType === 'Part' && line.itemSku) {
       const itemField = row.locator('input[role="combobox"]')
       await itemField.fill(line.itemSku)
@@ -43,6 +48,7 @@ export class RepairOrderCreateForm {
     }
     const inputs = row.locator('input:not([role="combobox"]):not([readonly])')
     await inputs.nth(0).fill(line.description)
+    if (line.unit) await row.locator('select').nth(1).selectOption({ label: line.unit })
     await inputs.nth(1).fill(line.quantity)
     await inputs.nth(2).fill(line.unitPrice)
   }
@@ -90,6 +96,10 @@ export class RepairOrderDetailPage {
   }
 
   async saveLine(index: number): Promise<void> {
+    // Wait for the PATCH to land: a test that navigates straight after the click
+    // would otherwise cancel the save.
+    const saved = this.page.waitForResponse((r) => r.request().method() === 'PATCH' && /\/lines\//.test(r.url()))
     await this.lineRow(index).getByRole('button', { name: 'Save', exact: true }).click()
+    await saved
   }
 }

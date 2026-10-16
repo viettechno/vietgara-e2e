@@ -22,7 +22,7 @@ test('E2E-QUO-001 create a draft quote with labor and part lines', { tag: '@smok
 
   await quoteForm.saveButton.click()
 
-  await expect(page).toHaveURL(/\/quotes\/[^/]+$/)
+  await expect(page).toHaveURL(/\/quotes\/(?!new)[^/]+$/)
   await expect(page.getByText('Draft')).toBeVisible()
   // (250,000 x 1) + (180,000 x 4) = 970,000
   await expect(page.getByText('970,000', { exact: false }).first()).toBeVisible()

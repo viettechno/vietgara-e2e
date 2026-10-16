@@ -16,8 +16,10 @@ import type {
   Entitlements,
   Garage,
   Invitation,
-  Item,
   ListResponse,
+  PackagingUnit,
+  Part,
+  PartCategory,
   PaymentMethod,
   Plan,
   PublicQuote,
@@ -34,7 +36,10 @@ import type {
   Settlement,
   SettlementStatus,
   StaffGroup,
+  StockLevel,
   StockTransaction,
+  UploadedFile,
+  Unit,
   Subscription,
   Vehicle,
 } from './types.js'
@@ -69,14 +74,24 @@ export type RepairOrderLineInput = {
 }
 export type CreateRepairOrderInput = { vehicleId: string; lines: RepairOrderLineInput[] }
 export type UpdateLineInput = { status: RepairOrderLineStatus; assignedTechnicianIds: string[] }
-export type ItemInput = { sku: string; name: string; unit?: string; reorderThreshold?: number }
-export type StockReceiptInput = { quantity: string; unitCost?: string }
-export type StockReceiptResult = { transaction?: StockTransaction; item?: Item }
+export type PartInput = {
+  sku: string
+  name: string
+  baseUnitId: string
+  salePrice?: number
+  categoryId?: string
+  brand?: string
+  reorderThreshold?: string
+}
+export type StockReceiptInput = { quantity: string; unitId?: string; unitCost?: number }
+export type StockReceiptResult = { transaction?: StockTransaction; stockLevel?: StockLevel }
 
 // A valid 1x1 PNG: the transfer screenshot the plan payment flow requires.
 const TRANSFER_EVIDENCE_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
 export class ApiClient {
+  private readonly unitCache = new Map<string, Unit>()
+
   constructor(
     private readonly request: APIRequestContext,
     private readonly token?: string,
@@ -113,7 +128,11 @@ export class ApiClient {
     return jsonRequest(this.request, 'PATCH', path, { token: this.token, body })
   }
 
-  private delete(path: string): Promise<void> {
+  private put<T>(path: string, body: unknown): Promise<T> {
+    return jsonRequest(this.request, 'PUT', path, { token: this.token, body })
+  }
+
+  private delete<T = void>(path: string): Promise<T> {
     return jsonRequest(this.request, 'DELETE', path, { token: this.token })
   }
 
@@ -308,26 +327,105 @@ export class ApiClient {
     return this.post(`/v1/garages/${garageId}/repair-orders/${orderId}/closing`)
   }
 
+  // ---- Catalogue (FRD 3.21, Release 6.0) ----------------------------------
+
+  createUnit(garageId: string, name: string, abbreviation: string): Promise<Unit> {
+    return this.post(`/v1/garages/${garageId}/units`, { name, abbreviation })
+  }
+
+  createCategory(garageId: string, name: string, parentId?: string): Promise<PartCategory> {
+    return this.post(`/v1/garages/${garageId}/part-categories`, { name, parentId })
+  }
+
+  createPart(garageId: string, input: PartInput): Promise<Part> {
+    return this.post(`/v1/garages/${garageId}/parts`, input)
+  }
+
+  updatePart(garageId: string, partId: string, input: Partial<PartInput>): Promise<Part> {
+    const mask = Object.keys(input).map((k) => k.replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`))
+    return this.patch(`/v1/garages/${garageId}/parts/${partId}?updateMask=${mask.join(',')}`, input)
+  }
+
+  createRole(name: string, permissions: string[]): Promise<{ id?: string }> {
+    return this.post('/v1/roles', { name, permissions })
+  }
+
+  createStaffGroup(garageId: string, name: string, roleId: string): Promise<StaffGroup> {
+    return this.post(`/v1/garages/${garageId}/staff-groups`, { name, roleId })
+  }
+
+  getPart(garageId: string, partId: string): Promise<Part> {
+    return this.get(`/v1/garages/${garageId}/parts/${partId}`)
+  }
+
+  setPartUnits(
+    garageId: string,
+    partId: string,
+    packagingUnits: Array<Pick<PackagingUnit, 'unitId' | 'factor'> & { salePrice?: number }>,
+  ): Promise<Part> {
+    return this.put(`/v1/garages/${garageId}/parts/${partId}/units`, { packagingUnits })
+  }
+
+  deletePart(garageId: string, partId: string): Promise<{ outcome?: string }> {
+    return this.delete(`/v1/garages/${garageId}/parts/${partId}`)
+  }
+
+  /** Uploads an image for a part and attaches it. */
+  async addPartImage(garageId: string, partId: string, png: Buffer): Promise<Part> {
+    const file: UploadedFile = await this.post(`/v1/garages/${garageId}/files`, {
+      kind: 'FILE_KIND_PART_IMAGE',
+      entityType: 'part',
+      entityId: partId,
+      content: png.toString('base64'),
+      contentType: 'image/png',
+    })
+    return this.post(`/v1/garages/${garageId}/parts/${partId}/images`, { fileId: file.id })
+  }
+
+  /**
+   * A part with its own base unit, for tests that only need "a part": the unit is
+   * created on first use in the garage (units are unique by name).
+   */
+  async createSimplePart(
+    garageId: string,
+    input: {
+      sku: string
+      name: string
+      unit?: { name: string; abbreviation: string }
+      salePrice?: number
+      brand?: string
+      reorderThreshold?: string
+    },
+  ): Promise<Part> {
+    const unit = input.unit ?? { name: 'Litre', abbreviation: 'L' }
+    const key = `${garageId}:${unit.name.toLowerCase()}`
+    let created = this.unitCache.get(key)
+    if (!created) {
+      created = await this.createUnit(garageId, unit.name, unit.abbreviation)
+      this.unitCache.set(key, created)
+    }
+    return this.createPart(garageId, {
+      sku: input.sku,
+      name: input.name,
+      baseUnitId: created.id ?? '',
+      salePrice: input.salePrice,
+      brand: input.brand,
+      reorderThreshold: input.reorderThreshold,
+    })
+  }
+
   // ---- Inventory (FRD 3.8, Release 1.3) ----------------------------------
 
-  createItem(garageId: string, input: ItemInput): Promise<Item> {
-    return this.post(`/v1/garages/${garageId}/inventory-items`, input)
+  getStockLevel(garageId: string, partId: string): Promise<StockLevel> {
+    return this.get(`/v1/garages/${garageId}/inventory-items/${partId}`)
   }
 
-  getItem(garageId: string, itemId: string): Promise<Item> {
-    return this.get(`/v1/garages/${garageId}/inventory-items/${itemId}`)
-  }
-
-  receiveStock(garageId: string, itemId: string, input: StockReceiptInput): Promise<StockReceiptResult> {
-    return this.post(`/v1/garages/${garageId}/stock-receipts`, { itemId, ...input })
+  receiveStock(garageId: string, partId: string, input: StockReceiptInput): Promise<StockReceiptResult> {
+    return this.post(`/v1/garages/${garageId}/stock-receipts`, { itemId: partId, ...input })
   }
 
   listStockMovements(garageId: string, params: { itemId?: string; page?: number } = {}): Promise<ListResponse<StockTransaction>> {
     return this.get(`/v1/garages/${garageId}/reports/stock-movements${query({ page: 1, pageSize: 20, ...params })}`)
-  }
-
-  deleteItem(garageId: string, itemId: string): Promise<void> {
-    return this.delete(`/v1/garages/${garageId}/inventory-items/${itemId}`)
   }
 
   // ---- Staff groups (FRD 3.3) --------------------------------------------

@@ -19,7 +19,7 @@ test('E2E-REP-001 create an ad-hoc repair order', { tag: '@smoke' }, async ({ pa
   await form.addLine({ itemType: 'Part', description: 'Brake pad set', quantity: '1', unitPrice: '450000' })
   await form.createButton.click()
 
-  await expect(page).toHaveURL(/\/repair-orders\/[^/]+$/)
+  await expect(page).toHaveURL(/\/repair-orders\/(?!new)[^/]+$/)
   await expect(page.getByText('To Do')).toBeVisible()
   await expect(page.getByText(vehicle.licensePlate ?? '')).toBeVisible()
   // (150,000 x 1) + (450,000 x 1) = 600,000
