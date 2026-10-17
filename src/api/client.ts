@@ -554,6 +554,15 @@ export class ApiClient {
     return this.patch(`/v1/garages/${garageId}/stock-counts/${countId}/lines/${lineId}`, { enteredCountedQuantity: quantity, unitId })
   }
 
+  /** The stock count as an Excel workbook: its content type and raw bytes. */
+  async downloadStockCountExcel(garageId: string, countId: string): Promise<{ contentType: string; bytes: Buffer }> {
+    const response = await this.request.fetch(`v1/garages/${garageId}/stock-counts/${countId}/excel`, {
+      headers: this.token ? { Authorization: `Bearer ${this.token}` } : {},
+    })
+    if (!response.ok()) throw new Error(`stock count export answered HTTP ${response.status()}`)
+    return { contentType: response.headers()['content-type'] ?? '', bytes: await response.body() }
+  }
+
   mergeStockCounts(garageId: string, countIds: string[]): Promise<StockCount> {
     return this.post(`/v1/garages/${garageId}/stock-counts:merge`, { stockCountIds: countIds })
   }

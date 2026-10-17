@@ -5,6 +5,9 @@ import { GoodsReceiptPage } from './GoodsReceiptPage.js'
 export class InventoryPage {
   readonly stockOnHandTab: Locator
   readonly goodsReceiptsTab: Locator
+  readonly stockCountsTab: Locator
+  readonly writeOffsTab: Locator
+  readonly supplierReturnsTab: Locator
   readonly stockMovementsTab: Locator
   readonly purchasesTab: Locator
   readonly valuationTab: Locator
@@ -16,6 +19,9 @@ export class InventoryPage {
   constructor(readonly page: Page) {
     this.stockOnHandTab = page.getByRole('tab', { name: 'Stock on Hand' })
     this.goodsReceiptsTab = page.getByRole('tab', { name: 'Goods receipts' })
+    this.stockCountsTab = page.getByRole('tab', { name: 'Stock counts' })
+    this.writeOffsTab = page.getByRole('tab', { name: 'Write-offs' })
+    this.supplierReturnsTab = page.getByRole('tab', { name: 'Supplier returns' })
     this.stockMovementsTab = page.getByRole('tab', { name: 'Stock Movements' })
     this.purchasesTab = page.getByRole('tab', { name: 'Purchases' })
     this.valuationTab = page.getByRole('tab', { name: 'Stock valuation' })
@@ -27,6 +33,21 @@ export class InventoryPage {
 
   async goto(): Promise<void> {
     await this.page.goto('/inventory')
+  }
+
+  /** Opens a document tab (counts, write-offs, supplier returns) by its URL. */
+  async gotoTab(tab: 'counts' | 'writeoffs' | 'returns'): Promise<void> {
+    await this.page.goto(`/inventory?tab=${tab}`)
+  }
+
+  /** Opens the stock card (movements, with the quantity on hand after each) of a part; resolves with its dialog. */
+  async openStockCard(sku: string): Promise<Locator> {
+    await this.partRow(sku)
+      .getByRole('button', { name: `Stock card: ${sku}` })
+      .click()
+    const dialog = this.page.getByRole('dialog')
+    await expect(dialog).toContainText(`Stock card`)
+    return dialog
   }
 
   /** The stock row of a part (by SKU). */
