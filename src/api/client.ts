@@ -39,9 +39,15 @@ import type {
   Settlement,
   SettlementStatus,
   StaffGroup,
+  RepairOrderPartReturn,
+  StockCount,
   StockIssue,
   StockLevel,
   StockTransaction,
+  StockTransactionRefType,
+  SupplierReturn,
+  WriteOff,
+  WriteOffReason,
   UploadedFile,
   Unit,
   Subscription,
@@ -97,6 +103,19 @@ export type GoodsReceiptInput = {
   notes?: string
   lines: GoodsReceiptLineInput[]
 }
+export type WriteOffInput = {
+  reason: WriteOffReason
+  notes?: string
+  lines: Array<{ partId: string; unitId?: string; enteredQuantity: string }>
+}
+export type SupplierReturnInput = {
+  supplierId: string
+  goodsReceiptId?: string
+  creditNoteNumber?: string
+  notes?: string
+  lines: Array<{ partId: string; unitId?: string; enteredQuantity: string; unitCost?: string }>
+}
+export type PartReturnInput = { repairOrderLineId: string; unitId?: string; enteredQuantity: string; reason: string }
 
 // A valid 1x1 PNG: the transfer screenshot the plan payment flow requires.
 const TRANSFER_EVIDENCE_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
@@ -508,6 +527,95 @@ export class ApiClient {
 
   listStockMovements(garageId: string, params: { partId?: string; page?: number } = {}): Promise<ListResponse<StockTransaction>> {
     return this.get(`/v1/garages/${garageId}/reports/stock-movements${query({ page: 1, pageSize: 20, ...params })}`)
+  }
+
+  // Stock counts, write-offs and returns (Release 7.1: FR-INV-09 to 12). The
+  // gateway unwraps the single-message responses, so these answer bare documents.
+
+  createStockCount(garageId: string, input: { name?: string; notes?: string } = {}): Promise<StockCount> {
+    return this.post(`/v1/garages/${garageId}/stock-counts`, input)
+  }
+
+  getStockCount(garageId: string, countId: string): Promise<StockCount> {
+    return this.get(`/v1/garages/${garageId}/stock-counts/${countId}`)
+  }
+
+  /** The garage's stock counts, newest first; the lines are left out of list answers. */
+  listStockCounts(garageId: string, params: { status?: string; page?: number } = {}): Promise<ListResponse<StockCount>> {
+    return this.get(`/v1/garages/${garageId}/stock-counts${query({ page: 1, pageSize: 20, ...params })}`)
+  }
+
+  addStockCountLines(garageId: string, countId: string, partIds: string[]): Promise<StockCount> {
+    return this.post(`/v1/garages/${garageId}/stock-counts/${countId}/lines`, { partIds })
+  }
+
+  /** Types the counted quantity of one line (the part's base unit unless `unitId` is given). */
+  countStockLine(garageId: string, countId: string, lineId: string, quantity: string, unitId?: string): Promise<StockCount> {
+    return this.patch(`/v1/garages/${garageId}/stock-counts/${countId}/lines/${lineId}`, { enteredCountedQuantity: quantity, unitId })
+  }
+
+  mergeStockCounts(garageId: string, countIds: string[]): Promise<StockCount> {
+    return this.post(`/v1/garages/${garageId}/stock-counts:merge`, { stockCountIds: countIds })
+  }
+
+  completeStockCount(garageId: string, countId: string, skipUncounted = false): Promise<StockCount> {
+    return this.post(`/v1/garages/${garageId}/stock-counts/${countId}:complete`, { skipUncounted })
+  }
+
+  cancelStockCount(garageId: string, countId: string): Promise<StockCount> {
+    return this.post(`/v1/garages/${garageId}/stock-counts/${countId}:cancel`)
+  }
+
+  /**
+   * A stock count with a line per part, every line counted: `counted` maps a part
+   * id to the quantity found. Left as a draft.
+   */
+  async createCountedStockCount(garageId: string, name: string, counted: Record<string, string>): Promise<StockCount> {
+    let count = await this.createStockCount(garageId, { name })
+    count = await this.addStockCountLines(garageId, count.id ?? '', Object.keys(counted))
+    for (const line of count.lines ?? []) {
+      count = await this.countStockLine(garageId, count.id ?? '', line.id ?? '', counted[line.partId ?? ''] ?? '')
+    }
+    return count
+  }
+
+  createWriteOff(garageId: string, input: WriteOffInput): Promise<WriteOff> {
+    return this.post(`/v1/garages/${garageId}/write-offs`, input)
+  }
+
+  getWriteOff(garageId: string, writeOffId: string): Promise<WriteOff> {
+    return this.get(`/v1/garages/${garageId}/write-offs/${writeOffId}`)
+  }
+
+  listWriteOffs(garageId: string, params: { reason?: WriteOffReason; status?: string } = {}): Promise<ListResponse<WriteOff>> {
+    return this.get(`/v1/garages/${garageId}/write-offs${query({ page: 1, pageSize: 20, ...params })}`)
+  }
+
+  cancelWriteOff(garageId: string, writeOffId: string): Promise<WriteOff> {
+    return this.post(`/v1/garages/${garageId}/write-offs/${writeOffId}:cancel`)
+  }
+
+  createSupplierReturn(garageId: string, input: SupplierReturnInput): Promise<SupplierReturn> {
+    return this.post(`/v1/garages/${garageId}/supplier-returns`, input)
+  }
+
+  listSupplierReturns(garageId: string, params: { supplierId?: string; status?: string } = {}): Promise<ListResponse<SupplierReturn>> {
+    return this.get(`/v1/garages/${garageId}/supplier-returns${query({ page: 1, pageSize: 20, ...params })}`)
+  }
+
+  cancelSupplierReturn(garageId: string, returnId: string): Promise<SupplierReturn> {
+    return this.post(`/v1/garages/${garageId}/supplier-returns/${returnId}:cancel`)
+  }
+
+  /** Returns unused parts of a posted stock issue's repair-order line to stock. */
+  returnRepairOrderPart(garageId: string, repairOrderId: string, input: PartReturnInput): Promise<RepairOrderPartReturn> {
+    return this.post(`/v1/garages/${garageId}/repair-orders/${repairOrderId}/part-returns`, input)
+  }
+
+  /** The movements of one part (its stock card), optionally only those caused by one kind of document. */
+  async stockCard(garageId: string, partId: string, refType?: StockTransactionRefType): Promise<StockTransaction[]> {
+    const answer = await this.listStockMovements(garageId, { partId })
+    return (answer.data ?? []).filter((movement) => !refType || movement.refType === refType)
   }
 
   // ---- Staff groups (FRD 3.3) --------------------------------------------
