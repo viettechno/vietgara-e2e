@@ -32,6 +32,7 @@ test('E2E-INV-012 completing a receipt updates stock and the weighted-average co
   await inventory.stockMovementsTab.click()
   const receipts = page.locator('tbody tr', { hasText: 'OIL-5W30' }).filter({ hasText: 'Goods receipt' })
   await expect(receipts).toHaveCount(2)
-  await expect(page.getByRole('cell', { name: 'Goods receipt ₫100', exact: true })).toHaveCount(1)
-  await expect(page.getByRole('cell', { name: 'Goods receipt ₫200', exact: true })).toHaveCount(1)
+  // Since Release 7.1 the reference cell also carries the document number, so match on the row.
+  await expect(receipts.filter({ hasText: '₫100' })).toHaveCount(1)
+  await expect(receipts.filter({ hasText: '₫200' })).toHaveCount(1)
 })

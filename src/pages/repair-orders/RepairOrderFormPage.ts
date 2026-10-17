@@ -6,6 +6,9 @@ export class StockIssueCard {
   readonly status: Locator
   readonly lines: Locator
   readonly issueNowButton: Locator
+  readonly returnPartsButton: Locator
+  /** The card's table of parts already returned to stock (Release 7.1). */
+  readonly returnedParts: Locator
 
   constructor(page: Page) {
     this.title = page.getByRole('heading', { name: /^Stock issue \S+$/ })
@@ -14,6 +17,8 @@ export class StockIssueCard {
     this.status = card.getByText(/^(Draft|Posted|Cancelled)$/)
     this.lines = card.getByRole('table', { name: 'Stock issue lines' }).locator('tbody tr')
     this.issueNowButton = card.getByRole('button', { name: 'Issue now' })
+    this.returnPartsButton = card.getByRole('button', { name: 'Return parts' })
+    this.returnedParts = card.getByRole('table', { name: 'Returned parts' }).locator('tbody tr')
   }
 }
 

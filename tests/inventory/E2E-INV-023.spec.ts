@@ -1,13 +1,20 @@
 // E2E-INV-023 · Cancelling a draft closes it; cancelling a completed count posts its reversal, refused once the stock is used
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
 //
-// The stock is "used" by a repair order that is completed and closed over the API
-// (closing posts its stock issue; the close itself is E2E-INV-018's subject).
-// Partial: driven over the API; the owner-web screens are not covered yet.
+// Partial. The draft is cancelled on screen. The reversal of a *completed* count (steps 4-5)
+// is driven over the API: owner-web 7.1 shows Cancel count on drafts only, so the screen
+// cannot take the step the scenario describes (reported to web). The stock is "used" by a
+// repair order completed and closed over the API (the close is E2E-INV-018's subject).
 import { expect, test } from '../../src/fixtures/index.js'
 import { PIECE, completeAndClose, expectRefused, onHand, stockedPart, waitForStockIssue } from '../../src/fixtures/inventory.js'
+import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'
+import { StockCountPage, documentRow } from '../../src/pages/inventory/StockAdjustmentPages.js'
 
-test('E2E-INV-023 cancelling a draft closes it; a completed count is reversed unless its stock was used', async ({ freshOwner }) => {
+test('E2E-INV-023 cancelling a draft closes it; a completed count is reversed unless its stock was used', async ({
+  page,
+  signIn,
+  freshOwner,
+}) => {
   const owner = await freshOwner('inv023', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara INV023' })
   const gid = garage.id ?? ''
@@ -24,11 +31,23 @@ test('E2E-INV-023 cancelling a draft closes it; a completed count is reversed un
     (await owner.api.createCountedStockCount(gid, 'Shelf A', { [plugId]: '7', [filterId]: '18' })).id ?? '',
   )
   expect(await onHand(owner.api, gid, plug)).toBe('7')
+  await signIn(owner.session, garage.id)
 
-  // Steps 1-2: cancelling a draft closes it, moves no stock, and works only once.
+  // Step 1: a new draft with FILTER-01 is cancelled on screen: it closes and no stock moves.
   const draft = await owner.api.createCountedStockCount(gid, 'Draft', { [filterId]: '10' })
-  expect((await owner.api.cancelStockCount(gid, draft.id ?? '')).status).toBe('STOCK_COUNT_STATUS_CANCELLED')
+  const count = new StockCountPage(page)
+  await count.goto(draft.id ?? '')
+  await count.cancelDraft()
+  await expect(page.getByText('Count cancelled.')).toBeVisible()
+  const inventory = new InventoryPage(page)
+  await expect(inventory.stockCountsTab).toHaveAttribute('aria-selected', 'true')
+  await expect(documentRow(page, draft.number ?? '')).toContainText('Cancelled')
   expect(await onHand(owner.api, gid, filter)).toBe('18')
+
+  // Step 2: a cancelled count offers no second cancel, and the API refuses one.
+  await count.goto(draft.id ?? '')
+  await expect(count.status).toHaveText('Cancelled')
+  await expect(count.cancelButton).toBeHidden()
   await expectRefused(owner.api.cancelStockCount(gid, draft.id ?? ''), 409, 'STOCK_COUNT_ALREADY_CANCELLED')
 
   // The reversal that works: a second completed count is cancelled while its stock is still on hand.
@@ -51,8 +70,10 @@ test('E2E-INV-023 cancelling a draft closes it; a completed count is reversed un
   await completeAndClose(owner.api, gid, order)
   await expect.poll(() => onHand(owner.api, gid, plug), { timeout: 60_000 }).toBe('1')
 
-  // Steps 4-5: taking back the 2 the count added would leave -1: refused, and nothing changes.
+  // Steps 4-5: taking back the 2 the count added would leave -1: refused, nothing changes.
   await expectRefused(owner.api.cancelStockCount(gid, shelfA.id ?? ''), 409, 'INSUFFICIENT_STOCK_TO_REVERSE')
-  expect((await owner.api.getStockCount(gid, shelfA.id ?? '')).status).toBe('STOCK_COUNT_STATUS_COMPLETED')
-  expect(await onHand(owner.api, gid, plug)).toBe('1')
+  await inventory.goto()
+  await expect(inventory.partRow('PLUG-M12')).toContainText('1 pc')
+  await count.goto(shelfA.id ?? '')
+  await expect(count.status).toHaveText('Completed')
 })
