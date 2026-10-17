@@ -8,6 +8,8 @@
 import type { APIRequestContext } from '@playwright/test'
 import { jsonRequest, query } from './http.js'
 import type {
+  MfaEnrollment,
+  MfaStatus,
   PlanPaymentRequest,
   SubscriptionSummary,
   Supplier,
@@ -144,6 +146,21 @@ export class ApiClient {
 
   login(email: string, password: string): Promise<Session> {
     return this.post('/v1/auth/login', { email, password })
+  }
+
+  // ---- Optional MFA (FR-IAM-09, Release 6.1) ------------------------------
+
+  mfaStatus(): Promise<MfaStatus> {
+    return this.get('/v1/me/mfa')
+  }
+
+  enrollMfa(): Promise<MfaEnrollment> {
+    return this.post('/v1/me/mfa/enroll')
+  }
+
+  /** Turns MFA on with a code from the authenticator; answers the recovery codes (shown once). */
+  confirmMfa(code: string): Promise<{ recoveryCodes?: string[] }> {
+    return this.post('/v1/me/mfa/enroll:confirm', { code })
   }
 
   sendEmailVerificationOtp(): Promise<{ expiresAt: string; resendAvailableAt: string }> {
