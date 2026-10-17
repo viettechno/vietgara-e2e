@@ -31,8 +31,12 @@ test('E2E-INV-010 permissions: view-only, and full access', async ({ page, signI
   await signIn(technician.session, garage.id)
   const inventory = new InventoryPage(page)
   await inventory.goto()
-  await expect(inventory.itemRow('OIL-5W30')).toBeVisible()
+  await expect(inventory.partRow('OIL-5W30')).toBeVisible()
   await expect(page.getByRole('button', { name: /^Receive stock/ })).toBeHidden()
+  // Receipts can be listed, but not started.
+  await inventory.goodsReceiptsTab.click()
+  await expect(page.getByRole('link', { name: 'New goods receipt' })).toBeHidden()
+  await inventory.stockOnHandTab.click()
 
   // The Technician may look at the catalogue too, but not change it.
   const catalogue = new CataloguePage(page)

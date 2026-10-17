@@ -39,7 +39,7 @@ test('E2E-CAT-006 part images: up to three, thumbnail in the lists', async ({ pa
   await expect(catalogue.row('WPR-24').locator('img')).toHaveCount(1)
   const inventory = new InventoryPage(page)
   await inventory.goto()
-  await expect(inventory.itemRow('WPR-24').locator('img')).toHaveCount(1)
+  await expect(inventory.partRow('WPR-24').locator('img')).toHaveCount(1)
 
   // Step 3: removing the first promotes the next.
   await catalogue.goto()
