@@ -1,37 +1,58 @@
-// E2E-INV-023 · Cancelling a completed count restores the stock; refused once the stock is used
+// E2E-INV-023 · Cancelling a draft closes it; cancelling a completed count posts its reversal, refused once the stock is used
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+//
+// The stock is "used" by a repair order that is completed and closed over the API
+// (closing posts its stock issue; the close itself is E2E-INV-018's subject).
+// Partial: driven over the API; the owner-web screens are not covered yet.
 import { expect, test } from '../../src/fixtures/index.js'
-import { expectRefused, onHand, stockedPart } from '../../src/fixtures/inventory.js'
+import { PIECE, completeAndClose, expectRefused, onHand, stockedPart, waitForStockIssue } from '../../src/fixtures/inventory.js'
 
-test('E2E-INV-023 cancelling a completed count restores the stock; refused once the stock is used', async ({ freshOwner }) => {
+test('E2E-INV-023 cancelling a draft closes it; a completed count is reversed unless its stock was used', async ({ freshOwner }) => {
   const owner = await freshOwner('inv023', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara INV023' })
   const gid = garage.id ?? ''
-  const oil = await stockedPart(owner.api, gid, { sku: 'OIL-5W30', name: 'Engine oil 5W-30', quantity: '5', unitCost: 100 })
-  const oilId = oil.id ?? ''
+  const customer = await owner.api.createCustomer(gid, { fullName: 'QA Customer An Nguyen' })
+  const vehicle = await owner.api.createVehicle(gid, { customerId: customer.id ?? '', licensePlate: '51A-232.32' })
+  const filter = await stockedPart(owner.api, gid, { sku: 'FILTER-01', name: 'Air filter', quantity: '20', unitCost: 50, unit: PIECE })
+  const plug = await stockedPart(owner.api, gid, { sku: 'PLUG-M12', name: 'Spark plug M12', quantity: '5', unitCost: 200, unit: PIECE })
+  const filterId = filter.id ?? ''
+  const plugId = plug.id ?? ''
 
-  // Steps 1-2: count 1 raises the stock to 9; cancelling it reverses the adjustment.
-  const first = await owner.api.completeStockCount(
+  // Precondition (E2E-INV-020): Shelf A is completed and added 2 PLUG-M12; FILTER-01 was counted down to 18.
+  const shelfA = await owner.api.completeStockCount(
     gid,
-    (await owner.api.createCountedStockCount(gid, 'Count 1', { [oilId]: '9' })).id ?? '',
+    (await owner.api.createCountedStockCount(gid, 'Shelf A', { [plugId]: '7', [filterId]: '18' })).id ?? '',
   )
-  expect(await onHand(owner.api, gid, oil)).toBe('9')
-  const cancelled = await owner.api.cancelStockCount(gid, first.id ?? '')
-  expect(cancelled.status).toBe('STOCK_COUNT_STATUS_CANCELLED')
-  expect(await onHand(owner.api, gid, oil)).toBe('5')
-  await expectRefused(owner.api.cancelStockCount(gid, first.id ?? ''), 409, 'STOCK_COUNT_ALREADY_CANCELLED')
+  expect(await onHand(owner.api, gid, plug)).toBe('7')
 
-  // Steps 3-4: count 2 raises it to 9 again, then a write-off uses 8 L.
-  const second = await owner.api.completeStockCount(
+  // Steps 1-2: cancelling a draft closes it, moves no stock, and works only once.
+  const draft = await owner.api.createCountedStockCount(gid, 'Draft', { [filterId]: '10' })
+  expect((await owner.api.cancelStockCount(gid, draft.id ?? '')).status).toBe('STOCK_COUNT_STATUS_CANCELLED')
+  expect(await onHand(owner.api, gid, filter)).toBe('18')
+  await expectRefused(owner.api.cancelStockCount(gid, draft.id ?? ''), 409, 'STOCK_COUNT_ALREADY_CANCELLED')
+
+  // The reversal that works: a second completed count is cancelled while its stock is still on hand.
+  const recount = await owner.api.completeStockCount(
     gid,
-    (await owner.api.createCountedStockCount(gid, 'Count 2', { [oilId]: '9' })).id ?? '',
+    (await owner.api.createCountedStockCount(gid, 'Recount', { [filterId]: '20' })).id ?? '',
   )
-  expect(await onHand(owner.api, gid, oil)).toBe('9')
-  await owner.api.createWriteOff(gid, { reason: 'WRITE_OFF_REASON_LOST', lines: [{ partId: oilId, enteredQuantity: '8' }] })
-  expect(await onHand(owner.api, gid, oil)).toBe('1')
+  expect(await onHand(owner.api, gid, filter)).toBe('20')
+  expect((await owner.api.cancelStockCount(gid, recount.id ?? '')).status).toBe('STOCK_COUNT_STATUS_CANCELLED')
+  expect(await onHand(owner.api, gid, filter)).toBe('18')
 
-  // Step 5: taking back the 4 L the count added would leave -3: refused, nothing changes.
-  await expectRefused(owner.api.cancelStockCount(gid, second.id ?? ''), 409, 'INSUFFICIENT_STOCK_TO_REVERSE')
-  expect((await owner.api.getStockCount(gid, second.id ?? '')).status).toBe('STOCK_COUNT_STATUS_COMPLETED')
-  expect(await onHand(owner.api, gid, oil)).toBe('1')
+  // Step 3: a repair order uses 6 PLUG-M12 and is closed; the stock issue posts and 1 is left.
+  const order = await owner.api.createRepairOrder(gid, {
+    vehicleId: vehicle.id ?? '',
+    lines: [
+      { itemType: 'REPAIR_ORDER_ITEM_TYPE_PART', itemRefId: plugId, description: 'Spark plug M12', quantity: '6', unitPrice: '90000' },
+    ],
+  })
+  await waitForStockIssue(owner.api, gid, order.id ?? '')
+  await completeAndClose(owner.api, gid, order)
+  await expect.poll(() => onHand(owner.api, gid, plug), { timeout: 60_000 }).toBe('1')
+
+  // Steps 4-5: taking back the 2 the count added would leave -1: refused, and nothing changes.
+  await expectRefused(owner.api.cancelStockCount(gid, shelfA.id ?? ''), 409, 'INSUFFICIENT_STOCK_TO_REVERSE')
+  expect((await owner.api.getStockCount(gid, shelfA.id ?? '')).status).toBe('STOCK_COUNT_STATUS_COMPLETED')
+  expect(await onHand(owner.api, gid, plug)).toBe('1')
 })
