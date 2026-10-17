@@ -54,6 +54,6 @@ test(
 
     const inventory = new InventoryPage(page)
     await inventory.goto()
-    await expect(inventory.itemRow('QA-WATER-500')).toContainText('0 btl')
+    await expect(inventory.partRow('QA-WATER-500')).toContainText('0 btl')
   },
 )

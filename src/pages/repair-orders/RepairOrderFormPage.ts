@@ -1,11 +1,28 @@
 import type { Locator, Page } from '@playwright/test'
 
+/** The stock issue card of a repair order (E2E-INV-015): the draft that reserves its parts. */
+export class StockIssueCard {
+  readonly title: Locator
+  readonly status: Locator
+  readonly lines: Locator
+  readonly issueNowButton: Locator
+
+  constructor(page: Page) {
+    this.title = page.getByRole('heading', { name: /^Stock issue \S+$/ })
+    // The card's panel: the nearest ancestor of its title that holds both the PDF button and the lines table.
+    const card = this.title.locator('xpath=ancestor::*[.//button[normalize-space()="Export PDF"] and .//table][1]')
+    this.status = card.getByText(/^(Draft|Posted|Cancelled)$/)
+    this.lines = card.getByRole('table', { name: 'Stock issue lines' }).locator('tbody tr')
+    this.issueNowButton = card.getByRole('button', { name: 'Issue now' })
+  }
+}
+
 export type RepairOrderLineInput = {
   itemType: 'Labor' | 'Part'
   description: string
   quantity: string
   unitPrice: string
-  itemSku?: string
+  partSku?: string
   /** The abbreviation of the unit the quantity is typed in (a packaging unit of the picked part). */
   unit?: string
 }
@@ -41,10 +58,10 @@ export class RepairOrderCreateForm {
       .locator('select')
       .first()
       .selectOption(line.itemType === 'Part' ? 'REPAIR_ORDER_ITEM_TYPE_PART' : 'REPAIR_ORDER_ITEM_TYPE_LABOR')
-    if (line.itemType === 'Part' && line.itemSku) {
-      const itemField = row.locator('input[role="combobox"]')
-      await itemField.fill(line.itemSku)
-      await this.page.getByRole('listbox').getByRole('option', { name: line.itemSku }).first().click()
+    if (line.itemType === 'Part' && line.partSku) {
+      const partField = row.locator('input[role="combobox"]')
+      await partField.fill(line.partSku)
+      await this.page.getByRole('listbox').getByRole('option', { name: line.partSku }).first().click()
     }
     const inputs = row.locator('input:not([role="combobox"]):not([readonly])')
     await inputs.nth(0).fill(line.description)
@@ -65,8 +82,10 @@ export class RepairOrderDetailPage {
   readonly closeButton: Locator
   readonly createSettlementButton: Locator
   readonly viewSettlementLink: Locator
+  readonly stockIssue: StockIssueCard
 
   constructor(readonly page: Page) {
+    this.stockIssue = new StockIssueCard(page)
     this.closeButton = page.getByRole('button', { name: 'Close repair order' })
     // A closed order offers settlement creation (E2E-BIL-001); the link to
     // the new settlement appears once it exists.

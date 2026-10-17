@@ -17,6 +17,7 @@ import type {
   Customer,
   Entitlements,
   Garage,
+  GoodsReceipt,
   Invitation,
   ListResponse,
   PackagingUnit,
@@ -38,6 +39,7 @@ import type {
   Settlement,
   SettlementStatus,
   StaffGroup,
+  StockIssue,
   StockLevel,
   StockTransaction,
   UploadedFile,
@@ -85,8 +87,16 @@ export type PartInput = {
   brand?: string
   reorderThreshold?: string
 }
-export type StockReceiptInput = { quantity: string; unitId?: string; unitCost?: number }
-export type StockReceiptResult = { transaction?: StockTransaction; stockLevel?: StockLevel }
+export type StockReceiptInput = { quantity: string; unitId?: string; unitCost?: number; supplierId?: string }
+export type StockReceiptResult = { receipt: GoodsReceipt; stockLevel: StockLevel }
+export type GoodsReceiptLineInput = { partId: string; unitId?: string; enteredQuantity: string; supplierId?: string; unitCost?: number }
+export type GoodsReceiptInput = {
+  defaultSupplierId?: string
+  receiptDate?: string
+  deliveryNoteNumber?: string
+  notes?: string
+  lines: GoodsReceiptLineInput[]
+}
 
 // A valid 1x1 PNG: the transfer screenshot the plan payment flow requires.
 const TRANSFER_EVIDENCE_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
@@ -273,6 +283,10 @@ export class ApiClient {
     return this.post(`/v1/garages/${garageId}/suppliers`, input)
   }
 
+  listSuppliers(garageId: string): Promise<ListResponse<Supplier>> {
+    return this.get(`/v1/garages/${garageId}/suppliers${query({ page: 1, pageSize: 100 })}`)
+  }
+
   // ---- Customer & Vehicle (FRD 3.5) --------------------------------------
 
   createCustomer(garageId: string, input: CustomerInput): Promise<Customer> {
@@ -434,14 +448,65 @@ export class ApiClient {
   // ---- Inventory (FRD 3.8, Release 1.3) ----------------------------------
 
   getStockLevel(garageId: string, partId: string): Promise<StockLevel> {
-    return this.get(`/v1/garages/${garageId}/inventory-items/${partId}`)
+    return this.get(`/v1/garages/${garageId}/stock-levels/${partId}`)
   }
 
-  receiveStock(garageId: string, partId: string, input: StockReceiptInput): Promise<StockReceiptResult> {
-    return this.post(`/v1/garages/${garageId}/stock-receipts`, { itemId: partId, ...input })
+  listStockLevels(garageId: string): Promise<ListResponse<StockLevel>> {
+    return this.get(`/v1/garages/${garageId}/stock-levels${query({ page: 1, pageSize: 100 })}`)
   }
 
-  listStockMovements(garageId: string, params: { itemId?: string; page?: number } = {}): Promise<ListResponse<StockTransaction>> {
+  // Goods receipt documents (FR-INV-06, Release 7.0). The gateway unwraps the
+  // single-message responses, so these answer bare receipts.
+
+  createGoodsReceipt(garageId: string, input: GoodsReceiptInput): Promise<GoodsReceipt> {
+    return this.post(`/v1/garages/${garageId}/goods-receipts`, input)
+  }
+
+  getGoodsReceipt(garageId: string, receiptId: string): Promise<GoodsReceipt> {
+    return this.get(`/v1/garages/${garageId}/goods-receipts/${receiptId}`)
+  }
+
+  completeGoodsReceipt(garageId: string, receiptId: string): Promise<GoodsReceipt> {
+    return this.post(`/v1/garages/${garageId}/goods-receipts/${receiptId}:complete`)
+  }
+
+  cancelGoodsReceipt(garageId: string, receiptId: string): Promise<GoodsReceipt> {
+    return this.post(`/v1/garages/${garageId}/goods-receipts/${receiptId}:cancel`)
+  }
+
+  /**
+   * Receives stock the Release 7.0 way: a goods receipt with one line, completed.
+   * Every line needs a supplier, so the garage's first supplier is used (one is
+   * created when it has none) unless `supplierId` says otherwise.
+   */
+  async receiveStock(garageId: string, partId: string, input: StockReceiptInput): Promise<StockReceiptResult> {
+    let supplierId = input.supplierId
+    if (!supplierId) {
+      const suppliers = await this.listSuppliers(garageId)
+      supplierId = (suppliers.data ?? [])[0]?.id ?? (await this.createSupplier(garageId, { name: 'QA Supplier' })).id
+    }
+    const created = await this.createGoodsReceipt(garageId, {
+      defaultSupplierId: supplierId,
+      lines: [{ partId, unitId: input.unitId, enteredQuantity: input.quantity, unitCost: input.unitCost }],
+    })
+    const receipt = await this.completeGoodsReceipt(garageId, created.id ?? '')
+    return { receipt, stockLevel: await this.getStockLevel(garageId, partId) }
+  }
+
+  /** The repair order's stock issue; created asynchronously after the order, so it may 404 at first. */
+  async getStockIssue(garageId: string, repairOrderId: string): Promise<StockIssue> {
+    const answer = await this.get<StockIssue & { stockIssue?: StockIssue }>(
+      `/v1/garages/${garageId}/repair-orders/${repairOrderId}/stock-issue`,
+    )
+    return answer.stockIssue ?? answer
+  }
+
+  /** Posts a draft stock issue ("issue now"). */
+  postStockIssue(garageId: string, stockIssueId: string): Promise<StockIssue> {
+    return this.post(`/v1/garages/${garageId}/stock-issues/${stockIssueId}:post`)
+  }
+
+  listStockMovements(garageId: string, params: { partId?: string; page?: number } = {}): Promise<ListResponse<StockTransaction>> {
     return this.get(`/v1/garages/${garageId}/reports/stock-movements${query({ page: 1, pageSize: 20, ...params })}`)
   }
 

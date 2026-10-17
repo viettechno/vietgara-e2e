@@ -728,15 +728,52 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/garages/{garageId}/inventory-items': {
+  '/api/v1/garages/{garageId}/goods-receipts': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    /** The stock-on-hand list (FR-INV-03): parts with their balances. */
-    get: operations['InventoryService_ListStockLevels']
+    /**
+     * Goods receipt documents (FR-INV-06, Release 7.0): a multi-line receipt
+     *     with a supplier per line. Reads need PERMISSION_INVENTORY_READ,
+     *     changes PERMISSION_INVENTORY_WRITE.
+     */
+    get: operations['InventoryService_ListGoodsReceipts']
+    put?: never
+    post: operations['InventoryService_CreateGoodsReceipt']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/goods-receipts/{goodsReceiptId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_GetGoodsReceipt']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch: operations['InventoryService_UpdateGoodsReceipt']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/goods-receipts/{goodsReceiptId}/pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-INV-06 (Release 7.0): a goods receipt document as a PDF. */
+    get: operations['DocumentService_ExportGoodsReceiptPdf']
     put?: never
     post?: never
     delete?: never
@@ -745,16 +782,44 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/api/v1/garages/{garageId}/inventory-items/{partId}': {
+  '/api/v1/garages/{garageId}/goods-receipts/{goodsReceiptId}:cancel': {
     parameters: {
       query?: never
       header?: never
       path?: never
       cookie?: never
     }
-    get: operations['InventoryService_GetStockLevel']
+    get?: never
     put?: never
-    post?: never
+    /**
+     * Cancelling a draft just closes it. Cancelling a completed receipt
+     *     reverses its stock movements, and is refused with
+     *     INSUFFICIENT_STOCK_TO_REVERSE when the reversal would take a part below
+     *     zero. A cancelled receipt cannot be cancelled again
+     *     (GOODS_RECEIPT_ALREADY_CANCELLED).
+     */
+    post: operations['InventoryService_CancelGoodsReceipt']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/goods-receipts/{goodsReceiptId}:complete': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Completing posts the receipt's stock movements; refused with
+     *     SUPPLIER_REQUIRED while a line has no supplier and with
+     *     GOODS_RECEIPT_NOT_DRAFT unless the receipt is a draft.
+     */
+    post: operations['InventoryService_CompleteGoodsReceipt']
     delete?: never
     options?: never
     head?: never
@@ -912,6 +977,26 @@ export interface paths {
     put?: never
     post?: never
     delete: operations['CatalogueService_RemovePartImage']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}/suppliers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The usual suppliers of a part with their code, last cost and default
+     *     (FR-INV-19, Release 7.0).
+     */
+    get: operations['InventoryService_GetPartSuppliers']
+    put: operations['InventoryService_PutPartSuppliers']
+    post?: never
+    delete?: never
     options?: never
     head?: never
     patch?: never
@@ -1143,6 +1228,29 @@ export interface paths {
     patch: operations['RepairOrderService_UpdateRepairOrderLine']
     trace?: never
   }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/part-returns': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_ListRepairOrderPartReturns']
+    put?: never
+    /**
+     * Returns unused parts of a repair order to stock (FR-INV-11, Release
+     *     7.1); needs PERMISSION_INVENTORY_ADJUST. The order's stock issue must be
+     *     posted (STOCK_ISSUE_NOT_POSTED: until then the draft just follows the
+     *     order's lines), and the total returned from a line cannot exceed what
+     *     was issued (RETURN_EXCEEDS_ISSUED).
+     */
+    post: operations['InventoryService_ReturnRepairOrderPart']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/pdf': {
     parameters: {
       query?: never
@@ -1155,6 +1263,88 @@ export interface paths {
      *     layout.
      */
     get: operations['DocumentService_ExportRepairOrderPdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/stock-issue': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The repair order's stock issue document (FR-INV-20, Release 7.0),
+     *     created with the order and, while a draft, following its part lines.
+     */
+    get: operations['InventoryService_GetRepairOrderStockIssue']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/stock-issue/pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-INV-20 (Release 7.0): the repair order's stock issue document
+     *     (phiếu xuất kho) as a PDF.
+     */
+    get: operations['DocumentService_ExportStockIssuePdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/purchases': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Purchases by supplier and period (FR-INV-19), from completed goods
+     *     receipts. Needs PERMISSION_INVENTORY_COST_READ; without it the whole call
+     *     is refused with PERMISSION_DENIED (its cost fields are not omitted).
+     */
+    get: operations['InventoryService_GetPurchasesReport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/purchases/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-INV-19 (Release 7.0): the purchases-by-supplier report
+     *     (InventoryService.GetPurchasesReport) as an Excel workbook. Needs
+     *     inventory.cost.read.
+     */
+    get: operations['DocumentService_ExportPurchasesExcel']
     put?: never
     post?: never
     delete?: never
@@ -1229,6 +1419,48 @@ export interface paths {
      *     (InventoryService.ListStockTransactions).
      */
     get: operations['DocumentService_ExportStockMovementsExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/stock-valuation': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Quantity and value per part and category at a date (FR-INV-07). Needs
+     *     PERMISSION_INVENTORY_COST_READ; without it the whole call is refused
+     *     with PERMISSION_DENIED (its cost fields are not omitted).
+     */
+    get: operations['InventoryService_GetStockValuationReport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/stock-valuation/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-INV-07 (Release 7.0): the stock valuation report
+     *     (InventoryService.GetStockValuationReport) as an Excel workbook. Needs
+     *     inventory.cost.read.
+     */
+    get: operations['DocumentService_ExportStockValuationExcel']
     put?: never
     post?: never
     delete?: never
@@ -1443,7 +1675,98 @@ export interface paths {
     patch: operations['StaffService_UpdateStaff']
     trace?: never
   }
-  '/api/v1/garages/{garageId}/stock-receipts': {
+  '/api/v1/garages/{garageId}/stock-counts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Stock counts (FR-INV-12, Release 7.1). Reads need PERMISSION_INVENTORY_READ,
+     *     every change PERMISSION_INVENTORY_COUNT. Reasons: STOCK_COUNT_NOT_DRAFT,
+     *     STOCK_COUNT_ALREADY_CANCELLED, STOCK_COUNT_HAS_UNCOUNTED_LINES (complete),
+     *     INSUFFICIENT_STOCK_TO_REVERSE (cancel of a completed count).
+     */
+    get: operations['InventoryService_ListStockCounts']
+    put?: never
+    post: operations['InventoryService_CreateStockCount']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts/{stockCountId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_GetStockCount']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch: operations['InventoryService_UpdateStockCount']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts/{stockCountId}/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-INV-12 (Release 7.1): a stock count as an Excel workbook for review
+     *     (counted against system quantity per line, with the value of the
+     *     difference when the caller has inventory.cost.read).
+     */
+    get: operations['DocumentService_ExportStockCountExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts/{stockCountId}/lines': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['InventoryService_AddStockCountLines']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts/{stockCountId}/lines/{lineId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete: operations['InventoryService_DeleteStockCountLine']
+    options?: never
+    head?: never
+    patch: operations['InventoryService_UpdateStockCountLine']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts/{stockCountId}:cancel': {
     parameters: {
       query?: never
       header?: never
@@ -1453,10 +1776,157 @@ export interface paths {
     get?: never
     put?: never
     /**
-     * Records a goods-receipt note from a supplier (FR-INV-01), increasing
-     *     stock on hand.
+     * Cancelling a draft just closes it; cancelling a completed count posts
+     *     the reversal of its adjustments.
      */
-    post: operations['InventoryService_CreateStockReceipt']
+    post: operations['InventoryService_CancelStockCount']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts/{stockCountId}:complete': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Posts one adjustment movement per counted line that differs, so that
+     *     stock equals the count; the count can no longer be edited.
+     */
+    post: operations['InventoryService_CompleteStockCount']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-counts:merge': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Folds several drafts into the first one; the others become cancelled. */
+    post: operations['InventoryService_MergeStockCounts']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-issues/{stockIssueId}:post': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Posts the issue now ("issue now"); otherwise the repair order's
+     *     closing posts it. A stock issue has no cancel RPC: the repair order
+     *     cancels its draft issue.
+     */
+    post: operations['InventoryService_PostStockIssue']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-levels': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The stock-on-hand list (FR-INV-03): parts with their balances. */
+    get: operations['InventoryService_ListStockLevels']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/stock-levels/{partId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_GetStockLevel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/supplier-returns': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Returns to supplier (FR-INV-10, Release 7.1). Reads need
+     *     PERMISSION_INVENTORY_READ, changes PERMISSION_INVENTORY_ADJUST. Creating
+     *     one posts it (INSUFFICIENT_STOCK when a part is short; the linked goods
+     *     receipt must be completed, else GOODS_RECEIPT_NOT_COMPLETED).
+     *     Cancelling restores the stock (SUPPLIER_RETURN_ALREADY_CANCELLED when
+     *     repeated).
+     */
+    get: operations['InventoryService_ListSupplierReturns']
+    put?: never
+    post: operations['InventoryService_CreateSupplierReturn']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/supplier-returns/{supplierReturnId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_GetSupplierReturn']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/supplier-returns/{supplierReturnId}:cancel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['InventoryService_CancelSupplierReturn']
     delete?: never
     options?: never
     head?: never
@@ -1651,6 +2121,61 @@ export interface paths {
      *     PERMISSION_CUSTOMER_CORRECT.
      */
     post: operations['VehicleService_CorrectVehicle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/write-offs': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Write-offs (FR-INV-09, Release 7.1). Reads need PERMISSION_INVENTORY_READ,
+     *     changes PERMISSION_INVENTORY_ADJUST. Creating one posts it; it is
+     *     refused with INSUFFICIENT_STOCK when a part is not on hand in that
+     *     quantity. Cancelling restores the stock (WRITE_OFF_ALREADY_CANCELLED
+     *     when repeated).
+     */
+    get: operations['InventoryService_ListWriteOffs']
+    put?: never
+    post: operations['InventoryService_CreateWriteOff']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/write-offs/{writeOffId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['InventoryService_GetWriteOff']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/write-offs/{writeOffId}:cancel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['InventoryService_CancelWriteOff']
     delete?: never
     options?: never
     head?: never
@@ -2197,20 +2722,48 @@ export interface components {
       /** @description image/png, image/jpeg or image/webp. */
       contentType: string
     }
-    InventoryServiceCreateStockReceiptBody: {
-      /** @description The part's id (the JSON field keeps the name item_id). */
-      itemId: string
+    /**
+     * @description AddStockCountLinesRequest adds parts to a draft count, taking the system
+     *     quantity snapshot of each. Parts already on the count are skipped. The
+     *     scan, search and category pickers of the screen all end here; the Excel
+     *     import and barcodes of Release 7.2 will too.
+     */
+    InventoryServiceAddStockCountLinesBody: {
+      /** @description Parts picked one by one (search, scan). */
+      partIds?: string[]
       /**
-       * @description In the base unit unless unit_id names a packaging unit of the part, in
-       *     which case it is converted on save (FR-CAT-02).
+       * @description Adds every active part of this category and its sub-categories that has
+       *     a stock balance or a reservation.
        */
-      quantity: string
+      categoryId?: string
+    }
+    InventoryServiceCancelGoodsReceiptBody: Record<string, never>
+    InventoryServiceCancelStockCountBody: Record<string, never>
+    InventoryServiceCancelSupplierReturnBody: Record<string, never>
+    InventoryServiceCancelWriteOffBody: Record<string, never>
+    InventoryServiceCompleteGoodsReceiptBody: Record<string, never>
+    InventoryServiceCompleteStockCountBody: {
       /**
-       * Format: int64
-       * @description VND per entered unit; stored per base unit. Zero means "not recorded".
+       * @description Drop the lines that were never counted instead of refusing
+       *     (STOCK_COUNT_HAS_UNCOUNTED_LINES).
        */
-      unitCost?: string
-      unitId?: string
+      skipUncounted?: boolean
+    }
+    /**
+     * @description MergeStockCountsRequest folds several draft counts into the first one.
+     *     A part that is on more than one of them keeps one line whose counted
+     *     quantity is the sum of the counted quantities (two people counted
+     *     different places); an uncounted line gives way to a counted one. The
+     *     other counts become CANCELLED and their lines move to the first.
+     */
+    InventoryServiceMergeStockCountsBody: {
+      /** @description At least two draft counts; the first is kept and returned. */
+      stockCountIds: string[]
+    }
+    InventoryServicePostStockIssueBody: Record<string, never>
+    InventoryServicePutPartSuppliersBody: {
+      /** @description Replaces the part's list as a whole; at most one default. */
+      data?: components['schemas']['v1PartSupplier'][]
     }
     InvitationServiceAcceptInvitationBody: Record<string, never>
     InvitationServiceCreateInvitationBody: {
@@ -2521,9 +3074,18 @@ export interface components {
     v1AddPartImageResponse: {
       part?: components['schemas']['v1Part']
     }
+    v1AddStockCountLinesResponse: {
+      stockCount?: components['schemas']['v1StockCount']
+    }
     v1AdjustCreditResponse: {
       entry?: components['schemas']['v1CreditLedgerEntry']
     }
+    /**
+     * @description AdjustmentStatus is the lifecycle of a write-off or a supplier return:
+     *     created already posted, cancelled by a reversing movement.
+     * @enum {string}
+     */
+    v1AdjustmentStatus: 'ADJUSTMENT_STATUS_COMPLETED' | 'ADJUSTMENT_STATUS_CANCELLED'
     /** @description AdminPlanPaymentRequest is one row of the platform admin's review queue. */
     v1AdminPlanPaymentRequest: {
       request?: components['schemas']['v1PlanPaymentRequest']
@@ -2570,8 +3132,20 @@ export interface components {
       /** @description Where an e-invoice is sent. */
       readonly invoiceEmail?: string
     }
+    v1CancelGoodsReceiptResponse: {
+      goodsReceipt?: components['schemas']['v1GoodsReceipt']
+    }
     v1CancelPlanPaymentResponse: {
       request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    v1CancelStockCountResponse: {
+      stockCount?: components['schemas']['v1StockCount']
+    }
+    v1CancelSupplierReturnResponse: {
+      supplierReturn?: components['schemas']['v1SupplierReturn']
+    }
+    v1CancelWriteOffResponse: {
+      writeOff?: components['schemas']['v1WriteOff']
     }
     /**
      * @description CandidateMembership is where a looked-up user stands with the garage.
@@ -2583,6 +3157,12 @@ export interface components {
     }
     v1CloseRepairOrderResponse: {
       repairOrder?: components['schemas']['v1RepairOrder']
+    }
+    v1CompleteGoodsReceiptResponse: {
+      goodsReceipt?: components['schemas']['v1GoodsReceipt']
+    }
+    v1CompleteStockCountResponse: {
+      stockCount?: components['schemas']['v1StockCount']
     }
     v1ConfirmCustomerUserLinkResponse: {
       link?: components['schemas']['v1CustomerUserLink']
@@ -2614,6 +3194,9 @@ export interface components {
     }
     v1CreateGarageResponse: {
       garage?: components['schemas']['v1Garage']
+    }
+    v1CreateGoodsReceiptResponse: {
+      goodsReceipt?: components['schemas']['v1GoodsReceipt']
     }
     v1CreateInvitationResponse: {
       invitation?: components['schemas']['v1Invitation']
@@ -2649,18 +3232,23 @@ export interface components {
     v1CreateStaffGroupResponse: {
       group?: components['schemas']['v1StaffGroup']
     }
-    v1CreateStockReceiptResponse: {
-      transaction?: components['schemas']['v1StockTransaction']
-      stockLevel?: components['schemas']['v1StockLevel']
+    v1CreateStockCountResponse: {
+      stockCount?: components['schemas']['v1StockCount']
     }
     v1CreateSupplierResponse: {
       supplier?: components['schemas']['v1Supplier']
+    }
+    v1CreateSupplierReturnResponse: {
+      supplierReturn?: components['schemas']['v1SupplierReturn']
     }
     v1CreateUnitResponse: {
       unit?: components['schemas']['v1Unit']
     }
     v1CreateVehicleResponse: {
       vehicle?: components['schemas']['v1Vehicle']
+    }
+    v1CreateWriteOffResponse: {
+      writeOff?: components['schemas']['v1WriteOff']
     }
     /**
      * @description CreditEntryKind is why the account credit changed (FR-LIC-09).
@@ -2831,6 +3419,9 @@ export interface components {
     v1DeleteRoleResponse: Record<string, never>
     v1DeleteStaffGroupResponse: Record<string, never>
     v1DeleteStaffResponse: Record<string, never>
+    v1DeleteStockCountLineResponse: {
+      stockCount?: components['schemas']['v1StockCount']
+    }
     v1DeleteSupplierResponse: {
       outcome?: components['schemas']['v1DeleteOutcome']
     }
@@ -2978,6 +3569,7 @@ export interface components {
       /** @description The legal representative. */
       representative?: string
       bank?: components['schemas']['v1BankDetails']
+      stockIssueMode?: components['schemas']['v1StockIssueMode']
     }
     /** @description GarageAccess is what the signed-in user may do in the garage. */
     v1GarageAccess: {
@@ -3027,6 +3619,9 @@ export interface components {
     v1GetGarageResponse: {
       garage?: components['schemas']['v1Garage']
     }
+    v1GetGoodsReceiptResponse: {
+      goodsReceipt?: components['schemas']['v1GoodsReceipt']
+    }
     v1GetMeResponse: {
       user?: components['schemas']['v1User']
     }
@@ -3053,6 +3648,9 @@ export interface components {
     v1GetPartResponse: {
       part?: components['schemas']['v1Part']
     }
+    v1GetPartSuppliersResponse: {
+      data?: components['schemas']['v1PartSupplier'][]
+    }
     v1GetPaymentInstructionsResponse: {
       instructions?: components['schemas']['v1PaymentInstructions']
     }
@@ -3065,11 +3663,22 @@ export interface components {
     v1GetPublicQuoteResponse: {
       quote?: components['schemas']['v1PublicQuote']
     }
+    v1GetPurchasesReportResponse: {
+      data?: components['schemas']['v1PurchaseLine'][]
+      /**
+       * Format: int64
+       * @description Sum of every line's amount, over the requested range.
+       */
+      totalAmount?: string
+    }
     v1GetQuoteResponse: {
       quote?: components['schemas']['v1Quote']
     }
     v1GetRepairOrderResponse: {
       repairOrder?: components['schemas']['v1RepairOrder']
+    }
+    v1GetRepairOrderStockIssueResponse: {
+      stockIssue?: components['schemas']['v1StockIssue']
     }
     v1GetRevenueReportResponse: {
       points?: components['schemas']['v1RevenuePoint'][]
@@ -3085,11 +3694,28 @@ export interface components {
     v1GetSettlementResponse: {
       settlement?: components['schemas']['v1Settlement']
     }
+    v1GetStockCountResponse: {
+      stockCount?: components['schemas']['v1StockCount']
+    }
     v1GetStockLevelResponse: {
       stockLevel?: components['schemas']['v1StockLevel']
     }
+    v1GetStockValuationReportResponse: {
+      data?: components['schemas']['v1StockValuationLine'][]
+      categories?: components['schemas']['v1StockValuationCategory'][]
+      /** Format: int64 */
+      totalValue?: string
+      /**
+       * @description The date valued at, "YYYY-MM-DD"; today when the request left it
+       *     empty.
+       */
+      readonly at?: string
+    }
     v1GetSupplierResponse: {
       supplier?: components['schemas']['v1Supplier']
+    }
+    v1GetSupplierReturnResponse: {
+      supplierReturn?: components['schemas']['v1SupplierReturn']
     }
     v1GetVehicleHistoryResponse: {
       data?: components['schemas']['v1VehicleHistoryEntry'][]
@@ -3097,6 +3723,104 @@ export interface components {
     v1GetVehicleResponse: {
       vehicle?: components['schemas']['v1Vehicle']
     }
+    v1GetWriteOffResponse: {
+      writeOff?: components['schemas']['v1WriteOff']
+    }
+    /**
+     * @description GoodsReceipt is a numbered multi-line document recording a delivery
+     *     (FR-INV-06): header number, date, supplier delivery note and notes,
+     *     status draft -> completed -> cancelled. One delivery from several
+     *     suppliers is a single document whose lines name their supplier.
+     */
+    v1GoodsReceipt: {
+      readonly id?: string
+      readonly garageId?: string
+      /**
+       * @description Rendered from the garage's goods_receipt numbering template
+       *     (FR-TEN-05); assigned when the document is created.
+       */
+      readonly number?: string
+      status?: components['schemas']['v1GoodsReceiptStatus']
+      /** @description The default supplier new lines inherit and may override. */
+      defaultSupplierId?: string
+      readonly defaultSupplierName?: string
+      /** @description The receipt date, "YYYY-MM-DD" in the garage's timezone. */
+      receiptDate?: string
+      /** @description The supplier's own delivery note number. */
+      deliveryNoteNumber?: string
+      notes?: string
+      lines?: components['schemas']['v1GoodsReceiptLine'][]
+      /**
+       * Format: int64
+       * @description Sum of the lines' amounts, whole VND. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly totalAmount?: string
+      /**
+       * Format: date-time
+       * @description Set when the receipt is completed / cancelled.
+       */
+      readonly completedAt?: string
+      /** Format: date-time */
+      readonly cancelledAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description GoodsReceiptLine is one part on a goods receipt. Every line carries its
+     *     supplier: the header's default_supplier_id is inherited by new lines,
+     *     and the part's default supplier (FR-INV-19) pre-fills it.
+     */
+    v1GoodsReceiptLine: {
+      readonly id?: string
+      partId: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      /**
+       * @description The packaging unit the user typed the quantity in; unset means the base
+       *     unit.
+       */
+      unitId?: string
+      /** @description The abbreviation of the entered unit; empty for the base unit. */
+      readonly unitAbbreviation?: string
+      /**
+       * @description In the entered unit unless unit_id is unset (then the base unit). The
+       *     stored base amount is derived on save (quantity).
+       */
+      enteredQuantity?: string
+      /** @description The base-unit amount, derived from entered_quantity on save. */
+      readonly quantity?: string
+      /**
+       * @description The line's supplier; inherited from the header's default_supplier_id.
+       *     Empty is allowed while the receipt is a draft, but completion is
+       *     refused (SUPPLIER_REQUIRED) while any line has none (FR-INV-06).
+       */
+      supplierId?: string
+      readonly supplierName?: string
+      /**
+       * Format: int64
+       * @description VND per entered unit, as typed; stored per base unit. Zero means "not
+       *     recorded". Omitted from answers when the caller lacks
+       *     PERMISSION_INVENTORY_COST_READ; such a caller cannot set it either.
+       */
+      unitCost?: string
+      /**
+       * Format: int64
+       * @description entered_quantity times unit_cost, whole VND, rounded half-up per line
+       *     (running total). Omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly lineAmount?: string
+    }
+    /**
+     * @description GoodsReceiptStatus is the lifecycle of a goods receipt document
+     *     (FR-INV-06): saved as a draft, then completed (which updates stock and
+     *     cost), or cancelled (which reverses a completed one).
+     * @enum {string}
+     */
+    v1GoodsReceiptStatus: 'GOODS_RECEIPT_STATUS_DRAFT' | 'GOODS_RECEIPT_STATUS_COMPLETED' | 'GOODS_RECEIPT_STATUS_CANCELLED'
     /**
      * @description Invitation asks an existing user to join a garage (FR-TEN-04). It is
      *     e-mailed to the user and expires after 7 days.
@@ -3142,6 +3866,10 @@ export interface components {
        *     inactive garages.
        */
       data?: components['schemas']['v1Garage'][]
+    }
+    v1ListGoodsReceiptsResponse: {
+      data?: components['schemas']['v1GoodsReceipt'][]
+      pagination?: components['schemas']['v1Pagination']
     }
     v1ListInvitationsResponse: {
       data?: components['schemas']['v1Invitation'][]
@@ -3197,6 +3925,9 @@ export interface components {
       data?: components['schemas']['v1Quote'][]
       pagination?: components['schemas']['v1Pagination']
     }
+    v1ListRepairOrderPartReturnsResponse: {
+      data?: components['schemas']['v1RepairOrderPartReturn'][]
+    }
     v1ListRepairOrdersResponse: {
       data?: components['schemas']['v1RepairOrder'][]
       pagination?: components['schemas']['v1Pagination']
@@ -3214,6 +3945,10 @@ export interface components {
     v1ListStaffResponse: {
       data?: components['schemas']['v1Staff'][]
     }
+    v1ListStockCountsResponse: {
+      data?: components['schemas']['v1StockCount'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
     v1ListStockLevelsResponse: {
       data?: components['schemas']['v1StockLevel'][]
       pagination?: components['schemas']['v1Pagination']
@@ -3226,6 +3961,10 @@ export interface components {
       data?: components['schemas']['v1SubscriptionSummary'][]
       pagination?: components['schemas']['v1Pagination']
     }
+    v1ListSupplierReturnsResponse: {
+      data?: components['schemas']['v1SupplierReturn'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
     v1ListSuppliersResponse: {
       data?: components['schemas']['v1Supplier'][]
       pagination?: components['schemas']['v1Pagination']
@@ -3236,6 +3975,10 @@ export interface components {
     }
     v1ListVehiclesResponse: {
       data?: components['schemas']['v1Vehicle'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListWriteOffsResponse: {
+      data?: components['schemas']['v1WriteOff'][]
       pagination?: components['schemas']['v1Pagination']
     }
     /**
@@ -3267,6 +4010,9 @@ export interface components {
     v1LookupStaffCandidateResponse: {
       candidate?: components['schemas']['v1StaffCandidate']
     }
+    v1MergeStockCountsResponse: {
+      stockCount?: components['schemas']['v1StockCount']
+    }
     /** @description MyGarage is a garage where the signed-in person is a customer. */
     v1MyGarage: {
       readonly garageId?: string
@@ -3291,6 +4037,16 @@ export interface components {
       settlement?: string
       /** @description Payment voucher (phiếu thu) numbers (FR-BIL-05, Release 5.0). */
       paymentVoucher?: string
+      /** @description Goods receipt numbers (FR-INV-06, Release 7.0). */
+      goodsReceipt?: string
+      /** @description Stock issue (phiếu xuất kho) numbers (FR-INV-20, Release 7.0). */
+      stockIssue?: string
+      /** @description Stock count numbers (FR-INV-12, Release 7.1). */
+      stockCount?: string
+      /** @description Write-off numbers (FR-INV-09, Release 7.1). */
+      writeOff?: string
+      /** @description Return to supplier numbers (FR-INV-10, Release 7.1). */
+      supplierReturn?: string
     }
     /** @description OtpChallenge tells the client how long the e-mailed OTP is valid. */
     v1OtpChallenge: {
@@ -3401,6 +4157,23 @@ export interface components {
       /** @description Public URL; the part_image kind needs no signature. */
       url?: string
     }
+    /**
+     * @description PartSupplier is one usual supplier of a part with the supplier's own code
+     *     and the last cost paid (FR-INV-19). One of them is the default that
+     *     pre-fills a receipt line's supplier.
+     */
+    v1PartSupplier: {
+      supplierId: string
+      readonly supplierName?: string
+      /** @description The supplier's own code for the part. */
+      supplierSku?: string
+      /**
+       * Format: int64
+       * @description The last cost paid per base unit, whole VND; omitted when never paid.
+       */
+      readonly lastUnitCost?: string
+      isDefault?: boolean
+    }
     /** @description PaymentEvidence is the screenshot of the transfer. */
     v1PaymentEvidence: {
       /** Format: byte */
@@ -3444,6 +4217,14 @@ export interface components {
      *      - PERMISSION_CUSTOMER_CORRECT: Correct a locked vehicle identity field and move a vehicle to another
      *     customer (FR-CUS-09). Held by the manager role by default.
      *      - PERMISSION_CATALOGUE_READ: Parts, units, packaging, categories, prices and images (Release 6.0).
+     *      - PERMISSION_INVENTORY_COST_READ: See a part's cost, average cost and the valuation report (FR-INV-08,
+     *     Release 7.0). Held by managers and accountants by default; advisors and
+     *     technicians see quantities only.
+     *      - PERMISSION_INVENTORY_ADJUST: Post stock adjustments other than counts: write-offs, returns to
+     *     supplier and returns of unused parts from a repair order (FR-INV-09/10/11,
+     *     Release 7.1). Held by managers and inventory staff by default.
+     *      - PERMISSION_INVENTORY_COUNT: Create, merge, complete and cancel stock counts (FR-INV-12, Release 7.1).
+     *     Held by managers and inventory staff by default.
      * @enum {string}
      */
     v1Permission:
@@ -3467,6 +4248,9 @@ export interface components {
       | 'PERMISSION_CUSTOMER_CORRECT'
       | 'PERMISSION_CATALOGUE_READ'
       | 'PERMISSION_CATALOGUE_WRITE'
+      | 'PERMISSION_INVENTORY_COST_READ'
+      | 'PERMISSION_INVENTORY_ADJUST'
+      | 'PERMISSION_INVENTORY_COUNT'
     /** @description PermissionInfo describes one catalog entry. */
     v1PermissionInfo: {
       permission?: components['schemas']['v1Permission']
@@ -3612,6 +4396,9 @@ export interface components {
       /** Format: date-time */
       readonly updatedAt?: string
     }
+    v1PostStockIssueResponse: {
+      stockIssue?: components['schemas']['v1StockIssue']
+    }
     /**
      * @description PublicQuote is what an unauthenticated customer sees through the
      *     approval link: no internal identifiers, only what they need to decide.
@@ -3631,6 +4418,37 @@ export interface components {
        * @description The link stops working after this time or once decided.
        */
       expiresAt?: string
+    }
+    /**
+     * @description PurchaseLine is one line of a completed goods receipt in the purchases
+     *     report (FR-INV-19).
+     */
+    v1PurchaseLine: {
+      readonly goodsReceiptId?: string
+      readonly goodsReceiptNumber?: string
+      /** @description The receipt date, "YYYY-MM-DD". */
+      readonly receiptDate?: string
+      readonly supplierId?: string
+      readonly supplierName?: string
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
+      /** @description The base-unit amount. */
+      readonly quantity?: string
+      readonly baseUnitAbbreviation?: string
+      /**
+       * Format: int64
+       * @description The cost per base unit, whole VND.
+       */
+      readonly unitCost?: string
+      /**
+       * Format: int64
+       * @description quantity times unit_cost, whole VND.
+       */
+      readonly amount?: string
+    }
+    v1PutPartSuppliersResponse: {
+      data?: components['schemas']['v1PartSupplier'][]
     }
     /** @description Quote is a price estimate awaiting the customer's approval (FR-QUO-01). */
     v1Quote: {
@@ -3848,6 +4666,42 @@ export interface components {
     v1RepairOrderLineStatus:
       'REPAIR_ORDER_LINE_STATUS_NOT_STARTED' | 'REPAIR_ORDER_LINE_STATUS_IN_PROGRESS' | 'REPAIR_ORDER_LINE_STATUS_COMPLETED'
     /**
+     * @description RepairOrderPartReturn records unused parts of a repair order coming back
+     *     to stock (FR-INV-11): the stock is restored at the cost they left with.
+     *     It is immutable. It does not change the repair order's lines or what the
+     *     customer is billed.
+     */
+    v1RepairOrderPartReturn: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly repairOrderId?: string
+      readonly repairOrderNumber?: string
+      readonly stockIssueId?: string
+      /** @description The repair order part line the parts are returned from. */
+      repairOrderLineId: string
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      /** @description The packaging unit the quantity is typed in; unset means the base unit. */
+      unitId?: string
+      readonly unitAbbreviation?: string
+      enteredQuantity: string
+      /** @description The base-unit amount, derived. */
+      readonly quantity?: string
+      /** @description Why the parts came back; required. */
+      reason: string
+      /**
+       * Format: int64
+       * @description The cost per base unit the parts are restored at (the line's cost
+       *     snapshot), whole VND; omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly unitCost?: string
+      readonly createdByName?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /**
      * @description RepairOrderStatus is the lifecycle of a repair order (FR-REP-01..06),
      *     shown as the Kanban board's columns (UI Design Spec Section 3.3).
      *
@@ -3879,6 +4733,9 @@ export interface components {
       newPassword: string
     }
     v1ResetPasswordResponse: Record<string, never>
+    v1ReturnRepairOrderPartResponse: {
+      partReturn?: components['schemas']['v1RepairOrderPartReturn']
+    }
     /**
      * @description RevenuePeriod is the bucket granularity of a revenue report (FR-RPT-01).
      * @enum {string}
@@ -4121,6 +4978,185 @@ export interface components {
      * @enum {string}
      */
     v1StaffStatus: 'STAFF_STATUS_ACTIVE' | 'STAFF_STATUS_INACTIVE'
+    /** @description StockCount is a numbered stock count document (FR-INV-12). */
+    v1StockCount: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Rendered from the garage's stock_count numbering template (FR-TEN-05). */
+      readonly number?: string
+      status?: components['schemas']['v1StockCountStatus']
+      /** @description A label for the people counting, for example "Shelf A". */
+      name?: string
+      notes?: string
+      /** @description Not included in list answers. */
+      readonly lines?: components['schemas']['v1StockCountLine'][]
+      /**
+       * Format: int32
+       * @description How many lines are in each result; included in list answers too.
+       */
+      readonly uncountedLines?: number
+      /** Format: int32 */
+      readonly matchedLines?: number
+      /** Format: int32 */
+      readonly overLines?: number
+      /** Format: int32 */
+      readonly shortLines?: number
+      /**
+       * Format: int64
+       * @description Sum of the lines' difference_value, whole VND, signed. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly totalDifferenceValue?: string
+      /** Format: date-time */
+      readonly completedAt?: string
+      readonly completedByName?: string
+      /** Format: date-time */
+      readonly cancelledAt?: string
+      readonly createdByName?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description StockCountLine is one part of a stock count. system_quantity is a
+     *     snapshot of the stock on hand taken when the line is added and again each
+     *     time the counted quantity is typed ("the system quantity at the time of
+     *     counting"); completing the count takes a final snapshot of every counted
+     *     line, so that stock equals the count afterwards.
+     */
+    v1StockCountLine: {
+      readonly id?: string
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      /**
+       * @description The packaging unit the counted quantity was typed in; unset means the
+       *     base unit.
+       */
+      unitId?: string
+      readonly unitAbbreviation?: string
+      /**
+       * @description The counted quantity as typed, in unit_id (or the base unit). Empty
+       *     means not counted yet; "0" is a real count of none.
+       */
+      enteredCountedQuantity?: string
+      /** @description The counted quantity in the base unit, derived; empty while uncounted. */
+      readonly countedQuantity?: string
+      /** @description The stock on hand in the base unit when the line was last counted. */
+      readonly systemQuantity?: string
+      /**
+       * @description counted_quantity minus system_quantity, base unit, signed (for example
+       *     "-2"); empty while uncounted.
+       */
+      readonly differenceQuantity?: string
+      result?: components['schemas']['v1StockCountLineResult']
+      /**
+       * Format: int64
+       * @description The weighted-average cost per base unit the difference is valued at,
+       *     whole VND: the live average while a draft, the value used at completion
+       *     afterwards. Omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly averageCost?: string
+      /**
+       * Format: int64
+       * @description difference_quantity times average_cost, whole VND, signed (a shortage is
+       *     negative); omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly differenceValue?: string
+      /**
+       * Format: date-time
+       * @description When the counted quantity was last typed.
+       */
+      readonly countedAt?: string
+    }
+    /**
+     * @description StockCountLineResult compares a line's counted quantity with the system
+     *     quantity.
+     *
+     *      - STOCK_COUNT_LINE_RESULT_UNCOUNTED: No counted quantity typed yet.
+     *      - STOCK_COUNT_LINE_RESULT_MATCHED: Counted equals the system quantity.
+     *      - STOCK_COUNT_LINE_RESULT_OVER: Counted is more than the system quantity.
+     *      - STOCK_COUNT_LINE_RESULT_SHORT: Counted is less than the system quantity.
+     * @enum {string}
+     */
+    v1StockCountLineResult:
+      | 'STOCK_COUNT_LINE_RESULT_UNCOUNTED'
+      | 'STOCK_COUNT_LINE_RESULT_MATCHED'
+      | 'STOCK_COUNT_LINE_RESULT_OVER'
+      | 'STOCK_COUNT_LINE_RESULT_SHORT'
+    /**
+     * @description StockCountStatus is the lifecycle of a stock count (FR-INV-12): a draft
+     *     is counted line by line and can be merged with other drafts; completing it
+     *     posts the adjustments and freezes it; cancelling a draft just closes it,
+     *     cancelling a completed count posts the reversal.
+     * @enum {string}
+     */
+    v1StockCountStatus: 'STOCK_COUNT_STATUS_DRAFT' | 'STOCK_COUNT_STATUS_COMPLETED' | 'STOCK_COUNT_STATUS_CANCELLED'
+    /**
+     * @description StockIssue is the numbered stock-out document of a repair order
+     *     (FR-INV-20). It is created as a draft with the repair order and follows
+     *     it until posted; printing it uses the standard document layout.
+     */
+    v1StockIssue: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Rendered from the garage's stock_issue numbering template (FR-TEN-05). */
+      readonly number?: string
+      readonly repairOrderId?: string
+      readonly repairOrderNumber?: string
+      status?: components['schemas']['v1StockIssueStatus']
+      readonly lines?: components['schemas']['v1StockIssueLine'][]
+      /** Format: date-time */
+      readonly postedAt?: string
+      readonly postedByName?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description StockIssueLine is one part line of a stock issue, derived from the
+     *     matching part line of the repair order while it is a draft.
+     */
+    v1StockIssueLine: {
+      readonly id?: string
+      readonly repairOrderLineId?: string
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      readonly unitId?: string
+      readonly unitAbbreviation?: string
+      readonly enteredQuantity?: string
+      /** @description The base-unit amount posted on the issue. */
+      readonly quantity?: string
+      /**
+       * Format: int64
+       * @description The cost snapshot per base unit, whole VND; omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly unitCost?: string
+      /**
+       * @description Release 7.1: the base-unit amount already returned to stock from this
+       *     line (FR-INV-11); what can still be returned is quantity minus this.
+       */
+      readonly returnedQuantity?: string
+    }
+    /**
+     * @description StockIssueMode is when a repair order's draft stock issue posts
+     *     (FR-INV-20): on close by default, or when the order starts.
+     * @enum {string}
+     */
+    v1StockIssueMode: 'STOCK_ISSUE_MODE_ON_CLOSE' | 'STOCK_ISSUE_MODE_ON_START'
+    /**
+     * @description StockIssueStatus is the lifecycle of a stock issue document (phiếu xuất
+     *     kho, FR-INV-20): a draft follows its repair order (the draft is the
+     *     reservation), then it is posted (stock movements written) or cancelled.
+     * @enum {string}
+     */
+    v1StockIssueStatus: 'STOCK_ISSUE_STATUS_DRAFT' | 'STOCK_ISSUE_STATUS_POSTED' | 'STOCK_ISSUE_STATUS_CANCELLED'
     /**
      * @description StockLevel is one part with how many of it the garage has (FR-INV-03).
      *     The part itself (SKU, name, units, category, brand, price, images) is
@@ -4147,13 +5183,34 @@ export interface components {
       readonly reorderThreshold?: string
       /** @description True at or below the reorder threshold. */
       readonly lowStock?: boolean
+      /**
+       * @description Decimal string in the base unit held by the part's draft stock issues
+       *     (Release 7.0, FR-INV-20): on hand minus this is what a new order can
+       *     reserve.
+       */
+      readonly quantityReserved?: string
+      /** @description quantity_on_hand minus quantity_reserved, in the base unit. */
+      readonly quantityAvailable?: string
+      /**
+       * Format: int64
+       * @description Weighted-average cost per base unit, whole VND, rounded for display
+       *     (FR-INV-07). Omitted from answers when the caller lacks
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly averageCost?: string
+      /**
+       * Format: int64
+       * @description average_cost times quantity_on_hand, whole VND. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly stockValue?: string
     }
     /** @description StockTransaction is one recorded stock movement. */
     v1StockTransaction: {
       readonly id?: string
-      readonly itemId?: string
-      readonly itemSku?: string
-      readonly itemName?: string
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
       type?: components['schemas']['v1StockTransactionType']
       /** @description Decimal string, always positive; type says the direction. */
       readonly quantity?: string
@@ -4177,21 +5234,92 @@ export interface components {
       readonly unitAbbreviation?: string
       /** @description The abbreviation of the part's base unit, the unit `quantity` is in. */
       readonly baseUnitAbbreviation?: string
+      /**
+       * @description Release 7.1: the number of the document behind the movement (goods
+       *     receipt, stock issue, stock count, write-off or supplier return); empty
+       *     for a repair order part return and for movements without a document.
+       */
+      readonly refNumber?: string
+      /**
+       * @description Release 7.1: why the movement happened, for adjustments (the write-off
+       *     reason, the repair order return reason; empty otherwise).
+       */
+      readonly reason?: string
+      /**
+       * @description Release 7.1: the user who caused the movement; empty for system
+       *     movements (an automatic posting).
+       */
+      readonly createdByName?: string
+      /**
+       * @description Release 7.1: the part's quantity on hand right after the movement, in
+       *     the base unit (the running balance of the stock card).
+       */
+      readonly quantityAfter?: string
     }
     /**
      * @description StockTransactionRefType names what caused a stock movement.
      *
-     *      - STOCK_TRANSACTION_REF_TYPE_PURCHASE: A manual stock receipt from a supplier (FR-INV-01).
+     *      - STOCK_TRANSACTION_REF_TYPE_PURCHASE: A manual stock receipt from a supplier (FR-INV-01). Superseded in
+     *     Release 7.0 by GOODS_RECEIPT, kept for movements recorded before it.
      *      - STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER: Automatic deduction when a repair order with part lines closes
-     *     (FR-INV-02).
+     *     (FR-INV-02). Superseded in Release 7.0 by STOCK_ISSUE.
+     *      - STOCK_TRANSACTION_REF_TYPE_GOODS_RECEIPT: A completed goods receipt document (FR-INV-06, Release 7.0).
+     *      - STOCK_TRANSACTION_REF_TYPE_STOCK_ISSUE: A posted stock issue document (phiếu xuất kho, FR-INV-20, Release 7.0).
+     *      - STOCK_TRANSACTION_REF_TYPE_STOCK_COUNT: A completed stock count: the adjustment that makes stock equal the
+     *     count, or the reversal of a cancelled count (FR-INV-12, Release 7.1).
+     *      - STOCK_TRANSACTION_REF_TYPE_WRITE_OFF: A write-off document, or the reversal of a cancelled one (FR-INV-09,
+     *     Release 7.1).
+     *      - STOCK_TRANSACTION_REF_TYPE_SUPPLIER_RETURN: A return to supplier document, or the reversal of a cancelled one
+     *     (FR-INV-10, Release 7.1).
+     *      - STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER_RETURN: Unused parts returned from a repair order (FR-INV-11, Release 7.1);
+     *     ref_id is the repair order part return.
      * @enum {string}
      */
-    v1StockTransactionRefType: 'STOCK_TRANSACTION_REF_TYPE_PURCHASE' | 'STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER'
+    v1StockTransactionRefType:
+      | 'STOCK_TRANSACTION_REF_TYPE_PURCHASE'
+      | 'STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER'
+      | 'STOCK_TRANSACTION_REF_TYPE_GOODS_RECEIPT'
+      | 'STOCK_TRANSACTION_REF_TYPE_STOCK_ISSUE'
+      | 'STOCK_TRANSACTION_REF_TYPE_STOCK_COUNT'
+      | 'STOCK_TRANSACTION_REF_TYPE_WRITE_OFF'
+      | 'STOCK_TRANSACTION_REF_TYPE_SUPPLIER_RETURN'
+      | 'STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER_RETURN'
     /**
      * @description StockTransactionType: a movement either adds to stock or removes from it.
      * @enum {string}
      */
     v1StockTransactionType: 'STOCK_TRANSACTION_TYPE_IN' | 'STOCK_TRANSACTION_TYPE_OUT'
+    /** @description StockValuationCategory is one category's total value. */
+    v1StockValuationCategory: {
+      readonly categoryId?: string
+      readonly categoryName?: string
+      /** Format: int64 */
+      readonly value?: string
+    }
+    /**
+     * @description StockValuationLine is one part's quantity and value at a date
+     *     (FR-INV-07). Only callers with PERMISSION_INVENTORY_COST_READ see it.
+     */
+    v1StockValuationLine: {
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly categoryId?: string
+      readonly categoryName?: string
+      /** @description The base-unit amount on hand. */
+      readonly quantityOnHand?: string
+      readonly baseUnitAbbreviation?: string
+      /**
+       * Format: int64
+       * @description The weighted-average cost per base unit, whole VND.
+       */
+      readonly averageCost?: string
+      /**
+       * Format: int64
+       * @description quantity_on_hand times average_cost, whole VND.
+       */
+      readonly value?: string
+    }
     v1SubmitPlanPaymentResponse: {
       request?: components['schemas']['v1PlanPaymentRequest']
     }
@@ -4276,6 +5404,67 @@ export interface components {
       address?: string
     }
     /**
+     * @description SupplierReturn is a numbered document that reduces stock and records the
+     *     credit owed by the supplier (FR-INV-10). It is posted when created;
+     *     cancelling it puts the parts back.
+     */
+    v1SupplierReturn: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Rendered from the garage's supplier_return numbering template. */
+      readonly number?: string
+      status?: components['schemas']['v1AdjustmentStatus']
+      supplierId: string
+      readonly supplierName?: string
+      /** @description The completed goods receipt the parts came from, when known. */
+      goodsReceiptId?: string
+      readonly goodsReceiptNumber?: string
+      /** @description The supplier's own credit note number, when they have issued one. */
+      creditNoteNumber?: string
+      notes?: string
+      lines?: components['schemas']['v1SupplierReturnLine'][]
+      /**
+       * Format: int64
+       * @description The credit recorded against the supplier: the sum of the lines'
+       *     amounts, whole VND. Omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly creditAmount?: string
+      /** Format: date-time */
+      readonly cancelledAt?: string
+      readonly createdByName?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /** @description SupplierReturnLine is one part of a return to a supplier. */
+    v1SupplierReturnLine: {
+      readonly id?: string
+      partId: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      unitId?: string
+      readonly unitAbbreviation?: string
+      enteredQuantity: string
+      /** @description The base-unit amount, derived. */
+      readonly quantity?: string
+      /**
+       * Format: int64
+       * @description The credit the supplier gives, VND per entered unit, as typed. Zero or
+       *     unset takes the cost of the same part on the linked goods receipt when
+       *     there is one, else the part's average cost. Omitted from answers, and
+       *     ignored on input, without PERMISSION_INVENTORY_COST_READ.
+       */
+      unitCost?: string
+      /**
+       * Format: int64
+       * @description entered_quantity times unit_cost, whole VND, rounded half-up per line.
+       *     Omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly lineAmount?: string
+    }
+    /**
      * @description TaxProfileKind: a customer has at most one personal tax profile and any
      *     number of company tax profiles (FR-CUS-07).
      * @enum {string}
@@ -4311,6 +5500,9 @@ export interface components {
     v1UpdateGarageResponse: {
       garage?: components['schemas']['v1Garage']
     }
+    v1UpdateGoodsReceiptResponse: {
+      goodsReceipt?: components['schemas']['v1GoodsReceipt']
+    }
     v1UpdateMeResponse: {
       user?: components['schemas']['v1User']
     }
@@ -4343,6 +5535,12 @@ export interface components {
     }
     v1UpdateStaffResponse: {
       staff?: components['schemas']['v1Staff']
+    }
+    v1UpdateStockCountLineResponse: {
+      stockCount?: components['schemas']['v1StockCount']
+    }
+    v1UpdateStockCountResponse: {
+      stockCount?: components['schemas']['v1StockCount']
     }
     v1UpdateSupplierResponse: {
       supplier?: components['schemas']['v1Supplier']
@@ -4526,6 +5724,71 @@ export interface components {
       /** @description Only the lines assigned to the technician, in the order's line order. */
       readonly lines?: components['schemas']['v1RepairOrderLine'][]
     }
+    /**
+     * @description WriteOff is a numbered document that reduces stock at average cost
+     *     (FR-INV-09). It is posted when created; mistakes are undone by cancelling
+     *     it, which puts the parts back.
+     */
+    v1WriteOff: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Rendered from the garage's write_off numbering template (FR-TEN-05). */
+      readonly number?: string
+      status?: components['schemas']['v1AdjustmentStatus']
+      reason: components['schemas']['v1WriteOffReason']
+      notes?: string
+      lines?: components['schemas']['v1WriteOffLine'][]
+      /**
+       * Format: int64
+       * @description Sum of the lines' value, whole VND. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly totalValue?: string
+      /** Format: date-time */
+      readonly cancelledAt?: string
+      readonly createdByName?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /** @description WriteOffLine is one part of a write-off. */
+    v1WriteOffLine: {
+      readonly id?: string
+      partId: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      /** @description The packaging unit the quantity is typed in; unset means the base unit. */
+      unitId?: string
+      readonly unitAbbreviation?: string
+      /** @description In unit_id, or the base unit; must be positive. */
+      enteredQuantity: string
+      /** @description The base-unit amount, derived. */
+      readonly quantity?: string
+      /**
+       * Format: int64
+       * @description The average cost per base unit at the moment of the write-off, whole
+       *     VND. Omitted without PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly unitCost?: string
+      /**
+       * Format: int64
+       * @description quantity times unit_cost, whole VND. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly lineValue?: string
+    }
+    /**
+     * @description WriteOffReason is why stock is written off (FR-INV-09).
+     * @enum {string}
+     */
+    v1WriteOffReason:
+      | 'WRITE_OFF_REASON_DAMAGED'
+      | 'WRITE_OFF_REASON_LOST'
+      | 'WRITE_OFF_REASON_EXPIRED'
+      | 'WRITE_OFF_REASON_INTERNAL_USE'
+      | 'WRITE_OFF_REASON_WARRANTY_REPLACEMENT'
   }
   responses: never
   parameters: never
@@ -4538,6 +5801,11 @@ export interface components {
     v1Unit: {
       content: {
         'application/json': components['schemas']['v1Unit']
+      }
+    }
+    v1GoodsReceipt: {
+      content: {
+        'application/json': components['schemas']['v1GoodsReceipt']
       }
     }
     v1Garage: {
@@ -6225,17 +7493,14 @@ export interface operations {
       }
     }
   }
-  InventoryService_ListStockLevels: {
+  InventoryService_ListGoodsReceipts: {
     parameters: {
       query?: {
-        /** @description Matches SKU, name or brand (answered by Catalogue). */
+        /** @description Matches the number, delivery note number or notes. */
         query?: string
-        /** @description Also matches the sub-categories of this category. */
-        categoryId?: string
-        brand?: string
-        /** @description Only parts at or below their reorder threshold. */
-        lowStock?: boolean
-        includeInactive?: boolean
+        /** @description Only receipts with a line from this supplier. */
+        supplierId?: string
+        status?: 'GOODS_RECEIPT_STATUS_DRAFT' | 'GOODS_RECEIPT_STATUS_COMPLETED' | 'GOODS_RECEIPT_STATUS_CANCELLED'
         page?: number
         pageSize?: number
       }
@@ -6253,7 +7518,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['v1ListStockLevelsResponse']
+          'application/json': components['schemas']['v1ListGoodsReceiptsResponse']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -6267,13 +7532,43 @@ export interface operations {
       }
     }
   }
-  InventoryService_GetStockLevel: {
+  InventoryService_CreateGoodsReceipt: {
     parameters: {
       query?: never
       header?: never
       path: {
         garageId: string
-        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1GoodsReceipt']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GoodsReceipt']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetGoodsReceipt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        goodsReceiptId: string
       }
       cookie?: never
     }
@@ -6284,7 +7579,140 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['v1StockLevel']
+          'application/json': components['schemas']['v1GoodsReceipt']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_UpdateGoodsReceipt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        goodsReceiptId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1GoodsReceipt']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GoodsReceipt']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportGoodsReceiptPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        goodsReceiptId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CancelGoodsReceipt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        goodsReceiptId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCancelGoodsReceiptBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GoodsReceipt']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CompleteGoodsReceipt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        goodsReceiptId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCompleteGoodsReceiptBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GoodsReceipt']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -6819,6 +8247,74 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetPartSuppliers: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetPartSuppliersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_PutPartSuppliers: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServicePutPartSuppliersBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PutPartSuppliersResponse']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -7408,6 +8904,74 @@ export interface operations {
       }
     }
   }
+  InventoryService_ListRepairOrderPartReturns: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListRepairOrderPartReturnsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_ReturnRepairOrderPart: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    /** @description Only repair_order_line_id, unit_id, entered_quantity and reason are read. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RepairOrderPartReturn']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrderPartReturn']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   DocumentService_ExportRepairOrderPdf: {
     parameters: {
       query?: never
@@ -7415,6 +8979,145 @@ export interface operations {
       path: {
         garageId: string
         repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetRepairOrderStockIssue: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetRepairOrderStockIssueResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportStockIssuePdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetPurchasesReport: {
+    parameters: {
+      query?: {
+        supplierId?: string
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone. */
+        from?: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to?: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetPurchasesReportResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportPurchasesExcel: {
+    parameters: {
+      query?: {
+        /** @description Same optional filters as InventoryService.GetPurchasesReport. */
+        supplierId?: string
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone. */
+        from?: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to?: string
+      }
+      header?: never
+      path: {
+        garageId: string
       }
       cookie?: never
     }
@@ -7517,10 +9220,37 @@ export interface operations {
   InventoryService_ListStockTransactions: {
     parameters: {
       query?: {
-        itemId?: string
+        partId?: string
         type?: 'STOCK_TRANSACTION_TYPE_IN' | 'STOCK_TRANSACTION_TYPE_OUT'
         page?: number
         pageSize?: number
+        /**
+         * @description Release 7.1: only movements caused by this kind of document.
+         *
+         *      - STOCK_TRANSACTION_REF_TYPE_PURCHASE: A manual stock receipt from a supplier (FR-INV-01). Superseded in
+         *     Release 7.0 by GOODS_RECEIPT, kept for movements recorded before it.
+         *      - STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER: Automatic deduction when a repair order with part lines closes
+         *     (FR-INV-02). Superseded in Release 7.0 by STOCK_ISSUE.
+         *      - STOCK_TRANSACTION_REF_TYPE_GOODS_RECEIPT: A completed goods receipt document (FR-INV-06, Release 7.0).
+         *      - STOCK_TRANSACTION_REF_TYPE_STOCK_ISSUE: A posted stock issue document (phiếu xuất kho, FR-INV-20, Release 7.0).
+         *      - STOCK_TRANSACTION_REF_TYPE_STOCK_COUNT: A completed stock count: the adjustment that makes stock equal the
+         *     count, or the reversal of a cancelled count (FR-INV-12, Release 7.1).
+         *      - STOCK_TRANSACTION_REF_TYPE_WRITE_OFF: A write-off document, or the reversal of a cancelled one (FR-INV-09,
+         *     Release 7.1).
+         *      - STOCK_TRANSACTION_REF_TYPE_SUPPLIER_RETURN: A return to supplier document, or the reversal of a cancelled one
+         *     (FR-INV-10, Release 7.1).
+         *      - STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER_RETURN: Unused parts returned from a repair order (FR-INV-11, Release 7.1);
+         *     ref_id is the repair order part return.
+         */
+        refType?:
+          | 'STOCK_TRANSACTION_REF_TYPE_PURCHASE'
+          | 'STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER'
+          | 'STOCK_TRANSACTION_REF_TYPE_GOODS_RECEIPT'
+          | 'STOCK_TRANSACTION_REF_TYPE_STOCK_ISSUE'
+          | 'STOCK_TRANSACTION_REF_TYPE_STOCK_COUNT'
+          | 'STOCK_TRANSACTION_REF_TYPE_WRITE_OFF'
+          | 'STOCK_TRANSACTION_REF_TYPE_SUPPLIER_RETURN'
+          | 'STOCK_TRANSACTION_REF_TYPE_REPAIR_ORDER_RETURN'
       }
       header?: never
       path: {
@@ -7554,7 +9284,78 @@ export interface operations {
     parameters: {
       query?: {
         /** @description Same optional filter as InventoryService.ListStockTransactions. */
-        itemId?: string
+        partId?: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetStockValuationReport: {
+    parameters: {
+      query?: {
+        /**
+         * @description The date to value at, "YYYY-MM-DD" in the garage's timezone; empty
+         *     means today.
+         */
+        at?: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetStockValuationReportResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportStockValuationExcel: {
+    parameters: {
+      query?: {
+        /** @description The date to value at, "YYYY-MM-DD"; empty means today. */
+        at?: string
       }
       header?: never
       path: {
@@ -8124,7 +9925,350 @@ export interface operations {
       }
     }
   }
-  InventoryService_CreateStockReceipt: {
+  InventoryService_ListStockCounts: {
+    parameters: {
+      query?: {
+        /** @description Matches the number, name or notes. */
+        query?: string
+        status?: 'STOCK_COUNT_STATUS_DRAFT' | 'STOCK_COUNT_STATUS_COMPLETED' | 'STOCK_COUNT_STATUS_CANCELLED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListStockCountsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CreateStockCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    /** @description Only name and notes are read; lines are added with AddStockCountLines. */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1StockCount']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetStockCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_UpdateStockCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1StockCount']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportStockCountExcel: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_AddStockCountLines: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceAddStockCountLinesBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_DeleteStockCountLine: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+        lineId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_UpdateStockCountLine: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+        lineId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1StockCountLine']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CancelStockCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCancelStockCountBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CompleteStockCount: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockCountId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCompleteStockCountBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_MergeStockCounts: {
     parameters: {
       query?: never
       header?: never
@@ -8135,9 +10279,85 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['InventoryServiceCreateStockReceiptBody']
+        'application/json': components['schemas']['InventoryServiceMergeStockCountsBody']
       }
     }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockCount']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_PostStockIssue: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        stockIssueId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServicePostStockIssueBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockIssue']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_ListStockLevels: {
+    parameters: {
+      query?: {
+        /** @description Matches SKU, name or brand (answered by Catalogue). */
+        query?: string
+        /** @description Also matches the sub-categories of this category. */
+        categoryId?: string
+        brand?: string
+        /** @description Only parts at or below their reorder threshold. */
+        lowStock?: boolean
+        includeInactive?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description A successful response. */
       200: {
@@ -8145,7 +10365,176 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['v1CreateStockReceiptResponse']
+          'application/json': components['schemas']['v1ListStockLevelsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetStockLevel: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1StockLevel']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_ListSupplierReturns: {
+    parameters: {
+      query?: {
+        /** @description Matches the number, credit note number or notes. */
+        query?: string
+        supplierId?: string
+        status?: 'ADJUSTMENT_STATUS_COMPLETED' | 'ADJUSTMENT_STATUS_CANCELLED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSupplierReturnsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CreateSupplierReturn: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1SupplierReturn']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupplierReturn']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetSupplierReturn: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        supplierReturnId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupplierReturn']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CancelSupplierReturn: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        supplierReturnId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCancelSupplierReturnBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupplierReturn']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -8792,6 +11181,149 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1Vehicle']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_ListWriteOffs: {
+    parameters: {
+      query?: {
+        /** @description Matches the number or notes. */
+        query?: string
+        reason?:
+          | 'WRITE_OFF_REASON_DAMAGED'
+          | 'WRITE_OFF_REASON_LOST'
+          | 'WRITE_OFF_REASON_EXPIRED'
+          | 'WRITE_OFF_REASON_INTERNAL_USE'
+          | 'WRITE_OFF_REASON_WARRANTY_REPLACEMENT'
+        status?: 'ADJUSTMENT_STATUS_COMPLETED' | 'ADJUSTMENT_STATUS_CANCELLED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListWriteOffsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CreateWriteOff: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1WriteOff']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1WriteOff']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_GetWriteOff: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        writeOffId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1WriteOff']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  InventoryService_CancelWriteOff: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        writeOffId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['InventoryServiceCancelWriteOffBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1WriteOff']
         }
       }
       /** @description Error (API Specification Section 1.1). */
