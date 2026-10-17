@@ -2,7 +2,8 @@
 // (00_Test_Data.md §3.3) and the stock-issue wait the repair-order specs share.
 import { expect } from '@playwright/test'
 import type { ApiClient } from '../api/client.js'
-import type { StockIssue, Supplier } from '../api/types.js'
+import { ApiError } from '../api/http.js'
+import type { Part, StockCount, StockCountLine, StockIssue, Supplier } from '../api/types.js'
 
 /** supplier1-1-1 and supplier1-1-2 of the test data. */
 export const SUPPLIER_1 = 'QA Supplier Phu Tung Sai Gon'
@@ -27,4 +28,38 @@ export async function waitForStockIssue(api: ApiClient, garageId: string, repair
     )
     .toBeTruthy()
   return issue as StockIssue
+}
+
+/** A part with `quantity` on hand at `unitCost` per base unit, received through a completed goods receipt. */
+export async function stockedPart(
+  api: ApiClient,
+  garageId: string,
+  input: { sku: string; name: string; quantity: string; unitCost: number; supplierId?: string },
+): Promise<Part> {
+  const part = await api.createSimplePart(garageId, { sku: input.sku, name: input.name })
+  await api.receiveStock(garageId, part.id ?? '', { quantity: input.quantity, unitCost: input.unitCost, supplierId: input.supplierId })
+  return part
+}
+
+/** The quantity of a part on hand now. */
+export async function onHand(api: ApiClient, garageId: string, part: Part): Promise<string | undefined> {
+  return (await api.getStockLevel(garageId, part.id ?? '')).quantityOnHand
+}
+
+/** A line of a stock count by part SKU. */
+export function countLine(count: StockCount, sku: string): StockCountLine {
+  const line = (count.lines ?? []).find((candidate) => candidate.partSku === sku)
+  if (!line) throw new Error(`stock count ${count.number} has no line for ${sku}`)
+  return line
+}
+
+/** Expects an API call to be refused with an HTTP status and (when given) an error code. */
+export async function expectRefused(call: Promise<unknown>, status: number, code?: string): Promise<void> {
+  const error = await call.then(
+    () => undefined,
+    (e: unknown) => e,
+  )
+  expect(error, 'the call should have been refused').toBeInstanceOf(ApiError)
+  expect((error as ApiError).status).toBe(status)
+  if (code) expect((error as ApiError).code).toBe(code)
 }
