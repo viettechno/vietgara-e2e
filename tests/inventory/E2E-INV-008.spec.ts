@@ -15,6 +15,8 @@ test(
   'E2E-INV-008 closing a repair order with part lines automatically deducts stock',
   { tag: '@smoke' },
   async ({ page, signIn, freshOwner }) => {
+    // The deduction polls up to 60 s below (Kafka lag under the parallel load of the full suite).
+    test.setTimeout(90_000)
     const owner = await freshOwner('inv008')
     const garage = await owner.api.createGarage({ name: 'QA Gara INV008' })
     const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer An Nguyen' })
