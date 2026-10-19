@@ -7,6 +7,8 @@ import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'
 import { RepairOrderCreateForm, RepairOrderDetailPage } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 
 test('E2E-CAT-002 receive by the case, issue by the can', { tag: '@smoke' }, async ({ page, signIn, freshOwner }) => {
+  // Events (stock issue, reservation, posting) are polled for up to 60 s; the full suite shares the runner with the stack.
+  test.setTimeout(120_000)
   const owner = await freshOwner('cat002', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara CAT002' })
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer An Nguyen' })

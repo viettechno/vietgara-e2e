@@ -6,6 +6,8 @@ import { customerWithVehicle, lineOf, openOrder, waitForIssue, waitForReserved }
 import { RepairOrderDetailPage } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 
 test('E2E-REP-015 cancel a repair order before work starts: the reservation is released', async ({ page, signIn, freshOwner }) => {
+  // Events (stock issue, reservation, posting) are polled for up to 60 s; the full suite shares the runner with the stack.
+  test.setTimeout(120_000)
   const owner = await freshOwner('rep015', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara REP015' })
   const gid = garage.id ?? ''
