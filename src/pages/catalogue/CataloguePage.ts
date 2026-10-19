@@ -113,10 +113,8 @@ export class CataloguePage {
     for (const part of input.parts ?? []) {
       const index = (await dialog.getByRole('button', { name: /^Remove part \d+$/ }).count()) + 1
       await dialog.getByRole('button', { name: 'Add a part' }).click()
-      await dialog
-        .locator('input[role="combobox"]')
-        .nth(index - 1)
-        .fill(part.sku)
+      // A part that is picked turns its search box into a read-only field, so the new row has the only one.
+      await dialog.locator('input[role="combobox"]').fill(part.sku)
       await this.page.getByRole('listbox').getByRole('option', { name: part.sku }).first().click()
       await this.setJobPart(index, part)
     }

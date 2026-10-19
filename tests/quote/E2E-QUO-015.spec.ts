@@ -18,10 +18,10 @@ test('E2E-QUO-015 pick a job on a quote: the labor line and the part lines appea
   const form = new QuoteFormPage(page)
   await form.open(quote.id ?? '')
   await form.addJob('Oil change', 'oil')
-  await expect(form.lineRow(1)).toContainText('Oil change')
-  await expect(form.lineRow(2)).toContainText('Engine oil 5W-30')
+  await expect(form.descriptionInput(1)).toHaveValue('Oil change')
+  await expect(form.descriptionInput(2)).toHaveValue('Engine oil 5W-30')
   await expect(form.quantityInput(2)).toHaveValue('4')
-  await expect(form.lineRow(3)).toContainText('Oil filter')
+  await expect(form.descriptionInput(3)).toHaveValue('Oil filter')
   await expect(form.lineRow(3).getByRole('checkbox', { name: 'Do not bill 4' })).toBeChecked()
   await expect(form.total).toContainText('660,000') // 100,000 + 200,000 + 4 × 90,000; the filter is not billed
 

@@ -28,7 +28,7 @@ test('E2E-QUO-016 a hidden consumable is not billed, not shown to the customer a
   const form = new QuoteFormPage(page)
   await form.open(quote.id ?? '')
   const hiddenRow = form.lineRow(3)
-  await expect(hiddenRow).toContainText('Oil filter')
+  await expect(form.descriptionInput(3)).toHaveValue('Oil filter')
   await expect(hiddenRow.getByRole('checkbox', { name: 'Do not bill 4' })).toBeChecked()
   await expect(hiddenRow.getByRole('spinbutton').last()).toHaveValue('0')
   await expect(hiddenRow.getByRole('spinbutton').last()).toBeDisabled()

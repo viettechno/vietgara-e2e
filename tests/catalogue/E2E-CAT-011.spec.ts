@@ -63,7 +63,7 @@ test('E2E-CAT-011 delete or deactivate a job; an inactive job leaves the picker 
   // Step 4: the old quote still has the lines the job made.
   expect(((await owner.api.getQuote(gid, oldQuote.id ?? '')).lines ?? []).map((line) => line.description)).toEqual(oldLines)
   await quoteForm.open(oldQuote.id ?? '')
-  await expect(page.getByText('QA Used job').first()).toBeVisible()
+  await expect(quoteForm.descriptionInput(1)).toHaveValue('QA Used job')
 
   // Step 5: reactivated, the job is offered again.
   await catalogue.goto()

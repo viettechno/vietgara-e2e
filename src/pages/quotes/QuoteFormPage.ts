@@ -119,6 +119,11 @@ export class QuoteFormPage {
     await this.jobPicker.waitFor({ state: 'hidden' })
   }
 
+  /** The description field of a draft line. */
+  descriptionInput(index: number): Locator {
+    return this.lineRow(index).locator('input:not([role="combobox"]):not([readonly]):not([type="number"]):not([type="checkbox"])').first()
+  }
+
   /** The quantity field of a draft line. */
   quantityInput(index: number): Locator {
     return this.lineRow(index).getByRole('spinbutton').first()
