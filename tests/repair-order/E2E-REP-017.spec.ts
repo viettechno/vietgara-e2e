@@ -8,6 +8,8 @@ import { customerWithVehicle, completeBillable, draftQuote, oilChange, waitForIs
 import { onHand } from '../../src/fixtures/inventory.js'
 
 test('E2E-REP-017 a hidden consumable is deducted, not billed, not printed, and does not hold the order back', async ({ freshOwner }) => {
+  // Events (stock issue, reservation, posting) are polled for up to 60 s; the full suite shares the runner with the stack.
+  test.setTimeout(120_000)
   const owner = await freshOwner('rep017', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara REP017' })
   const gid = garage.id ?? ''

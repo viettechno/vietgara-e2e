@@ -9,6 +9,8 @@ import { customerWithVehicle, lineOf, openOrder, reserved, waitForIssue, waitFor
 import { RepairOrderDetailPage } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 
 test('E2E-REP-014 the draft stock issue follows the part lines; a posted issue freezes the parts', async ({ page, signIn, freshOwner }) => {
+  // Events (stock issue, reservation, posting) are polled for up to 60 s; the full suite shares the runner with the stack.
+  test.setTimeout(120_000)
   const owner = await freshOwner('rep014', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara REP014' })
   const gid = garage.id ?? ''

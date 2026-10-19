@@ -15,6 +15,8 @@ test('E2E-INV-023 cancelling a draft closes it; a completed count is reversed un
   signIn,
   freshOwner,
 }) => {
+  // Events (stock issue, reservation, posting) are polled for up to 60 s; the full suite shares the runner with the stack.
+  test.setTimeout(120_000)
   const owner = await freshOwner('inv023', { locale: 'LOCALE_EN' })
   const garage = await owner.api.createGarage({ name: 'QA Gara INV023' })
   const gid = garage.id ?? ''
