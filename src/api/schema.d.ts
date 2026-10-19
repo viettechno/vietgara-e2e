@@ -474,6 +474,26 @@ export interface paths {
     patch: operations['GarageService_UpdateGarage']
     trace?: never
   }
+  '/api/v1/garages/{garageId}/barcodes:lookup': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Finds the part a scanned code belongs to (FR-INV-13), including
+     *     inactive parts so a scan can say so. NOT_FOUND when no part has it.
+     */
+    get: operations['CatalogueService_LookupPartByBarcode']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/customers': {
     parameters: {
       query?: never
@@ -826,6 +846,63 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/imports/{importType}/confirm': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Imports the file in one transaction. A file with any error is refused
+     *     as a whole (IMPORT_FILE_INVALID) and nothing is written. The same file
+     *     content imported twice for the same garage and type is refused
+     *     (IMPORT_FILE_ALREADY_IMPORTED), so a retry or double click cannot
+     *     create a second document.
+     */
+    post: operations['ImportService_ConfirmImport']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/imports/{importType}/preview': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Checks the file and reports every error without writing anything. */
+    post: operations['ImportService_PreviewImport']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/imports/{importType}/template': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The template workbook for a type, with a sheet of instructions. */
+    get: operations['ImportService_DownloadImportTemplate']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/invitations': {
     parameters: {
       query?: never
@@ -944,6 +1021,23 @@ export interface paths {
     options?: never
     head?: never
     patch: operations['CatalogueService_UpdatePart']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/parts/{partId}/barcodes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** Replaces the part's barcodes (FR-INV-13). */
+    put: operations['CatalogueService_SetPartBarcodes']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
     trace?: never
   }
   '/api/v1/garages/{garageId}/parts/{partId}/images': {
@@ -2688,6 +2782,13 @@ export interface components {
        */
       fileId: string
     }
+    CatalogueServiceSetPartBarcodesBody: {
+      /**
+       * @description Replaces the whole barcode table. A code already used by another part
+       *     of the garage is refused (BARCODE_ALREADY_USED).
+       */
+      barcodes?: components['schemas']['v1PartBarcode'][]
+    }
     CatalogueServiceSetPartUnitsBody: {
       /** @description Replaces the whole packaging table. */
       packagingUnits?: components['schemas']['v1PackagingUnit'][]
@@ -2721,6 +2822,25 @@ export interface components {
       content: string
       /** @description image/png, image/jpeg or image/webp. */
       contentType: string
+    }
+    ImportServiceConfirmImportBody: {
+      fileName?: string
+      /**
+       * Format: byte
+       * @description The same file that was previewed; it is checked again.
+       */
+      content: string
+    }
+    ImportServicePreviewImportBody: {
+      /** @description The original file name, kept in the audit entry. */
+      fileName?: string
+      /**
+       * Format: byte
+       * @description An .xlsx workbook made from the template, at most 5 MB and 5,000 rows
+       *     (base64 in JSON; the server accepts messages of that size). A file over
+       *     either limit is reported as a row-0 error, not imported.
+       */
+      content: string
     }
     /**
      * @description AddStockCountLinesRequest adds parts to a draft count, taking the system
@@ -3166,6 +3286,9 @@ export interface components {
     }
     v1ConfirmCustomerUserLinkResponse: {
       link?: components['schemas']['v1CustomerUserLink']
+    }
+    v1ConfirmImportResponse: {
+      result?: components['schemas']['v1ImportResult']
     }
     v1ConfirmMfaEnrollmentRequest: {
       /** @description A 6-digit code from the authenticator app. */
@@ -3821,6 +3944,104 @@ export interface components {
      * @enum {string}
      */
     v1GoodsReceiptStatus: 'GOODS_RECEIPT_STATUS_DRAFT' | 'GOODS_RECEIPT_STATUS_COMPLETED' | 'GOODS_RECEIPT_STATUS_CANCELLED'
+    /** @description ImportPreview is the result of checking a file without writing anything. */
+    v1ImportPreview: {
+      importType?: components['schemas']['v1ImportType']
+      /**
+       * Format: int32
+       * @description Data rows read, without the header.
+       */
+      totalRows?: number
+      /**
+       * Format: int32
+       * @description Rows without any error.
+       */
+      validRows?: number
+      /** @description Every error found, ordered by row; capped at 1000 (errors_truncated). */
+      errors?: components['schemas']['v1ImportRowError'][]
+      errorsTruncated?: boolean
+      /** @description The template headers. */
+      columns?: string[]
+      /** @description The first rows, at most 20. */
+      sampleRows?: components['schemas']['v1ImportPreviewRow'][]
+      /**
+       * @description What confirming would create, by name: for parts, "parts", "barcodes",
+       *     "units", "categories" and "receipt_lines"; for documents, "lines".
+       */
+      counts?: {
+        [key: string]: number
+      }
+      /**
+       * @description True when the file has rows and no errors at all; always false when
+       *     errors_truncated.
+       */
+      canConfirm?: boolean
+    }
+    /** @description ImportPreviewRow is one row of the file as read, for the preview table. */
+    v1ImportPreviewRow: {
+      /**
+       * Format: int32
+       * @description Numbered like ImportRowError.row.
+       */
+      row?: number
+      /** @description In the order of ImportPreview.columns. */
+      cells?: string[]
+    }
+    /** @description ImportResult is what a confirmed import created. */
+    v1ImportResult: {
+      importType?: components['schemas']['v1ImportType']
+      /** Format: int32 */
+      rowsImported?: number
+      /** @description Same keys as ImportPreview.counts. */
+      counts?: {
+        [key: string]: number
+      }
+      /**
+       * @description The document the import created: the completed opening-stock receipt of
+       *     a parts import, the draft receipt or the draft count. Empty when a parts
+       *     file had no opening quantity.
+       */
+      documentId?: string
+      documentNumber?: string
+    }
+    /**
+     * @description ImportRowError is one problem found in the file. A file is imported only
+     *     when it has none, so the preview lists every error at once.
+     */
+    v1ImportRowError: {
+      /**
+       * Format: int32
+       * @description The row number as the sheet shows it: the header is row 1 and the first
+       *     data row is 2. 0 for a problem of the whole file such as a missing
+       *     column.
+       */
+      row?: number
+      /**
+       * @description The column header the problem is in; empty when it concerns the row or
+       *     the file.
+       */
+      column?: string
+      /**
+       * @description A stable reason such as SKU_DUPLICATE, BARCODE_ALREADY_USED,
+       *     UNKNOWN_SUPPLIER or REQUIRED_VALUE_MISSING. File-level reasons (row 0):
+       *     FILE_TOO_LARGE, TOO_MANY_ROWS, MISSING_COLUMN, and PERMISSION_REQUIRED
+       *     when the file has columns (opening stock, unit cost) whose permission
+       *     the caller lacks.
+       */
+      code?: string
+      message?: string
+    }
+    /**
+     * @description ImportType names what an Excel file imports (FR-INV-14, Release 7.2).
+     *
+     *      - IMPORT_TYPE_PARTS: Parts with units, category, brand, barcodes and, per row, an opening
+     *     quantity and cost. Rows with an opening quantity are posted as one
+     *     completed goods receipt, each line with its own supplier.
+     *      - IMPORT_TYPE_GOODS_RECEIPTS: A draft goods receipt with its lines (supplier per line).
+     *      - IMPORT_TYPE_STOCK_COUNTS: A draft stock count with its counted quantities.
+     * @enum {string}
+     */
+    v1ImportType: 'IMPORT_TYPE_PARTS' | 'IMPORT_TYPE_GOODS_RECEIPTS' | 'IMPORT_TYPE_STOCK_COUNTS'
     /**
      * @description Invitation asks an existing user to join a garage (FR-TEN-04). It is
      *     e-mailed to the user and expires after 7 days.
@@ -4007,6 +4228,10 @@ export interface components {
        */
       userExists?: boolean
     }
+    v1LookupPartByBarcodeResponse: {
+      part?: components['schemas']['v1Part']
+      barcode?: components['schemas']['v1PartBarcode']
+    }
     v1LookupStaffCandidateResponse: {
       candidate?: components['schemas']['v1StaffCandidate']
     }
@@ -4135,6 +4360,28 @@ export interface components {
       readonly createdAt?: string
       /** Format: date-time */
       readonly updatedAt?: string
+      /**
+       * @description The barcodes that identify this part, each for the base unit or a
+       *     packaging unit (FR-INV-13). Set with SetPartBarcodes.
+       */
+      readonly barcodes?: components['schemas']['v1PartBarcode'][]
+    }
+    /** @description PartBarcode is one scannable code of a part. Codes are unique per garage. */
+    v1PartBarcode: {
+      /**
+       * @description 1 to 64 characters, letters, digits and - . / + $ % space; stored as
+       *     typed after trimming. Matched case-insensitively, by lookup, search and
+       *     the uniqueness check alike. Unique across the garage's parts; deleting
+       *     a part frees its codes.
+       */
+      barcode: string
+      /**
+       * @description The packaging unit one scan stands for (a case barcode); unset means
+       *     the base unit. Must be a packaging unit of the same part.
+       */
+      unitId?: string
+      readonly unitName?: string
+      readonly unitAbbreviation?: string
     }
     /**
      * @description PartCategory is one node of the category tree of at most three levels
@@ -4398,6 +4645,9 @@ export interface components {
     }
     v1PostStockIssueResponse: {
       stockIssue?: components['schemas']['v1StockIssue']
+    }
+    v1PreviewImportResponse: {
+      preview?: components['schemas']['v1ImportPreview']
     }
     /**
      * @description PublicQuote is what an unauthenticated customer sees through the
@@ -4826,6 +5076,9 @@ export interface components {
       challengeToken?: string
       /** Format: date-time */
       challengeExpiresAt?: string
+    }
+    v1SetPartBarcodesResponse: {
+      part?: components['schemas']['v1Part']
     }
     v1SetPartUnitsResponse: {
       part?: components['schemas']['v1Part']
@@ -6816,6 +7069,39 @@ export interface operations {
       }
     }
   }
+  CatalogueService_LookupPartByBarcode: {
+    parameters: {
+      query: {
+        barcode: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1LookupPartByBarcodeResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   CustomerService_ListCustomers: {
     parameters: {
       query?: {
@@ -7726,6 +8012,108 @@ export interface operations {
       }
     }
   }
+  ImportService_ConfirmImport: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        importType: 'IMPORT_TYPE_PARTS' | 'IMPORT_TYPE_GOODS_RECEIPTS' | 'IMPORT_TYPE_STOCK_COUNTS'
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ImportServiceConfirmImportBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ImportResult']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ImportService_PreviewImport: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        importType: 'IMPORT_TYPE_PARTS' | 'IMPORT_TYPE_GOODS_RECEIPTS' | 'IMPORT_TYPE_STOCK_COUNTS'
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ImportServicePreviewImportBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ImportPreview']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ImportService_DownloadImportTemplate: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        importType: 'IMPORT_TYPE_PARTS' | 'IMPORT_TYPE_GOODS_RECEIPTS' | 'IMPORT_TYPE_STOCK_COUNTS'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   InvitationService_ListInvitations: {
     parameters: {
       query?: {
@@ -8029,7 +8417,7 @@ export interface operations {
   CatalogueService_ListParts: {
     parameters: {
       query?: {
-        /** @description Matches SKU, name or brand. */
+        /** @description Matches SKU, name, brand or an exact barcode. */
         query?: string
         /** @description Also matches the sub-categories of this category. */
         categoryId?: string
@@ -8173,6 +8561,41 @@ export interface operations {
       cookie?: never
     }
     requestBody: components['requestBodies']['v1Part']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Part']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  CatalogueService_SetPartBarcodes: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        partId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CatalogueServiceSetPartBarcodesBody']
+      }
+    }
     responses: {
       200: {
         headers: {

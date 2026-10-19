@@ -34,6 +34,7 @@
     "dotenv": "^18.0.4",
     "eslint": "^10.11.0",
     "eslint-plugin-playwright": "^2.12.0",
+    "exceljs": "^4.4.0",
     "openapi-typescript": "^7.13.0",
     "pg": "^8.23.1",
     "prettier": "^3.9.9",

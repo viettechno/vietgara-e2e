@@ -59,6 +59,10 @@
       "description": "MfaService lets a signed-in user manage their own TOTP second factor\n(FR-IAM-09, NFR-SE-04). MFA is optional for every user and applies only to\ne-mail and password sign-in. Resetting a password does not disable it."
     },
     {
+      "name": "ImportService",
+      "description": "ImportService reads Excel files into parts, goods receipts and stock\ncounts (FR-INV-14). The permission depends on the type: parts need\nPERMISSION_CATALOGUE_WRITE, plus PERMISSION_INVENTORY_WRITE and\nPERMISSION_INVENTORY_COST_READ when rows carry an opening quantity or\ncost; goods receipts need PERMISSION_INVENTORY_WRITE (and cost read for\nunit costs); stock counts need PERMISSION_INVENTORY_COUNT."
+    },
+    {
       "name": "InventoryService",
       "description": "InventoryService manages how many of each part a garage has (FRD 3.7).\nReads need PERMISSION_INVENTORY_READ, changes PERMISSION_INVENTORY_WRITE\n(stock counts need PERMISSION_INVENTORY_COUNT, write-offs, supplier\nreturns and repair order part returns PERMISSION_INVENTORY_ADJUST).\nThe parts themselves are managed by CatalogueService."
     },
@@ -1330,6 +1334,53 @@
           "$ref": "#/components/requestBodies/v1Garage"
         },
         "tags": ["GarageService"]
+      }
+    },
+    "/api/v1/garages/{garageId}/barcodes:lookup": {
+      "get": {
+        "summary": "Finds the part a scanned code belongs to (FR-INV-13), including\ninactive parts so a scan can say so. NOT_FOUND when no part has it.",
+        "operationId": "CatalogueService_LookupPartByBarcode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1LookupPartByBarcodeResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error (API Specification Section 1.1).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "garageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "barcode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": ["CatalogueService"]
       }
     },
     "/api/v1/garages/{garageId}/customers": {
@@ -2786,6 +2837,170 @@
         "tags": ["InventoryService"]
       }
     },
+    "/api/v1/garages/{garageId}/imports/{importType}/confirm": {
+      "post": {
+        "summary": "Imports the file in one transaction. A file with any error is refused\nas a whole (IMPORT_FILE_INVALID) and nothing is written. The same file\ncontent imported twice for the same garage and type is refused\n(IMPORT_FILE_ALREADY_IMPORTED), so a retry or double click cannot\ncreate a second document.",
+        "operationId": "ImportService_ConfirmImport",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ImportResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error (API Specification Section 1.1).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "garageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "importType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["IMPORT_TYPE_PARTS", "IMPORT_TYPE_GOODS_RECEIPTS", "IMPORT_TYPE_STOCK_COUNTS"]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportServiceConfirmImportBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": ["ImportService"]
+      }
+    },
+    "/api/v1/garages/{garageId}/imports/{importType}/preview": {
+      "post": {
+        "summary": "Checks the file and reports every error without writing anything.",
+        "operationId": "ImportService_PreviewImport",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ImportPreview"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error (API Specification Section 1.1).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "garageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "importType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["IMPORT_TYPE_PARTS", "IMPORT_TYPE_GOODS_RECEIPTS", "IMPORT_TYPE_STOCK_COUNTS"]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportServicePreviewImportBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": ["ImportService"]
+      }
+    },
+    "/api/v1/garages/{garageId}/imports/{importType}/template": {
+      "get": {
+        "summary": "The template workbook for a type, with a sheet of instructions.",
+        "operationId": "ImportService_DownloadImportTemplate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiHttpBody"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error (API Specification Section 1.1).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "garageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "importType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["IMPORT_TYPE_PARTS", "IMPORT_TYPE_GOODS_RECEIPTS", "IMPORT_TYPE_STOCK_COUNTS"]
+            }
+          }
+        ],
+        "tags": ["ImportService"]
+      }
+    },
     "/api/v1/garages/{garageId}/invitations": {
       "get": {
         "operationId": "InvitationService_ListInvitations",
@@ -3252,7 +3467,7 @@
           },
           {
             "name": "query",
-            "description": "Matches SKU, name or brand.",
+            "description": "Matches SKU, name, brand or an exact barcode.",
             "in": "query",
             "required": false,
             "schema": {
@@ -3488,6 +3703,63 @@
         ],
         "requestBody": {
           "$ref": "#/components/requestBodies/v1Part"
+        },
+        "tags": ["CatalogueService"]
+      }
+    },
+    "/api/v1/garages/{garageId}/parts/{partId}/barcodes": {
+      "put": {
+        "summary": "Replaces the part's barcodes (FR-INV-13).",
+        "operationId": "CatalogueService_SetPartBarcodes",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1Part"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error (API Specification Section 1.1).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "garageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "partId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CatalogueServiceSetPartBarcodesBody"
+              }
+            }
+          },
+          "required": true
         },
         "tags": ["CatalogueService"]
       }
@@ -9860,6 +10132,18 @@
         },
         "required": ["fileId"]
       },
+      "CatalogueServiceSetPartBarcodesBody": {
+        "type": "object",
+        "properties": {
+          "barcodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/v1PartBarcode"
+            },
+            "description": "Replaces the whole barcode table. A code already used by another part\nof the garage is refused (BARCODE_ALREADY_USED)."
+          }
+        }
+      },
       "CatalogueServiceSetPartUnitsBody": {
         "type": "object",
         "properties": {
@@ -9937,6 +10221,35 @@
           }
         },
         "required": ["content", "contentType"]
+      },
+      "ImportServiceConfirmImportBody": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "format": "byte",
+            "description": "The same file that was previewed; it is checked again."
+          }
+        },
+        "required": ["content"]
+      },
+      "ImportServicePreviewImportBody": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "The original file name, kept in the audit entry."
+          },
+          "content": {
+            "type": "string",
+            "format": "byte",
+            "description": "An .xlsx workbook made from the template, at most 5 MB and 5,000 rows\n(base64 in JSON; the server accepts messages of that size). A file over\neither limit is reported as a row-0 error, not imported."
+          }
+        },
+        "required": ["content"]
       },
       "InventoryServiceAddStockCountLinesBody": {
         "type": "object",
@@ -10519,6 +10832,14 @@
         "properties": {
           "link": {
             "$ref": "#/components/schemas/v1CustomerUserLink"
+          }
+        }
+      },
+      "v1ConfirmImportResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/v1ImportResult"
           }
         }
       },
@@ -11872,6 +12193,134 @@
         "enum": ["GOODS_RECEIPT_STATUS_DRAFT", "GOODS_RECEIPT_STATUS_COMPLETED", "GOODS_RECEIPT_STATUS_CANCELLED"],
         "description": "GoodsReceiptStatus is the lifecycle of a goods receipt document\n(FR-INV-06): saved as a draft, then completed (which updates stock and\ncost), or cancelled (which reverses a completed one)."
       },
+      "v1ImportPreview": {
+        "type": "object",
+        "properties": {
+          "importType": {
+            "$ref": "#/components/schemas/v1ImportType"
+          },
+          "totalRows": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Data rows read, without the header."
+          },
+          "validRows": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Rows without any error."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/v1ImportRowError"
+            },
+            "description": "Every error found, ordered by row; capped at 1000 (errors_truncated)."
+          },
+          "errorsTruncated": {
+            "type": "boolean"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The template headers."
+          },
+          "sampleRows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/v1ImportPreviewRow"
+            },
+            "description": "The first rows, at most 20."
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "What confirming would create, by name: for parts, \"parts\", \"barcodes\",\n\"units\", \"categories\" and \"receipt_lines\"; for documents, \"lines\"."
+          },
+          "canConfirm": {
+            "type": "boolean",
+            "description": "True when the file has rows and no errors at all; always false when\nerrors_truncated."
+          }
+        },
+        "description": "ImportPreview is the result of checking a file without writing anything."
+      },
+      "v1ImportPreviewRow": {
+        "type": "object",
+        "properties": {
+          "row": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numbered like ImportRowError.row."
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "In the order of ImportPreview.columns."
+          }
+        },
+        "description": "ImportPreviewRow is one row of the file as read, for the preview table."
+      },
+      "v1ImportResult": {
+        "type": "object",
+        "properties": {
+          "importType": {
+            "$ref": "#/components/schemas/v1ImportType"
+          },
+          "rowsImported": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Same keys as ImportPreview.counts."
+          },
+          "documentId": {
+            "type": "string",
+            "description": "The document the import created: the completed opening-stock receipt of\na parts import, the draft receipt or the draft count. Empty when a parts\nfile had no opening quantity."
+          },
+          "documentNumber": {
+            "type": "string"
+          }
+        },
+        "description": "ImportResult is what a confirmed import created."
+      },
+      "v1ImportRowError": {
+        "type": "object",
+        "properties": {
+          "row": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The row number as the sheet shows it: the header is row 1 and the first\ndata row is 2. 0 for a problem of the whole file such as a missing\ncolumn."
+          },
+          "column": {
+            "type": "string",
+            "description": "The column header the problem is in; empty when it concerns the row or\nthe file."
+          },
+          "code": {
+            "type": "string",
+            "description": "A stable reason such as SKU_DUPLICATE, BARCODE_ALREADY_USED,\nUNKNOWN_SUPPLIER or REQUIRED_VALUE_MISSING. File-level reasons (row 0):\nFILE_TOO_LARGE, TOO_MANY_ROWS, MISSING_COLUMN, and PERMISSION_REQUIRED\nwhen the file has columns (opening stock, unit cost) whose permission\nthe caller lacks."
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "description": "ImportRowError is one problem found in the file. A file is imported only\nwhen it has none, so the preview lists every error at once."
+      },
+      "v1ImportType": {
+        "type": "string",
+        "enum": ["IMPORT_TYPE_PARTS", "IMPORT_TYPE_GOODS_RECEIPTS", "IMPORT_TYPE_STOCK_COUNTS"],
+        "description": "ImportType names what an Excel file imports (FR-INV-14, Release 7.2).\n\n - IMPORT_TYPE_PARTS: Parts with units, category, brand, barcodes and, per row, an opening\nquantity and cost. Rows with an opening quantity are posted as one\ncompleted goods receipt, each line with its own supplier.\n - IMPORT_TYPE_GOODS_RECEIPTS: A draft goods receipt with its lines (supplier per line).\n - IMPORT_TYPE_STOCK_COUNTS: A draft stock count with its counted quantities."
+      },
       "v1Invitation": {
         "type": "object",
         "properties": {
@@ -12410,6 +12859,17 @@
           }
         }
       },
+      "v1LookupPartByBarcodeResponse": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "$ref": "#/components/schemas/v1Part"
+          },
+          "barcode": {
+            "$ref": "#/components/schemas/v1PartBarcode"
+          }
+        }
+      },
       "v1LookupStaffCandidateResponse": {
         "type": "object",
         "properties": {
@@ -12648,10 +13108,41 @@
             "type": "string",
             "format": "date-time",
             "readOnly": true
+          },
+          "barcodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/v1PartBarcode"
+            },
+            "description": "The barcodes that identify this part, each for the base unit or a\npackaging unit (FR-INV-13). Set with SetPartBarcodes.",
+            "readOnly": true
           }
         },
         "description": "Part is one part code of a garage (FR-INV-01, FR-CAT-01..04, FR-CAT-09).",
         "required": ["sku", "name", "baseUnitId"]
+      },
+      "v1PartBarcode": {
+        "type": "object",
+        "properties": {
+          "barcode": {
+            "type": "string",
+            "description": "1 to 64 characters, letters, digits and - . / + $ % space; stored as\ntyped after trimming. Matched case-insensitively, by lookup, search and\nthe uniqueness check alike. Unique across the garage's parts; deleting\na part frees its codes."
+          },
+          "unitId": {
+            "type": "string",
+            "description": "The packaging unit one scan stands for (a case barcode); unset means\nthe base unit. Must be a packaging unit of the same part."
+          },
+          "unitName": {
+            "type": "string",
+            "readOnly": true
+          },
+          "unitAbbreviation": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "description": "PartBarcode is one scannable code of a part. Codes are unique per garage.",
+        "required": ["barcode"]
       },
       "v1PartCategory": {
         "type": "object",
@@ -13055,6 +13546,14 @@
         "properties": {
           "stockIssue": {
             "$ref": "#/components/schemas/v1StockIssue"
+          }
+        }
+      },
+      "v1PreviewImportResponse": {
+        "type": "object",
+        "properties": {
+          "preview": {
+            "$ref": "#/components/schemas/v1ImportPreview"
           }
         }
       },
@@ -13848,6 +14347,14 @@
           }
         },
         "description": "Session is what every successful sign-in returns. When the user has MFA\nenabled and signs in with e-mail and password, the sign-in answers with\nmfa_required = true and a challenge_token instead of tokens (access_token\nand refresh_token are empty); the client then calls VerifyMfaChallenge.\nGoogle sign-in never asks for the second factor."
+      },
+      "v1SetPartBarcodesResponse": {
+        "type": "object",
+        "properties": {
+          "part": {
+            "$ref": "#/components/schemas/v1Part"
+          }
+        }
       },
       "v1SetPartUnitsResponse": {
         "type": "object",
