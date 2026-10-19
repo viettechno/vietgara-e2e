@@ -416,6 +416,19 @@ export class ApiClient {
     return this.put(`/v1/garages/${garageId}/parts/${partId}/units`, { packagingUnits })
   }
 
+  /** The garage's parts (the first 100), optionally matching a SKU, name, brand or exact barcode. */
+  async listParts(garageId: string, params: { query?: string } = {}): Promise<Part[]> {
+    const search = new URLSearchParams({ pageSize: '100' })
+    if (params.query) search.set('query', params.query)
+    const body = await this.get<{ data?: Part[] }>(`/v1/garages/${garageId}/parts?${search.toString()}`)
+    return body.data ?? []
+  }
+
+  /** Replaces a part's barcodes (FR-INV-13); `unitId` names the packaging unit a code stands for. */
+  setPartBarcodes(garageId: string, partId: string, barcodes: Array<{ barcode: string; unitId?: string }>): Promise<Part> {
+    return this.put(`/v1/garages/${garageId}/parts/${partId}/barcodes`, { barcodes })
+  }
+
   deletePart(garageId: string, partId: string): Promise<{ outcome?: string }> {
     return this.delete(`/v1/garages/${garageId}/parts/${partId}`)
   }
