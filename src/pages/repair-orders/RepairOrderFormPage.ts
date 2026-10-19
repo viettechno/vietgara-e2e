@@ -85,6 +85,8 @@ export class RepairOrderCreateForm {
 /** The repair order detail/Kanban-card page at /repair-orders/:id (E2E-REP-003..012). */
 export class RepairOrderDetailPage {
   readonly closeButton: Locator
+  readonly addLineButton: Locator
+  readonly cancelButton: Locator
   readonly createSettlementButton: Locator
   readonly viewSettlementLink: Locator
   readonly stockIssue: StockIssueCard
@@ -92,6 +94,8 @@ export class RepairOrderDetailPage {
   constructor(readonly page: Page) {
     this.stockIssue = new StockIssueCard(page)
     this.closeButton = page.getByRole('button', { name: 'Close repair order' })
+    this.addLineButton = page.getByRole('button', { name: 'Add line item' })
+    this.cancelButton = page.getByRole('button', { name: 'Cancel repair order', exact: true })
     // A closed order offers settlement creation (E2E-BIL-001); the link to
     // the new settlement appears once it exists.
     this.createSettlementButton = page.getByRole('button', { name: 'Create settlement' })
@@ -125,5 +129,57 @@ export class RepairOrderDetailPage {
     const saved = this.page.waitForResponse((r) => r.request().method() === 'PATCH' && /\/lines\//.test(r.url()))
     await this.lineRow(index).getByRole('button', { name: 'Save', exact: true }).click()
     await saved
+  }
+
+  // ---- Line changes on an open order (E2E-REP-013) ------------------------
+
+  editLineButton(description: string): Locator {
+    return this.page.getByRole('button', { name: `Edit line: ${description}` })
+  }
+
+  removeLineButton(description: string): Locator {
+    return this.page.getByRole('button', { name: `Remove line: ${description}` })
+  }
+
+  /** Fills the add/edit line dialog that is open and saves it. A part is picked by SKU. */
+  async saveLineDialog(input: {
+    itemType?: 'Labor' | 'Part'
+    partSku?: string
+    description?: string
+    quantity?: string
+    unit?: string
+    unitPrice?: string
+  }): Promise<void> {
+    const dialog = this.page.getByRole('dialog')
+    if (input.itemType) {
+      await dialog
+        .getByLabel('Type', { exact: true })
+        .selectOption(input.itemType === 'Part' ? 'REPAIR_ORDER_ITEM_TYPE_PART' : 'REPAIR_ORDER_ITEM_TYPE_LABOR')
+    }
+    if (input.partSku) {
+      await dialog.locator('input[role="combobox"]').fill(input.partSku)
+      await this.page.getByRole('listbox').getByRole('option', { name: input.partSku }).first().click()
+    }
+    if (input.description !== undefined) await dialog.getByRole('textbox').fill(input.description)
+    if (input.unit) await dialog.getByLabel('Quantity (Unit)').selectOption({ label: input.unit })
+    if (input.quantity !== undefined) await dialog.getByRole('spinbutton').first().fill(input.quantity)
+    if (input.unitPrice !== undefined) await dialog.getByRole('spinbutton').last().fill(input.unitPrice)
+    const saved = this.page.waitForResponse((r) => r.request().method() !== 'GET' && /\/repair-orders\/[^/]+\/lines/.test(r.url()))
+    await dialog.getByRole('button', { name: 'Save', exact: true }).click()
+    await saved
+  }
+
+  /** Removes a line through the confirmation. */
+  async removeLine(description: string): Promise<void> {
+    await this.removeLineButton(description).click()
+    const removed = this.page.waitForResponse((r) => r.request().method() === 'DELETE' && /\/lines\//.test(r.url()))
+    await this.page.getByRole('dialog').getByRole('button', { name: 'Remove line', exact: true }).click()
+    await removed
+  }
+
+  /** Cancels the order through the confirmation. */
+  async cancelOrder(): Promise<void> {
+    await this.cancelButton.click()
+    await this.page.getByRole('dialog').getByRole('button', { name: 'Cancel the order' }).click()
   }
 }

@@ -19,6 +19,7 @@ import type {
   Garage,
   GoodsReceipt,
   Invitation,
+  Job,
   ListResponse,
   PackagingUnit,
   Part,
@@ -66,7 +67,18 @@ export type VehicleInput = {
   vin?: string
   engineNumber?: string
 }
-export type QuoteLineInput = { itemType: QuoteItemType; description: string; quantity: string; unitPrice: string }
+export type QuoteLineInput = {
+  itemType: QuoteItemType
+  description: string
+  quantity: string
+  unitPrice: string
+  itemRefId?: string
+  unitId?: string
+  enteredQuantity?: string
+  jobId?: string
+  /** A hidden consumable (FR-CAT-08): stocked, not billed, not shown to the customer. */
+  nonBillable?: boolean
+}
 export type QuoteInput = {
   customerId: string
   vehicleId: string
@@ -81,7 +93,23 @@ export type RepairOrderLineInput = {
   description: string
   quantity: string
   unitPrice: string
+  unitId?: string
+  enteredQuantity?: string
+  jobId?: string
+  nonBillable?: boolean
 }
+/** One suggested part of a job: `quantity` is typed in `unitId` (the part's base unit when unset). */
+export type JobPartInput = { partId: string; quantity: string; unitId?: string; nonBillable?: boolean }
+export type JobInput = { name: string; category?: string; laborPrice?: number; durationMinutes?: number; parts?: JobPartInput[] }
+/** The fields of a repair order line that can change (FR-REP-07); only the ones named are sent. */
+export type EditLineInput = Partial<{
+  description: string
+  itemRefId: string
+  quantity: string
+  unitId: string
+  enteredQuantity: string
+  unitPrice: string
+}>
 export type CreateRepairOrderInput = { vehicleId: string; lines: RepairOrderLineInput[] }
 export type UpdateLineInput = { status: RepairOrderLineStatus; assignedTechnicianIds: string[] }
 export type PartInput = {
@@ -92,6 +120,7 @@ export type PartInput = {
   categoryId?: string
   brand?: string
   reorderThreshold?: string
+  isActive?: boolean
 }
 export type StockReceiptInput = { quantity: string; unitId?: string; unitCost?: number; supplierId?: string }
 export type StockReceiptResult = { receipt: GoodsReceipt; stockLevel: StockLevel }
@@ -377,6 +406,63 @@ export class ApiClient {
     return this.post(`/v1/garages/${garageId}/repair-orders/${orderId}/closing`)
   }
 
+  // ---- Jobs and repair order lines (Release 7.3) -------------------------
+
+  getQuote(garageId: string, quoteId: string): Promise<Quote> {
+    return this.get(`/v1/garages/${garageId}/quotes/${quoteId}`)
+  }
+
+  createJob(garageId: string, input: JobInput): Promise<Job> {
+    return this.post(`/v1/garages/${garageId}/jobs`, input)
+  }
+
+  getJob(garageId: string, jobId: string): Promise<Job> {
+    return this.get(`/v1/garages/${garageId}/jobs/${jobId}`)
+  }
+
+  /** The garage's jobs; `query` matches the name or category. */
+  async listJobs(garageId: string, params: { query?: string; category?: string; includeInactive?: boolean } = {}): Promise<Job[]> {
+    const body = await this.get<ListResponse<Job>>(`/v1/garages/${garageId}/jobs${query({ pageSize: 100, ...params })}`)
+    return body.data ?? []
+  }
+
+  /** Changes the named fields; `parts` replaces the whole list. */
+  updateJob(garageId: string, jobId: string, input: Partial<JobInput>): Promise<Job> {
+    const mask = Object.keys(input).map((k) => k.replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`))
+    return this.patch(`/v1/garages/${garageId}/jobs/${jobId}?updateMask=${mask.join(',')}`, input)
+  }
+
+  /** Deletes the job, or deactivates it when a quote or an order line came from it; dryRun only reports which. */
+  deleteJob(garageId: string, jobId: string, dryRun = false): Promise<{ outcome?: string }> {
+    return this.delete(`/v1/garages/${garageId}/jobs/${jobId}${dryRun ? '?dryRun=true' : ''}`)
+  }
+
+  activateJob(garageId: string, jobId: string): Promise<Job> {
+    return this.post(`/v1/garages/${garageId}/jobs/${jobId}:activate`)
+  }
+
+  /** Appends a job's labor and part lines to a draft quote. */
+  addQuoteJob(garageId: string, quoteId: string, jobId: string): Promise<Quote> {
+    return this.post(`/v1/garages/${garageId}/quotes/${quoteId}/lines:fromJob`, { jobId })
+  }
+
+  addRepairOrderLine(garageId: string, orderId: string, line: RepairOrderLineInput): Promise<RepairOrder> {
+    return this.post(`/v1/garages/${garageId}/repair-orders/${orderId}/lines`, line)
+  }
+
+  editRepairOrderLine(garageId: string, orderId: string, lineId: string, edit: EditLineInput): Promise<RepairOrder> {
+    return this.patch(`/v1/garages/${garageId}/repair-orders/${orderId}/lines/${lineId}`, edit)
+  }
+
+  removeRepairOrderLine(garageId: string, orderId: string, lineId: string): Promise<RepairOrder> {
+    return this.delete(`/v1/garages/${garageId}/repair-orders/${orderId}/lines/${lineId}`)
+  }
+
+  /** Cancels an order whose work has not started: its reserved parts are released. */
+  cancelRepairOrder(garageId: string, orderId: string): Promise<RepairOrder> {
+    return this.post(`/v1/garages/${garageId}/repair-orders/${orderId}/cancellation`)
+  }
+
   // ---- Catalogue (FRD 3.21, Release 6.0) ----------------------------------
 
   createUnit(garageId: string, name: string, abbreviation: string): Promise<Unit> {
@@ -429,8 +515,9 @@ export class ApiClient {
     return this.put(`/v1/garages/${garageId}/parts/${partId}/barcodes`, { barcodes })
   }
 
-  deletePart(garageId: string, partId: string): Promise<{ outcome?: string }> {
-    return this.delete(`/v1/garages/${garageId}/parts/${partId}`)
+  /** Deletes the part, or deactivates it when documents refer to it; dryRun only reports which. */
+  deletePart(garageId: string, partId: string, dryRun = false): Promise<{ outcome?: string }> {
+    return this.delete(`/v1/garages/${garageId}/parts/${partId}${dryRun ? '?dryRun=true' : ''}`)
   }
 
   /** Uploads an image for a part and attaches it. */

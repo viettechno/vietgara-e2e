@@ -5,18 +5,22 @@ export class CataloguePage {
   readonly partsTab: Locator
   readonly unitsTab: Locator
   readonly categoriesTab: Locator
+  readonly jobsTab: Locator
   readonly newPartButton: Locator
   readonly newUnitButton: Locator
   readonly newCategoryButton: Locator
+  readonly newJobButton: Locator
   readonly showInactive: Locator
 
   constructor(readonly page: Page) {
     this.partsTab = page.getByRole('tab', { name: 'Parts' })
     this.unitsTab = page.getByRole('tab', { name: 'Units' })
     this.categoriesTab = page.getByRole('tab', { name: 'Categories' })
+    this.jobsTab = page.getByRole('tab', { name: 'Jobs' })
     this.newPartButton = page.getByRole('button', { name: 'New part' })
     this.newUnitButton = page.getByRole('button', { name: 'New unit' })
     this.newCategoryButton = page.getByRole('button', { name: 'New category' })
+    this.newJobButton = page.getByRole('button', { name: 'New job' })
     this.showInactive = page.getByRole('switch', { name: 'Show inactive items' })
   }
 
@@ -85,5 +89,48 @@ export class CataloguePage {
       .getByRole('button', { name: `Images: ${sku}` })
       .click()
     return this.page.getByRole('dialog')
+  }
+
+  // ---- Jobs (E2E-CAT-010/011) ---------------------------------------------
+
+  async openJobs(): Promise<void> {
+    await this.jobsTab.click()
+  }
+
+  /** Fills the job form that is open; `parts` are added in order, each picked by SKU. */
+  async fillJob(input: {
+    name?: string
+    category?: string
+    laborPrice?: string
+    duration?: string
+    parts?: Array<{ sku: string; quantity: string; unit?: string; hidden?: boolean }>
+  }): Promise<void> {
+    const dialog = this.page.getByRole('dialog')
+    if (input.name !== undefined) await dialog.getByLabel('Job', { exact: true }).fill(input.name)
+    if (input.category !== undefined) await dialog.getByLabel('Category', { exact: true }).fill(input.category)
+    if (input.laborPrice !== undefined) await dialog.getByLabel('Labor price').fill(input.laborPrice)
+    if (input.duration !== undefined) await dialog.getByLabel('Duration').fill(input.duration)
+    for (const part of input.parts ?? []) {
+      const index = (await dialog.getByRole('button', { name: /^Remove part \d+$/ }).count()) + 1
+      await dialog.getByRole('button', { name: 'Add a part' }).click()
+      await dialog
+        .locator('input[role="combobox"]')
+        .nth(index - 1)
+        .fill(part.sku)
+      await this.page.getByRole('listbox').getByRole('option', { name: part.sku }).first().click()
+      await this.setJobPart(index, part)
+    }
+  }
+
+  /** Sets the quantity, unit and hidden mark of the suggested part number `index` (from 1). */
+  async setJobPart(index: number, part: { quantity?: string; unit?: string; hidden?: boolean }): Promise<void> {
+    const dialog = this.page.getByRole('dialog')
+    if (part.unit) await dialog.getByLabel(`Quantity ${index} (Unit)`).selectOption({ label: part.unit })
+    if (part.quantity !== undefined) await dialog.getByRole('spinbutton', { name: `Quantity ${index}` }).fill(part.quantity)
+    if (part.hidden !== undefined) await dialog.getByRole('checkbox', { name: `Do not bill the customer ${index}` }).setChecked(part.hidden)
+  }
+
+  async saveJob(): Promise<void> {
+    await this.page.getByRole('dialog').getByRole('button', { name: 'Save', exact: true }).click()
   }
 }

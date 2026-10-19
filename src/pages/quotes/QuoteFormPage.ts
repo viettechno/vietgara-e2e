@@ -16,6 +16,8 @@ export class QuoteFormPage {
   readonly customerField: Locator
   readonly vehicleField: Locator
   readonly addLineButton: Locator
+  readonly addJobButton: Locator
+  readonly jobPicker: Locator
   readonly saveButton: Locator
   readonly sendButton: Locator
   readonly convertButton: Locator
@@ -31,6 +33,8 @@ export class QuoteFormPage {
     this.customerField = page.getByPlaceholder('Search by name, phone, e-mail or plate…')
     this.vehicleField = page.getByLabel('Vehicle', { exact: true })
     this.addLineButton = page.getByRole('button', { name: 'Add line item' })
+    this.addJobButton = page.getByRole('button', { name: 'Add a job' })
+    this.jobPicker = page.getByRole('dialog', { name: 'Add a job' })
     this.saveButton = page.getByRole('button', { name: 'Save', exact: true })
     this.sendButton = page.getByRole('button', { name: 'Send for approval' })
     this.convertButton = page.getByRole('button', { name: 'Convert to repair order' })
@@ -91,5 +95,32 @@ export class QuoteFormPage {
 
   lineTotalText(index: number): Locator {
     return this.lineRow(index).locator('td').nth(4)
+  }
+
+  /** Saves the quote and waits for the server to answer, so a spec can read it back. */
+  async save(): Promise<void> {
+    const saved = this.page.waitForResponse(
+      (r) => r.request().method() !== 'GET' && /\/quotes\/[^/]+$/.test(new URL(r.url()).pathname) && r.ok(),
+    )
+    await this.saveButton.click()
+    await saved
+  }
+
+  /** The quote's total, as shown under the lines. */
+  get total(): Locator {
+    return this.page.getByText('Total', { exact: true }).locator('xpath=..')
+  }
+
+  /** Opens the job picker, searches and adds the job: its labor line and part lines join the quote (E2E-QUO-015). */
+  async addJob(name: string, search = name): Promise<void> {
+    await this.addJobButton.click()
+    await this.jobPicker.getByPlaceholder('Search by name or category…').fill(search)
+    await this.jobPicker.locator('li', { hasText: name }).getByRole('button', { name: 'Add job' }).click()
+    await this.jobPicker.waitFor({ state: 'hidden' })
+  }
+
+  /** The quantity field of a draft line. */
+  quantityInput(index: number): Locator {
+    return this.lineRow(index).getByRole('spinbutton').first()
   }
 }

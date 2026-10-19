@@ -940,6 +940,58 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/jobs': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['JobService_ListJobs']
+    put?: never
+    post: operations['JobService_CreateJob']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/jobs/{jobId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['JobService_GetJob']
+    put?: never
+    post?: never
+    /**
+     * Follows the delete-or-deactivate rule (FR-CAT-07): a job that a quote
+     *     line came from is only deactivated.
+     */
+    delete: operations['JobService_DeleteJob']
+    options?: never
+    head?: never
+    patch: operations['JobService_UpdateJob']
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/jobs/{jobId}:activate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['JobService_ActivateJob']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/logo': {
     parameters: {
       query?: never
@@ -1204,6 +1256,29 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}/lines:fromJob': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Adds a job's lines to a draft quote (FR-CAT-06): one labor line at the
+     *     job's labor price, then one part line per suggested part at the part's
+     *     sale price in the suggested unit. A deactivated job is refused; a
+     *     suggestion whose part is deactivated is skipped. The lines are
+     *     appended, count against the 100-line limit, and stay editable.
+     */
+    post: operations['QuoteService_AddQuoteJob']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/quotes/{quoteId}/pdf': {
     parameters: {
       query?: never
@@ -1280,6 +1355,28 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/cancellation': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Cancels a repair order that is open or waiting on parts (Release 7.3):
+     *     its stock issue is cancelled and the reservation released. The quote it
+     *     came from stays converted. FAILED_PRECONDITION once work has started,
+     *     or when the order is completed, closed or already cancelled.
+     */
+    post: operations['RepairOrderService_CancelRepairOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/closing': {
     parameters: {
       query?: never
@@ -1301,6 +1398,27 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/lines': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Adds a line to a repair order that is not closed or cancelled
+     *     (Release 7.3). The draft stock issue follows a part line. Once the
+     *     stock issue is posted, a part line can no longer be added.
+     */
+    post: operations['RepairOrderService_AddRepairOrderLine']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/lines/{lineId}': {
     parameters: {
       query?: never
@@ -1311,13 +1429,21 @@ export interface paths {
     get?: never
     put?: never
     post?: never
-    delete?: never
+    /**
+     * Removes a line from a repair order that is not closed or cancelled
+     *     (Release 7.3); the last line cannot be removed. A part line cannot be
+     *     removed once the stock issue is posted (FAILED_PRECONDITION).
+     */
+    delete: operations['RepairOrderService_DeleteRepairOrderLine']
     options?: never
     head?: never
     /**
-     * Assigns technicians and/or updates one line's own progress
-     *     (FR-REP-02/03); the repair order's overall status (the Kanban
-     *     column) is derived from its lines and returned in the response.
+     * Assigns technicians, updates one line's own progress (FR-REP-02/03)
+     *     and, since Release 7.3, edits the line itself (description, item_ref_id,
+     *     quantity, entered_quantity, unit_id, unit_price). The repair order's
+     *     overall status (the Kanban column) is derived from its lines and
+     *     returned in the response. A part line's item, quantity and unit are
+     *     fixed once the stock issue is posted.
      */
     patch: operations['RepairOrderService_UpdateRepairOrderLine']
     trace?: never
@@ -2893,6 +3019,7 @@ export interface components {
     }
     InvitationServiceDeclineInvitationBody: Record<string, never>
     InvitationServiceRevokeInvitationBody: Record<string, never>
+    JobServiceActivateJobBody: Record<string, never>
     LicenseAdminServiceAdjustCreditBody: {
       /**
        * Format: int64
@@ -2934,12 +3061,16 @@ export interface components {
     PublicQuoteServiceDecidePublicQuoteBody: {
       decisions: components['schemas']['v1QuoteLineDecisionInput'][]
     }
+    QuoteServiceAddQuoteJobBody: {
+      jobId: string
+    }
     QuoteServiceConvertQuoteBody: Record<string, never>
     QuoteServiceRecordQuoteDecisionBody: {
       /** @description One decision per line of the quote. */
       decisions: components['schemas']['v1QuoteLineDecisionInput'][]
     }
     QuoteServiceSendQuoteBody: Record<string, never>
+    RepairOrderServiceCancelRepairOrderBody: Record<string, never>
     RepairOrderServiceCloseRepairOrderBody: Record<string, never>
     SettlementServiceCreateSettlementBody: {
       repairOrderId: string
@@ -3182,6 +3313,9 @@ export interface components {
     v1ActivateCustomerTaxProfileResponse: {
       taxProfile?: components['schemas']['v1CustomerTaxProfile']
     }
+    v1ActivateJobResponse: {
+      job?: components['schemas']['v1Job']
+    }
     v1ActivatePartResponse: {
       part?: components['schemas']['v1Part']
     }
@@ -3193,6 +3327,12 @@ export interface components {
     }
     v1AddPartImageResponse: {
       part?: components['schemas']['v1Part']
+    }
+    v1AddQuoteJobResponse: {
+      quote?: components['schemas']['v1Quote']
+    }
+    v1AddRepairOrderLineResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
     }
     v1AddStockCountLinesResponse: {
       stockCount?: components['schemas']['v1StockCount']
@@ -3257,6 +3397,9 @@ export interface components {
     }
     v1CancelPlanPaymentResponse: {
       request?: components['schemas']['v1PlanPaymentRequest']
+    }
+    v1CancelRepairOrderResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
     }
     v1CancelStockCountResponse: {
       stockCount?: components['schemas']['v1StockCount']
@@ -3323,6 +3466,9 @@ export interface components {
     }
     v1CreateInvitationResponse: {
       invitation?: components['schemas']['v1Invitation']
+    }
+    v1CreateJobResponse: {
+      job?: components['schemas']['v1Job']
     }
     v1CreatePartCategoryResponse: {
       category?: components['schemas']['v1PartCategory']
@@ -3520,6 +3666,9 @@ export interface components {
     v1DeleteGarageLogoResponse: {
       garage?: components['schemas']['v1Garage']
     }
+    v1DeleteJobResponse: {
+      outcome?: components['schemas']['v1DeleteOutcome']
+    }
     /**
      * @description DeleteOutcome is what a DELETE did (FR-CAT-07, the delete-or-deactivate
      *     rule). An object that nothing references is soft-deleted; one that is
@@ -3539,6 +3688,9 @@ export interface components {
       outcome?: components['schemas']['v1DeleteOutcome']
     }
     v1DeleteQuoteResponse: Record<string, never>
+    v1DeleteRepairOrderLineResponse: {
+      repairOrder?: components['schemas']['v1RepairOrder']
+    }
     v1DeleteRoleResponse: Record<string, never>
     v1DeleteStaffGroupResponse: Record<string, never>
     v1DeleteStaffResponse: Record<string, never>
@@ -3744,6 +3896,9 @@ export interface components {
     }
     v1GetGoodsReceiptResponse: {
       goodsReceipt?: components['schemas']['v1GoodsReceipt']
+    }
+    v1GetJobResponse: {
+      job?: components['schemas']['v1Job']
     }
     v1GetMeResponse: {
       user?: components['schemas']['v1User']
@@ -4071,6 +4226,71 @@ export interface components {
       | 'INVITATION_STATUS_DECLINED'
       | 'INVITATION_STATUS_REVOKED'
       | 'INVITATION_STATUS_EXPIRED'
+    /**
+     * @description Job is one type of work of a garage (FR-CAT-05): a standard labor charge
+     *     and the parts it usually needs.
+     */
+    v1Job: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Unique per garage, compared without regard to case. */
+      name: string
+      /** @description A free label to group jobs in the picker (for example Maintenance). */
+      category?: string
+      /**
+       * Format: int64
+       * @description The standard labor price, whole VND; zero is allowed.
+       */
+      laborPrice?: string
+      /**
+       * Format: int32
+       * @description The standard duration in minutes; zero when not set.
+       */
+      durationMinutes?: number
+      /**
+       * @description At most 30 suggested parts, each part once. On update, sending parts
+       *     replaces the whole list.
+       */
+      parts?: components['schemas']['v1JobPart'][]
+      isActive?: boolean
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description JobPart is one part a job suggests (FR-CAT-05): a default amount in a
+     *     unit of the part. The quote form turns it into a part line.
+     */
+    v1JobPart: {
+      partId: string
+      /**
+       * @description The amount in unit_id (the part's base unit when unit_id is unset), a
+       *     decimal string above zero with at most three decimals.
+       */
+      quantity: string
+      /** @description A packaging unit of the part; unset means the base unit. */
+      unitId?: string
+      /**
+       * @description A hidden consumable (FR-CAT-08): the quote line it makes is not shown to
+       *     the customer and is not billed, but its stock is deducted.
+       */
+      nonBillable?: boolean
+      readonly partSku?: string
+      readonly partName?: string
+      readonly unitAbbreviation?: string
+      /**
+       * Format: int64
+       * @description The part's current sale price per unit_id (or per base unit), whole
+       *     VND; what a quote line made from this suggestion starts at.
+       */
+      readonly unitPrice?: string
+      /**
+       * @description False when the part has been deactivated since; such a suggestion is
+       *     skipped when the job is added to a quote.
+       */
+      readonly partIsActive?: boolean
+    }
     v1ListAllPlansResponse: {
       data?: components['schemas']['v1Plan'][]
     }
@@ -4094,6 +4314,10 @@ export interface components {
     }
     v1ListInvitationsResponse: {
       data?: components['schemas']['v1Invitation'][]
+    }
+    v1ListJobsResponse: {
+      data?: components['schemas']['v1Job'][]
+      pagination?: components['schemas']['v1Pagination']
     }
     v1ListMyCreditLedgerResponse: {
       data?: components['schemas']['v1CreditLedgerEntry'][]
@@ -4785,6 +5009,21 @@ export interface components {
       /** @description The amount as typed, in unit_id (decimal string); required with unit_id. */
       enteredQuantity?: string
       readonly unitAbbreviation?: string
+      /**
+       * @description The job this line came from (FR-CAT-06), kept so the quote remembers its
+       *     origin; the job may since have been deactivated. The line itself is
+       *     independent of the job and stays editable.
+       */
+      jobId?: string
+      /**
+       * @description A hidden consumable (FR-CAT-08): a part line the customer does not see
+       *     and is not billed for, whose stock is deducted when the job is done.
+       *     Only a part line with item_ref_id can be non-billable; its unit_price
+       *     and line_total are 0 and it is left out of total_amount, the public
+       *     quote, the PDF and the approval decisions. It is carried to the repair
+       *     order when its job_id has an approved line, or when it has no job_id.
+       */
+      nonBillable?: boolean
     }
     /**
      * @description QuoteLineDecision is the customer's decision on one line item
@@ -4907,6 +5146,14 @@ export interface components {
        *     have more than one.
        */
       assignedTechnicianIds?: string[]
+      /** @description The job the line came from (Release 7.3), carried from the quote line. */
+      jobId?: string
+      /**
+       * @description A hidden consumable (FR-CAT-08): its stock is deducted, but it is not
+       *     billed, has no price and does not hold the order back (it needs no
+       *     progress). Printed documents leave it out.
+       */
+      nonBillable?: boolean
     }
     /**
      * @description RepairOrderLineStatus is one line's own progress (FR-REP-03), tracked
@@ -4956,10 +5203,14 @@ export interface components {
      *     shown as the Kanban board's columns (UI Design Spec Section 3.3).
      *
      *      - REPAIR_ORDER_STATUS_OPEN: "To Do": not yet started.
-     *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock.
+     *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock (Release 7.3): set when the
+     *     draft stock issue cannot be covered by what is on hand, cleared when
+     *     it can.
      *      - REPAIR_ORDER_STATUS_COMPLETED: Every line is done; ready for the advisor to close it.
      *      - REPAIR_ORDER_STATUS_CLOSED: Closed (FR-REP-06): no further edits; ready for settlement (Release
      *     1.4) and triggers stock deduction (Event Design, repair_order.closed).
+     *      - REPAIR_ORDER_STATUS_CANCELLED: Cancelled before any work started (Release 7.3): its stock issue is
+     *     cancelled and the reservation released. Final.
      * @enum {string}
      */
     v1RepairOrderStatus:
@@ -4968,6 +5219,7 @@ export interface components {
       | 'REPAIR_ORDER_STATUS_WAITING_ON_PARTS'
       | 'REPAIR_ORDER_STATUS_COMPLETED'
       | 'REPAIR_ORDER_STATUS_CLOSED'
+      | 'REPAIR_ORDER_STATUS_CANCELLED'
     v1RequestCustomerUserLinkResponse: {
       link?: components['schemas']['v1CustomerUserLink']
     }
@@ -5368,6 +5620,12 @@ export interface components {
       readonly createdAt?: string
       /** Format: date-time */
       readonly updatedAt?: string
+      /**
+       * @description Release 7.3: true while a draft cannot be covered by the stock on hand
+       *     (some line has a short_quantity); the repair order is then waiting on
+       *     parts.
+       */
+      readonly isShort?: boolean
     }
     /**
      * @description StockIssueLine is one part line of a stock issue, derived from the
@@ -5396,6 +5654,12 @@ export interface components {
        *     line (FR-INV-11); what can still be returned is quantity minus this.
        */
       readonly returnedQuantity?: string
+      /**
+       * @description Release 7.3: the base-unit amount of this line the stock cannot cover
+       *     yet ("0" when covered). Reservations are served in the order the issues
+       *     were created.
+       */
+      readonly shortQuantity?: string
     }
     /**
      * @description StockIssueMode is when a repair order's draft stock issue posts
@@ -5756,6 +6020,9 @@ export interface components {
     v1UpdateGoodsReceiptResponse: {
       goodsReceipt?: components['schemas']['v1GoodsReceipt']
     }
+    v1UpdateJobResponse: {
+      job?: components['schemas']['v1Job']
+    }
     v1UpdateMeResponse: {
       user?: components['schemas']['v1User']
     }
@@ -6069,6 +6336,11 @@ export interface components {
     v1Customer: {
       content: {
         'application/json': components['schemas']['v1Customer']
+      }
+    }
+    v1Job: {
+      content: {
+        'application/json': components['schemas']['v1Job']
       }
     }
     v1PartCategory: {
@@ -8222,6 +8494,206 @@ export interface operations {
       }
     }
   }
+  JobService_ListJobs: {
+    parameters: {
+      query?: {
+        /** @description Matches the name or the category. */
+        query?: string
+        category?: string
+        /** @description Inactive jobs are hidden unless asked for (they never show in pickers). */
+        includeInactive?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListJobsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  JobService_CreateJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Job']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Job']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  JobService_GetJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        jobId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Job']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  JobService_DeleteJob: {
+    parameters: {
+      query?: {
+        dryRun?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+        jobId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeleteJobResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  JobService_UpdateJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        jobId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1Job']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Job']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  JobService_ActivateJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        jobId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['JobServiceActivateJobBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Job']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   GarageService_UploadGarageLogo: {
     parameters: {
       query?: never
@@ -9071,6 +9543,41 @@ export interface operations {
       }
     }
   }
+  QuoteService_AddQuoteJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['QuoteServiceAddQuoteJobBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Quote']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   DocumentService_ExportQuotePdf: {
     parameters: {
       query?: never
@@ -9145,10 +9652,14 @@ export interface operations {
         vehicleId?: string
         /**
          * @description - REPAIR_ORDER_STATUS_OPEN: "To Do": not yet started.
-         *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock.
+         *      - REPAIR_ORDER_STATUS_WAITING_ON_PARTS: Blocked on a part not currently in stock (Release 7.3): set when the
+         *     draft stock issue cannot be covered by what is on hand, cleared when
+         *     it can.
          *      - REPAIR_ORDER_STATUS_COMPLETED: Every line is done; ready for the advisor to close it.
          *      - REPAIR_ORDER_STATUS_CLOSED: Closed (FR-REP-06): no further edits; ready for settlement (Release
          *     1.4) and triggers stock deduction (Event Design, repair_order.closed).
+         *      - REPAIR_ORDER_STATUS_CANCELLED: Cancelled before any work started (Release 7.3): its stock issue is
+         *     cancelled and the reservation released. Final.
          */
         status?:
           | 'REPAIR_ORDER_STATUS_OPEN'
@@ -9156,6 +9667,7 @@ export interface operations {
           | 'REPAIR_ORDER_STATUS_WAITING_ON_PARTS'
           | 'REPAIR_ORDER_STATUS_COMPLETED'
           | 'REPAIR_ORDER_STATUS_CLOSED'
+          | 'REPAIR_ORDER_STATUS_CANCELLED'
         /** @description Only repair orders with a line assigned to this technician. */
         technicianId?: string
         page?: number
@@ -9255,6 +9767,41 @@ export interface operations {
       }
     }
   }
+  RepairOrderService_CancelRepairOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RepairOrderServiceCancelRepairOrderBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   RepairOrderService_CloseRepairOrder: {
     parameters: {
       query?: never
@@ -9290,6 +9837,73 @@ export interface operations {
       }
     }
   }
+  RepairOrderService_AddRepairOrderLine: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RepairOrderLine']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  RepairOrderService_DeleteRepairOrderLine: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+        lineId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   RepairOrderService_UpdateRepairOrderLine: {
     parameters: {
       query?: never
@@ -9301,7 +9915,10 @@ export interface operations {
       }
       cookie?: never
     }
-    /** @description status and/or assigned_technician_ids (FR-REP-02/03). */
+    /**
+     * @description status and/or assigned_technician_ids (FR-REP-02/03), and from
+     *     Release 7.3 the editable fields of the line.
+     */
     requestBody: {
       content: {
         'application/json': components['schemas']['v1RepairOrderLine']
