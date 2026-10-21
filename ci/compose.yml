@@ -122,7 +122,11 @@ services:
       KONG_PROXY_LISTEN: 0.0.0.0:8000
       KONG_LOG_LEVEL: warn
       KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE: 8m
+      # Gateway errors (a 429 from the rate limits) use the API's error envelope.
+      KONG_ERROR_TEMPLATE_JSON: /etc/kong/error.json
+      KONG_ERROR_DEFAULT_TYPE: application/json
     ports:
       - '127.0.0.1:${KONG_PROXY_PORT:-8000}:8000'
     volumes:
       - ./kong.yml:/etc/kong/kong.yml:ro
+      - ./error.json:/etc/kong/error.json:ro
