@@ -327,6 +327,11 @@ export class ApiClient {
 
   // ---- Platform staff (FR-IAM-10) -------------------------------------------
 
+  /** The platform permissions of the caller; rejects on a backend older than Release 8.1. */
+  getPlatformAccess(): Promise<{ platformAdmin?: boolean; permissions?: string[] }> {
+    return this.get('/v1/admin/me/permissions')
+  }
+
   createPlatformRole(input: { name: string; permissions: string[] }): Promise<{ id: string; name: string }> {
     return this.post('/v1/admin/platform-roles', input)
   }
