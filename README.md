@@ -169,6 +169,7 @@ Per [`01_Test_Strategy.md` §5](https://github.com/viettechno/vietgara-docs/blob
 
 - **Smoke (PR gate):** E2E-IAM-001, E2E-TEN-001, E2E-QUO-001, E2E-REP-001, E2E-INV-001, E2E-INV-008. No new spec joins `@smoke` until a green nightly proves it fast and deterministic.
 - **Identity:** E2E-IAM-008 (sign in, wrong credentials, case-insensitive e-mail), E2E-IAM-009 (sign out ends the session), E2E-IAM-011 (password reset; cross-browser revocation stays manual), E2E-IAM-020 (platform admin in the admin web, owner denied).
+- **Platform staff:** E2E-PLT-001 (an invited user accepts, sees subscriptions read-only, loses access when removed from the group).
 - **Tenant:** E2E-TEN-004 (trial garage limit), E2E-TEN-005 (switch active garage), E2E-TEN-007 (invite by e-mail, second-actor accept from the Mailpit link).
 - **License:** E2E-LIC-001 (trial reads), E2E-LIC-002 (switch to a paid plan).
 - **Customer:** E2E-CUS-001 (create with consent + search), E2E-CUS-005 (register a vehicle from the owner's page + lookup).
