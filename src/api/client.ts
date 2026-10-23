@@ -325,6 +325,29 @@ export class ApiClient {
     return this.post(`/v1/admin/subscriptions/${subscriptionId}/extensions`, { days })
   }
 
+  // ---- Platform staff (FR-IAM-10) -------------------------------------------
+
+  /** The platform permissions of the caller; rejects on a backend older than Release 8.1. */
+  getPlatformAccess(): Promise<{ platformAdmin?: boolean; permissions?: string[] }> {
+    return this.get('/v1/admin/me/permissions')
+  }
+
+  createPlatformRole(input: { name: string; permissions: string[] }): Promise<{ id: string; name: string }> {
+    return this.post('/v1/admin/platform-roles', input)
+  }
+
+  createPlatformGroup(input: { name: string; roleId: string }): Promise<{ id: string; name: string }> {
+    return this.post('/v1/admin/platform-groups', input)
+  }
+
+  invitePlatformStaff(email: string, groupId: string): Promise<{ id: string }> {
+    return this.post('/v1/admin/platform-invitations', { email, groupId })
+  }
+
+  removePlatformStaffMember(groupId: string, userId: string): Promise<void> {
+    return jsonRequest(this.request, 'DELETE', `/v1/admin/platform-groups/${groupId}/members/${userId}`, { token: this.token })
+  }
+
   // ---- Supplier (FRD 3.23) ------------------------------------------------
 
   createSupplier(garageId: string, input: { name: string; taxCode?: string }): Promise<Supplier> {

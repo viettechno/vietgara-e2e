@@ -84,6 +84,7 @@ services:
       HTTP_PORT: 8080
       API_DOCS_ENABLED: 'false'
       APP_BASE_URL: http://localhost:${KONG_PROXY_PORT:-8000}
+      ADMIN_APP_BASE_URL: http://admin.localhost:${KONG_PROXY_PORT:-8000}
       PLATFORM_ADMIN_EMAILS: admin@vietgara.test
       REDIS_ADDR: redis:6379
       # Short, so the period-end and grace-end scenarios (E2E-LIC-010/011)
