@@ -1,6 +1,6 @@
 // E2E-QUO-004 · Send for approval (LINK mode): e-mailed automatically when the customer has an e-mail on file
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { QuoteFormPage } from '../../src/pages/quotes/QuoteFormPage.js'
 
 test('E2E-QUO-004 send for approval (LINK mode) e-mails the customer', async ({ page, signIn, freshOwner, mailpit }) => {
@@ -9,7 +9,7 @@ test('E2E-QUO-004 send for approval (LINK mode) e-mails the customer', async ({ 
   const customer = await owner.api.createCustomer(garage.id ?? '', {
     fullName: 'QA Customer An QUO004',
     phone: '0911000041',
-    email: `customer.an.quo004.${Date.now()}@vietgara.test`,
+    email: `customer.an.quo004.${Date.now()}@${env.testEmailDomain}`,
   })
   const vehicle = await owner.api.createVehicle(garage.id ?? '', { customerId: customer.id ?? '', licensePlate: '51A-441.41' })
   const quote = await owner.api.createQuote(garage.id ?? '', {

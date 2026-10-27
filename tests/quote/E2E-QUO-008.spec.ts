@@ -4,13 +4,13 @@
 // MANUAL mode has no link and no e-mail: the send only marks the quote
 // ready, and the decision panel records it. Each line's Approve/Reject
 // control is the same radio group the public link uses.
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { QuoteFormPage } from '../../src/pages/quotes/QuoteFormPage.js'
 
 test('E2E-QUO-008 manual mode records the decision directly', async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('quo008')
   const garage = await owner.api.createGarage({ name: 'QA Gara QUO008' })
-  const customerEmail = `customer.quo008.${Date.now()}@vietgara.test`
+  const customerEmail = `customer.quo008.${Date.now()}@${env.testEmailDomain}`
   const customer = await owner.api.createCustomer(garage.id ?? '', {
     fullName: 'QA Customer An QUO008',
     phone: '0911000082',

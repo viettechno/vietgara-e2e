@@ -29,7 +29,7 @@ export async function registerAndVerify(
   // (repeated local debugging, a shared staging DB) where the bare form
   // would collide on the second run. CI against a freshly seeded DB does
   // not need it, but it is harmless there too.
-  const email = `signup.${localPart}.${Date.now()}@vietgara.test`
+  const email = `signup.${localPart}.${Date.now()}@${env.testEmailDomain}`
   const password = env.testUserPassword
   const fullName = options.fullName ?? `QA Owner ${localPart.toUpperCase()}`
 

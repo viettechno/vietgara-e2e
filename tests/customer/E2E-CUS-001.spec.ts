@@ -1,6 +1,6 @@
 // E2E-CUS-001 · Create a customer with consent and find them by search
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { CustomersPage } from '../../src/pages/customers/CustomersPage.js'
 
 test('E2E-CUS-001 create a customer with consent and find them by search', async ({ page, signIn, freshOwner }) => {
@@ -13,7 +13,7 @@ test('E2E-CUS-001 create a customer with consent and find them by search', async
   await customers.createCustomer({
     fullName: 'QA Customer Hoa Pham',
     phone: '0911000020',
-    email: 'customer.hoa@vietgara.test',
+    email: `customer.hoa@${env.testEmailDomain}`,
     consent: true,
   })
 

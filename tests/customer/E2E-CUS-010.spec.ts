@@ -3,7 +3,7 @@
 //
 // Since Release 5.0 a partner is a supplier: the screen is Suppliers and has
 // no insurer type. The second garage proves suppliers belong to one garage.
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { GarageSwitcher } from '../../src/pages/garages/GarageSwitcher.js'
 import { SuppliersPage } from '../../src/pages/suppliers/SuppliersPage.js'
 
@@ -23,7 +23,7 @@ test('E2E-CUS-010 manage suppliers', async ({ page, signIn, freshOwner, adminApi
     taxCode: '0309876543',
     contactPerson: 'Mr. Tuan',
     phone: '0912000003',
-    email: 'sales.daunhot@vietgara.test',
+    email: `sales.daunhot@${env.testEmailDomain}`,
   })
   await expect(suppliers.row('QA Supplier Dau Nhot Mien Nam')).toContainText('Mr. Tuan')
   // Phones are stored normalized (E.164): 0912000003 shows as +84912000003.

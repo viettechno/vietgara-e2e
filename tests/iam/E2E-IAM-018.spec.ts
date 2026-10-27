@@ -1,12 +1,12 @@
 // E2E-IAM-018 · Interface and e-mail language
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { LoginPage, AccountMenu } from '../../src/pages/auth/LoginPage.js'
 
 test('E2E-IAM-018 interface and e-mail language', async ({ page, api, mailpit }) => {
   // Use a baseline user with Vietnamese locale - ADVISOR_A1 from dataset
   // For now, create a fresh user with Vietnamese locale
-  const email = `signup.iam018.${Date.now()}@vietgara.test`
+  const email = `signup.iam018.${Date.now()}@${env.testEmailDomain}`
   const password = 'Qa@123456'
   const fullName = 'QA IAM018 Vietnamese'
 

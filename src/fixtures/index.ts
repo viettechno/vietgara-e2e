@@ -89,7 +89,7 @@ export const test = base.extend<Fixtures>({
 
   // A brand-new, verified owner user with no garage yet -- the
   // starting point for most module tests. `localPart` becomes
-  // `signup.<localPart>@vietgara.test` (00_Test_Data.md's convention);
+  // `signup.<localPart>@<test domain>` (00_Test_Data.md's convention);
   // pass the scenario ID, e.g. freshOwner('quo001').
   freshOwner: async ({ api, mailpit }, use) => {
     await use((localPart, options) => registerAndVerify(api, mailpit, localPart, options))

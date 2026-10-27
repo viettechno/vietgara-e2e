@@ -1,11 +1,11 @@
 // E2E-IAM-002 · Unverified user can only use the Account page
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { LoginPage } from '../../src/pages/auth/LoginPage.js'
 
 test('E2E-IAM-002 unverified user can only use the Account page', async ({ page, api }) => {
   // Create an unverified user by registering but not verifying
-  const email = `signup.iam002.${Date.now()}@vietgara.test`
+  const email = `signup.iam002.${Date.now()}@${env.testEmailDomain}`
   const password = 'Qa@123456'
   const fullName = 'QA Unverified User'
 

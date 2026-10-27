@@ -49,6 +49,8 @@ concurrency:
 jobs:
   e2e:
     uses: ./.github/workflows/e2e.yml
+    # The secrets of an existing environment (MAILPIT_URL, TEST_PASSWORD, ADMIN_PASSWORD).
+    secrets: inherit
     with:
       backend_tag: ${{ inputs.backend_tag }}
       owner_web_tag: ${{ inputs.owner_web_tag }}
