@@ -11,11 +11,14 @@ export const env = {
   // src/api/http.ts) resolve against this per normal URL rules, and a
   // missing trailing slash would drop the last path segment (here, /api).
   apiBaseUrl: ensureTrailingSlash(process.env.API_BASE_URL ?? 'http://localhost:8000/api'),
-  mailpitUrl: process.env.MAILPIT_URL ?? 'http://localhost:8025',
-  platformAdminEmail: process.env.PLATFORM_ADMIN_EMAIL ?? 'admin@vietgara.test',
+  mailpitUrl: process.env.MAILPIT_URL || 'http://localhost:8025',
+  // The domain of every e-mail address the specs invent. A foreign environment (staging)
+  // delivers only addresses under its TEST_USERS_EMAIL_DOMAIN to the Mailpit this suite reads.
+  testEmailDomain: process.env.TEST_EMAIL_DOMAIN || 'vietgara.test',
+  platformAdminEmail: process.env.PLATFORM_ADMIN_EMAIL || 'admin@vietgara.test',
   // The baseline platform admin's password on the stubbed stack (dataset environments.stubbed.adminPassword).
-  platformAdminPassword: process.env.PLATFORM_ADMIN_PASSWORD ?? 'Admin#2026-local',
-  testUserPassword: process.env.TEST_USER_PASSWORD ?? 'Qa@123456',
+  platformAdminPassword: process.env.PLATFORM_ADMIN_PASSWORD || 'Admin#2026-local',
+  testUserPassword: process.env.TEST_USER_PASSWORD || 'Qa@123456',
   // Direct database access for the time-shifting helpers (src/fixtures/timeshift.ts).
   // ci/compose.yml publishes Postgres on 127.0.0.1:${PG_PORT:-15432}; empty means no access.
   databaseUrl: process.env.DATABASE_URL ?? '',

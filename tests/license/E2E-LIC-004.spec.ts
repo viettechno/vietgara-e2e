@@ -1,6 +1,6 @@
 // E2E-LIC-004 · Staff limit counts members and pending invitations once per person
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'
 
@@ -53,7 +53,7 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
   await expect(page.getByText('0 / 2').first()).toBeVisible()
 
   // Create freelancer and invite
-  const freelancerEmail = `signup.lic004-freelancer.${Date.now()}@vietgara.test`
+  const freelancerEmail = `signup.lic004-freelancer.${Date.now()}@${env.testEmailDomain}`
   const freelancerInitial = await api.register({ email: freelancerEmail, password: 'Qa@123456', fullName: 'QA Freelancer LIC004' })
 
   // Get Technician group
@@ -67,7 +67,7 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
   await api.withToken(owner.session.accessToken).inviteStaff(garageId, freelancerUserId, [techGroup.id])
 
   // Create viewer and invite (pending)
-  const viewerEmail = `signup.lic004-viewer.${Date.now()}@vietgara.test`
+  const viewerEmail = `signup.lic004-viewer.${Date.now()}@${env.testEmailDomain}`
   const viewerInitial = await api.register({ email: viewerEmail, password: 'Qa@123456', fullName: 'QA Viewer LIC004' })
   const viewerUserId = viewerInitial.user?.id
   if (!viewerUserId) throw new Error('Viewer user ID missing')
@@ -78,7 +78,7 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
   await expect(page.getByText('2 / 2').first()).toBeVisible()
 
   // Try to invite advisor - should be refused
-  const advisorEmail = `signup.lic004-advisor.${Date.now()}@vietgara.test`
+  const advisorEmail = `signup.lic004-advisor.${Date.now()}@${env.testEmailDomain}`
   const advisorInitial = await api.register({ email: advisorEmail, password: 'Qa@123456', fullName: 'QA Advisor LIC004' })
   const advisorUserId = advisorInitial.user?.id
   if (!advisorUserId) throw new Error('Advisor user ID missing')

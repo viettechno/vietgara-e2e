@@ -1,10 +1,10 @@
 // E2E-IAM-001 · Sign up with e-mail and verify with the code
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 import { RegisterPage, VerifyEmailPage } from '../../src/pages/auth/RegisterPage.js'
 
 test('E2E-IAM-001 sign up with e-mail and verify with the code', { tag: '@smoke' }, async ({ page, mailpit }) => {
-  const email = `signup.iam001.${Date.now()}@vietgara.test`
+  const email = `signup.iam001.${Date.now()}@${env.testEmailDomain}`
   const fullName = 'QA Signup IAM001'
 
   const register = new RegisterPage(page)

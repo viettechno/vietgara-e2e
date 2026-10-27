@@ -64,6 +64,10 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
+      # A trailing slash in web_base_url would make the API base `https://host//api`.
+      - name: Normalise the web base URL
+        run: echo "WEB_BASE_URL=${WEB_BASE_URL%/}" >> "$GITHUB_ENV"
+
       # The pinned shared dataset (testdata.version): the global setup seeds
       # the baseline (owners, garages, platform admin) from it before the
       # suite runs, and tests/testdata/baseline.spec.ts proves the seed.
@@ -127,11 +131,20 @@ jobs:
       - name: Run the suite
         env:
           API_BASE_URL: ${{ env.WEB_BASE_URL }}/api
-          MAILPIT_URL: http://localhost:8025
+          # The local stack has its own Mailpit. An existing environment
+          # (web_base_url) uses its test inbox, from the repository secrets;
+          # its backend delivers to it only the addresses under its
+          # TEST_USERS_EMAIL_DOMAIN, which the specs therefore have to use.
+          MAILPIT_URL: ${{ env.EXISTING_ENV == 'true' && secrets.MAILPIT_URL || 'http://localhost:8025' }}
+          TEST_USER_PASSWORD: ${{ env.EXISTING_ENV == 'true' && secrets.TEST_PASSWORD || '' }}
+          PLATFORM_ADMIN_PASSWORD: ${{ env.EXISTING_ENV == 'true' && secrets.ADMIN_PASSWORD || '' }}
+          TEST_EMAIL_DOMAIN: ${{ env.EXISTING_ENV == 'true' && (vars.STAGING_TEST_EMAIL_DOMAIN || 'blackbox.vietgara.test') || '' }}
+          PLATFORM_ADMIN_EMAIL: ${{ env.EXISTING_ENV == 'true' && format('admin@{0}', vars.STAGING_TEST_EMAIL_DOMAIN || 'blackbox.vietgara.test') || '' }}
           # Direct database access for the time-shifting helpers
           # (src/fixtures/timeshift.ts): ci/compose.yml publishes Postgres on
-          # 127.0.0.1:${PG_PORT:-15432}. Without it E2E-LIC-010/011 skip.
-          DATABASE_URL: postgres://user:password@localhost:15432/vietgara
+          # 127.0.0.1:${PG_PORT:-15432}. Without it (an existing environment)
+          # E2E-LIC-010/011 skip.
+          DATABASE_URL: ${{ env.EXISTING_ENV != 'true' && 'postgres://user:password@localhost:15432/vietgara' || '' }}
           CI: true
           PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/results.json
           GREP: ${{ inputs.grep }}
