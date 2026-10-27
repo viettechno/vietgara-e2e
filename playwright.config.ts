@@ -5,7 +5,7 @@ const webBaseUrl = process.env.WEB_BASE_URL ?? 'http://localhost:8000'
 // The platform-admin SPA shares Kong with the owner web but on its own host
 // (ci/kong.yml matches `admin.localhost`), so it gets its own origin — and
 // its own project below, so owner specs never accidentally run against it.
-const adminWebBaseUrl = process.env.ADMIN_WEB_BASE_URL ?? 'http://admin.localhost:8000'
+const adminWebBaseUrl = process.env.ADMIN_WEB_BASE_URL || 'http://admin.localhost:8000'
 
 // See README.md "Running the suite" and .env.example. Scenario source of
 // truth: vietgara-docs/docs/05-Testing/E2E_Scenarios -- every spec title
