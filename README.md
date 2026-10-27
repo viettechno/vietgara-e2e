@@ -11,7 +11,7 @@
 | **Tests**      | `vietgara-owner-web` through `vietgara-backend` (Kong, Postgres, Mailpit)                                  |
 | **Related**    | `vietgara-docs` (scenarios), `vietgara-backend/testing/blackbox` (API-level tests)                         |
 
-Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` (and, from Release 4.2, `vietgara-admin-web`) against a running `vietgara-backend`.
+Automated end-to-end tests for VietGara: [Playwright](https://playwright.dev) + TypeScript, driving the real `vietgara-owner-web` (and, `vietgara-admin-web`) against a running `vietgara-backend`.
 
 **Scenarios are written in [`vietgara-docs`](https://github.com/viettechno/vietgara-docs) first** ([`docs/05-Testing/E2E_Scenarios/`](https://github.com/viettechno/vietgara-docs/tree/master/docs/05-Testing/E2E_Scenarios)), with a stable ID, named test data and exact expected results. This repo automates them under the same ID — a spec here should always be traceable to one scenario there, never the other way around. A behaviour with no documented scenario gets one before it gets a test.
 
@@ -42,15 +42,14 @@ tests/
 
 The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI document `vietgara-owner-web` uses (`npm run generate:api`, requires the sibling `../vietgara-proto` checkout) — one source of truth for both.
 
-## Roadmap: Phase 4, Quality Foundation
+## Scope
 
-Per the [Release Plan](https://github.com/viettechno/vietgara-docs/blob/master/docs/01-Product/Release_Plan/Release_Plan_Phase4.md) in `vietgara-docs`. The suite automates the P1 scenarios of the stable modules (plus the viewport check), currently 29 specs: 6 smoke on every pull request, the rest nightly. Phase 4 changes how it is fed and how far it goes:
+The suite automates the P1 scenarios of the stable modules (plus the viewport check), currently 29 specs: 6 smoke on every pull request, the rest nightly.
 
-- **Shared test data (Release 4.0).** The public repository `vietgara-testdata` holds the YAML dataset (users, garages, staff, customers, vehicles, suppliers, parts, plans) with short names (`owner1`, `gara1-1`, `gara1-2`, `advisor1-1`, `customer1-1-1`) and a Go and a TypeScript loader. This suite pins a tag of it in `testdata.version` (`npm run testdata` clones it into `.testdata/`, gitignored) and reads it through the vendored loader in `src/testdata/` — no spec hardcodes a dataset persona without the loader and the pin behind it. Fixed names are for the read-mostly baseline; scenario-owned data (sign-up, password reset, destructive scenarios) is still created with a unique suffix and deleted in teardown.
+- **Shared test data.** The public repository `vietgara-testdata` holds the YAML dataset (users, garages, staff, customers, vehicles, suppliers, parts, plans) with short names (`owner1`, `gara1-1`, `gara1-2`, `advisor1-1`, `customer1-1-1`) and a Go and a TypeScript loader. This suite pins a tag of it in `testdata.version` (`npm run testdata` clones it into `.testdata/`, gitignored) and reads it through the vendored loader in `src/testdata/` — no spec hardcodes a dataset persona without the loader and the pin behind it. Fixed names are for the read-mostly baseline; scenario-owned data (sign-up, password reset, destructive scenarios) is still created with a unique suffix and deleted in teardown.
 - **Passwords.** One shared test password for the baseline users on the stubbed stack; on staging it comes from a CI secret (`passwordRef` in the dataset), never from the repository. The platform admin has its own secret. Two-step verification (MFA) is optional, so no baseline user has it: the MFA specs (`E2E-IAM-022` to `025`) turn it on for fresh users, and need `MFA_ENCRYPTION_KEY` on the backend (set in `ci/compose.yml`).
 - **Seed and purge.** The Playwright global setup seeds the dataset's owners, plans and garages plus the platform-admin user through the public API (the backend `make seed` scope, extended with the admin the admin-web suite needs); staff, customers, suppliers and the catalogue still wait for the backend seeder. A privileged, test-only purge removes every user under the test domain after the run (the API cannot remove used records because of the delete-or-deactivate rule). It is off in production and refuses anything outside the test domain.
-- **Scope (Release 4.2).** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set nightly against the stubbed stack and weekly against staging. Mobile device tests are deliberately left for later.
-- **Every later release** adds its own scenarios as part of its Definition of Done.
+- **Coverage.** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set nightly against the stubbed stack and weekly against staging. Mobile device tests are deliberately left for later.
 
 ## Prerequisites
 
@@ -175,7 +174,7 @@ Per [`01_Test_Strategy.md` §5](https://github.com/viettechno/vietgara-docs/blob
 - **Customer:** E2E-CUS-001 (create with consent + search), E2E-CUS-005 (register a vehicle from the owner's page + lookup).
 - **Quote:** E2E-QUO-004 (LINK send + customer e-mail + quote PDF download), E2E-QUO-006 (public-link mixed and rejected decisions), E2E-QUO-008 (MANUAL record), E2E-QUO-010 (convert approved lines only).
 - **Repair order:** E2E-REP-008 (close requires completed lines).
-- **Inventory:** E2E-INV-003 (goods receipts accumulate), E2E-INV-010 (Technician view-only, outsider sidebar), and from Release 7.0 E2E-INV-011 (a goods receipt with a supplier per line, draft then completed), E2E-INV-012 (weighted-average cost), E2E-INV-013 (reverse a receipt; refused once the stock is used), E2E-INV-015 (purchases and stock valuation on screen), E2E-INV-016 (a technician sees no cost), E2E-INV-017 (a repair order's stock issue reserves its parts; "Issue now"), and from Release 7.1 E2E-INV-020 (a stock count makes stock equal the count), E2E-INV-022 (two drafts merge; uncounted lines skipped), E2E-INV-023 (cancel a draft or a completed count; refused once the stock is used), E2E-INV-025 (write-off and its cancel), E2E-INV-026 (return to supplier and its cancel), E2E-INV-027 (unused parts returned from a posted stock issue; the cap refused), driven on the owner-web screens (page objects in `src/pages/inventory/StockAdjustmentPages.ts`), with the setup and the refusals the screens prevent over the API. `ApiClient.receiveStock` creates a supplier when the garage has none, then a goods receipt, and completes it.
+- **Inventory:** E2E-INV-003 (goods receipts accumulate), E2E-INV-010 (Technician view-only, outsider sidebar), E2E-INV-011 (a goods receipt with a supplier per line, draft then completed), E2E-INV-012 (weighted-average cost), E2E-INV-013 (reverse a receipt; refused once the stock is used), E2E-INV-015 (purchases and stock valuation on screen), E2E-INV-016 (a technician sees no cost), E2E-INV-017 (a repair order's stock issue reserves its parts; "Issue now"), and from Release 7.1 E2E-INV-020 (a stock count makes stock equal the count), E2E-INV-022 (two drafts merge; uncounted lines skipped), E2E-INV-023 (cancel a draft or a completed count; refused once the stock is used), E2E-INV-025 (write-off and its cancel), E2E-INV-026 (return to supplier and its cancel), E2E-INV-027 (unused parts returned from a posted stock issue; the cap refused), driven on the owner-web screens (page objects in `src/pages/inventory/StockAdjustmentPages.ts`), with the setup and the refusals the screens prevent over the API. `ApiClient.receiveStock` creates a supplier when the garage has none, then a goods receipt, and completes it.
 - **Settlement:** E2E-BIL-001 (create from a closed order + receipt PDF download), E2E-BIL-003 (partial then full payment, third refused), E2E-BIL-008 (outstanding filter + dashboard revenue).
 - **Viewport:** no horizontal overflow and visible main content on home/customers/quotes at 1440/820/390 px (NON-smoke: 9 page loads).
 - **Testdata proof:** the seeded baseline users own the dataset garages (`tests/testdata/baseline.spec.ts`).
@@ -183,8 +182,6 @@ Per [`01_Test_Strategy.md` §5](https://github.com/viettechno/vietgara-docs/blob
 Deliberately deferred, with reasons (review before automating):
 
 - E2E-LIC-010/011/012, E2E-TEN-012 — need the SQL time helpers (H1/H2/H4): no UI or API moves the clock.
-- E2E-CUS-010/011 — the Partners screen is now Suppliers (Release 5.0 rename): the scenarios predate it; automate after the docs catch up.
-- E2E-BIL-004/005 — payment vouchers have no API field yet (Phase 5 scope).
 - E2E-BIL-006 — API-level idempotency: blackbox territory, not browser.
 - E2E-BIL-007 — visual PDF check: manual only.
 - E2E-BIL-010, E2E-QUO-012 — need the transaction-limit plan plus faked clocks.
