@@ -136,6 +136,8 @@ jobs:
           # its backend delivers to it only the addresses under its
           # TEST_USERS_EMAIL_DOMAIN, which the specs therefore have to use.
           MAILPIT_URL: ${{ env.EXISTING_ENV == 'true' && secrets.MAILPIT_URL || 'http://localhost:8025' }}
+          # The platform admin console has its own host (the local one is admin.localhost).
+          ADMIN_WEB_BASE_URL: ${{ env.EXISTING_ENV == 'true' && secrets.STAGING_ADMIN_WEB_BASE_URL || '' }}
           TEST_USER_PASSWORD: ${{ env.EXISTING_ENV == 'true' && secrets.TEST_PASSWORD || '' }}
           PLATFORM_ADMIN_PASSWORD: ${{ env.EXISTING_ENV == 'true' && secrets.ADMIN_PASSWORD || '' }}
           TEST_EMAIL_DOMAIN: ${{ env.EXISTING_ENV == 'true' && (vars.STAGING_TEST_EMAIL_DOMAIN || 'blackbox.vietgara.test') || '' }}

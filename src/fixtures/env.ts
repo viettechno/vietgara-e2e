@@ -6,7 +6,7 @@ export const env = {
   // The platform-admin SPA shares Kong with the owner web but on its own
   // host (ci/kong.yml: admin-web-route matches `admin.localhost`), so it
   // needs its own origin, not a path under WEB_BASE_URL.
-  adminWebBaseUrl: process.env.ADMIN_WEB_BASE_URL ?? 'http://admin.localhost:8000',
+  adminWebBaseUrl: process.env.ADMIN_WEB_BASE_URL || 'http://admin.localhost:8000',
   // Trailing slash matters: relative request paths (no leading slash, see
   // src/api/http.ts) resolve against this per normal URL rules, and a
   // missing trailing slash would drop the last path segment (here, /api).
