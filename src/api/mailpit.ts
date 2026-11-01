@@ -48,6 +48,22 @@ export class MailpitClient {
     return withSubjects.filter((m) => m.subject.includes(subjectContains))
   }
 
+  /**
+   * The 6-digit code of a message that arrived after `knownCode`: the inbox
+   * of a user already holds the sign-up code, so a later code is told apart
+   * by being a different one.
+   */
+  async waitForNewOtp(email: string, knownCode: string, timeoutMs = 20_000): Promise<string> {
+    const deadline = Date.now() + timeoutMs
+
+    for (;;) {
+      const code = this.extractOtp(await this.waitForMessage(email, { timeoutMs }))
+      if (code !== knownCode) return code
+      if (Date.now() > deadline) throw new Error(`no new code arrived for ${email} within ${timeoutMs}ms`)
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    }
+  }
+
   /** A 6-digit OTP found anywhere in the message body. */
   extractOtp(message: MailpitMessage): string {
     const match = /\b(\d{6})\b/.exec(message.Text)

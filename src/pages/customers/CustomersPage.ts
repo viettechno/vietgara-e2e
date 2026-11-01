@@ -74,3 +74,44 @@ export class CustomerDetailPage {
     await dialog.getByRole('button', { name: 'Create', exact: true }).click()
   }
 }
+
+/** The "Tax profiles" section of the customer page (E2E-CUS-017): FR-CUS-07. */
+export class TaxProfilesSection {
+  readonly newButton: Locator
+  readonly dialog: Locator
+
+  constructor(readonly page: Page) {
+    this.newButton = page.getByRole('button', { name: 'New tax profile' })
+    this.dialog = page.getByRole('dialog')
+  }
+
+  row(legalName: string): Locator {
+    return this.page.locator('tbody tr', { hasText: legalName })
+  }
+
+  /** Opens the New tax profile modal, fills it and presses Create (it may stay open on an error). */
+  async create(input: {
+    kind?: 'Personal' | 'Company'
+    legalName: string
+    taxId?: string
+    address?: string
+    invoiceEmail?: string
+    isDefault?: boolean
+  }): Promise<void> {
+    await this.newButton.click()
+    if (input.kind !== undefined) await this.dialog.getByLabel('Type').selectOption({ label: input.kind })
+    await this.dialog.getByLabel('Legal name').fill(input.legalName)
+    if (input.taxId !== undefined) await this.dialog.getByLabel('Tax ID').fill(input.taxId)
+    if (input.address !== undefined) await this.dialog.getByLabel('Address').fill(input.address)
+    if (input.invoiceEmail !== undefined) await this.dialog.getByLabel('E-invoice e-mail').fill(input.invoiceEmail)
+    if (input.isDefault === true) await this.dialog.getByLabel(/Bill to this profile/).check()
+    await this.dialog.getByRole('button', { name: 'Create', exact: true }).click()
+  }
+
+  /** Edits a row's profile: the modal opens filled, `change` fills it, Save presses it. */
+  async edit(legalName: string, change: (dialog: Locator) => Promise<void>): Promise<void> {
+    await this.page.getByRole('button', { name: `Edit: ${legalName}` }).click()
+    await change(this.dialog)
+    await this.dialog.getByRole('button', { name: 'Save', exact: true }).click()
+  }
+}

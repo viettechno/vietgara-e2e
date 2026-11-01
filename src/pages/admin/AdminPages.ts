@@ -37,3 +37,35 @@ export class AdminSubscriptionsPage {
     return this.page.locator('tbody tr', { hasText: text })
   }
 }
+
+/** The review queue at /payment-requests on the admin origin (E2E-LIC-002, E2E-LIC-016): FR-LIC-08. */
+export class AdminPaymentRequestsPage {
+  constructor(readonly page: Page) {}
+
+  async goto(): Promise<void> {
+    await this.page.goto('/payment-requests')
+  }
+
+  /** The queue row of an owner, found by e-mail address. */
+  row(ownerEmail: string): Locator {
+    return this.page.locator('tbody tr', { hasText: ownerEmail })
+  }
+
+  /** Opens the request of an owner, then approves it (an optional note), and waits for the confirmation. */
+  async approve(ownerEmail: string, note?: string): Promise<void> {
+    await this.row(ownerEmail).getByRole('button', { name: 'Review' }).click()
+    const dialog = this.page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Approve', exact: true }).click()
+    if (note !== undefined) await dialog.getByLabel('Note').fill(note)
+    await dialog.getByRole('button', { name: 'Approve and apply the plan' }).click()
+  }
+
+  /** Opens the request of an owner and rejects it with a reason. */
+  async reject(ownerEmail: string, reason: string): Promise<void> {
+    await this.row(ownerEmail).getByRole('button', { name: 'Review' }).click()
+    const dialog = this.page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Reject', exact: true }).click()
+    await dialog.getByLabel('Reason for rejecting').fill(reason)
+    await dialog.getByRole('button', { name: 'Reject request' }).click()
+  }
+}
