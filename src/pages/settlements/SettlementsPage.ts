@@ -31,6 +31,11 @@ export class SettlementDetailPage {
     await this.page.goto(`/settlements/${settlementId}`)
   }
 
+  /** Opens "Who is billed" (the pencil next to Bill to). */
+  async openBilling(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Change who is billed' }).click()
+  }
+
   /** Fills the Record payment modal (labels from RecordPaymentModal) and saves. */
   async recordPayment(input: { amount: string; method?: 'Cash' | 'Bank transfer' | 'Online'; note?: string }): Promise<void> {
     await this.recordPaymentButton.click()

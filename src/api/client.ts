@@ -344,6 +344,19 @@ export class ApiClient {
     return this.post('/v1/admin/platform-invitations', { email, groupId })
   }
 
+  /** A platform staff member accepts the invitation to a staff group. */
+  async acceptFirstPlatformInvitation(): Promise<void> {
+    const invitations = await this.get<{ data?: Array<{ id?: string }> }>('/v1/me/platform-invitations')
+    const id = invitations.data?.[0]?.id
+    if (!id) throw new Error('no platform invitation to accept')
+    await this.post(`/v1/me/platform-invitations/${id}/accept`)
+  }
+
+  /** Platform support asks to read one garage (it waits for the owner's approval). */
+  requestSupportGrant(garageId: string, reason: string, ttlHours: number): Promise<{ id?: string }> {
+    return this.post('/v1/admin/support-grants', { garageId, reason, ttlHours })
+  }
+
   removePlatformStaffMember(groupId: string, userId: string): Promise<void> {
     return jsonRequest(this.request, 'DELETE', `/v1/admin/platform-groups/${groupId}/members/${userId}`, { token: this.token })
   }
@@ -362,6 +375,24 @@ export class ApiClient {
 
   createCustomer(garageId: string, input: CustomerInput): Promise<Customer> {
     return this.post(`/v1/garages/${garageId}/customers`, input)
+  }
+
+  createTaxProfile(
+    garageId: string,
+    customerId: string,
+    input: { kind: 'TAX_PROFILE_KIND_PERSONAL' | 'TAX_PROFILE_KIND_COMPANY'; legalName: string; taxId?: string; address?: string },
+  ): Promise<{ id?: string; legalName?: string }> {
+    return this.post(`/v1/garages/${garageId}/customers/${customerId}/tax-profiles`, input)
+  }
+
+  updateTaxProfile(
+    garageId: string,
+    customerId: string,
+    profileId: string,
+    input: { legalName?: string; taxId?: string; address?: string },
+  ): Promise<{ id?: string }> {
+    // The update mask is left out on purpose: the fields sent are the fields changed.
+    return this.patch(`/v1/garages/${garageId}/customers/${customerId}/tax-profiles/${profileId}`, input)
   }
 
   createVehicle(garageId: string, input: VehicleInput): Promise<Vehicle> {
