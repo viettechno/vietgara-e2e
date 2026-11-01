@@ -25,11 +25,16 @@ test('E2E-NOT-002 switch a type off and change the sender name in the garage set
   await page.goto(`/garages/${gid}/settings`)
   const quoteReady = page.getByRole('switch', { name: 'Quote ready' })
   await expect(quoteReady).toBeChecked()
+  // Wait for each save to land (a reload would cancel one still running).
+  const saved = () =>
+    page.waitForResponse((r) => ['PUT', 'PATCH'].includes(r.request().method()) && r.url().includes(`/garages/${gid}`) && r.ok())
+  const switchSaved = saved()
   await quoteReady.click()
-  await expect(page.getByText('Saved').first()).toBeVisible()
+  await switchSaved
   await page.getByLabel('Sender name').fill('Gara An Phat')
+  const nameSaved = saved()
   await page.getByLabel('Sender name').locator('xpath=ancestor::form').getByRole('button', { name: 'Save' }).click()
-  await expect(page.getByText('Saved').first()).toBeVisible()
+  await nameSaved
 
   // Both stay after a reload.
   await page.reload()
@@ -39,9 +44,12 @@ test('E2E-NOT-002 switch a type off and change the sender name in the garage set
 
   // Step 4: sending the quote now sends no e-mail, and the log says why.
   await owner.api.sendQuote(gid, quote.id ?? '')
-  await page.reload()
+  // The log is written from an event, so give it a moment.
   const row = page.locator('tbody tr', { hasText: email })
-  await expect(row).toBeVisible()
+  await expect(async () => {
+    await page.reload()
+    await expect(row).toBeVisible({ timeout: 2_000 })
+  }).toPass({ timeout: 20_000 })
   await expect(row).toContainText('Quote ready')
   await expect(row).toContainText('Not sent')
   await expect(row).toContainText('You switched this e-mail off.')

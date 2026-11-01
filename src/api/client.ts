@@ -347,7 +347,9 @@ export class ApiClient {
   /** A platform staff member accepts the invitation to a staff group. */
   async acceptFirstPlatformInvitation(): Promise<void> {
     const invitations = await this.get<{ data?: Array<{ id?: string }> }>('/v1/me/platform-invitations')
-    await this.post(`/v1/me/platform-invitations/${invitations.data?.[0]?.id ?? ''}/accept`)
+    const id = invitations.data?.[0]?.id
+    if (!id) throw new Error('no platform invitation to accept')
+    await this.post(`/v1/me/platform-invitations/${id}/accept`)
   }
 
   /** Platform support asks to read one garage (it waits for the owner's approval). */

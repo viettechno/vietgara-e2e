@@ -19,7 +19,7 @@ test('E2E-PLT-002 a role change applies at once; a role in use cannot be deleted
   await page.goto('/roles')
   await page.getByRole('button', { name: 'Add role' }).click()
   const dialog = page.getByRole('dialog')
-  await dialog.getByLabel('Name').fill(roleName)
+  await dialog.getByLabel('Name', { exact: true }).fill(roleName)
   await dialog.getByLabel('View subscriptions').check()
   await dialog.getByRole('button', { name: 'Save' }).click()
   const roleRow = page.locator('tbody tr', { hasText: roleName })
@@ -29,8 +29,8 @@ test('E2E-PLT-002 a role change applies at once; a role in use cannot be deleted
   // Step 2: a group that uses it.
   await page.goto('/groups')
   await page.getByRole('button', { name: 'Add group' }).click()
-  await dialog.getByLabel('Name').fill(groupName)
-  await dialog.getByLabel('Role').selectOption({ label: roleName })
+  await dialog.getByLabel('Name', { exact: true }).fill(groupName)
+  await dialog.getByLabel('Role', { exact: true }).selectOption({ label: roleName })
   await dialog.getByRole('button', { name: 'Save' }).click()
   await expect(page.locator('tbody tr', { hasText: groupName })).toContainText(roleName)
 
