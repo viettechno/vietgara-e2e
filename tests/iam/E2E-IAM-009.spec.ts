@@ -6,7 +6,7 @@ import { CustomersPage } from '../../src/pages/customers/CustomersPage.js'
 
 test('E2E-IAM-009 sign out ends the session', async ({ page, freshOwner }) => {
   const owner = await freshOwner('iam009')
-  const garage = await owner.api.createGarage({ name: 'QA Gara IAM009' })
+  await owner.api.createGarage({ name: 'QA Gara IAM009' })
 
   // Sign in through the real form: the signIn fixture's localStorage seed
   // re-runs on every full page load and would restore the session after
