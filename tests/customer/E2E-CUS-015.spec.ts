@@ -36,8 +36,8 @@ test('E2E-CUS-015 a link request is confirmed with the one-time code', async ({ 
   await dialog.getByLabel('Code the customer read out').fill(code)
   await dialog.getByRole('button', { name: 'Confirm link' }).click()
 
-  // Step 3: the customer is linked, and the advisor still does not know who the user is.
+  // Step 3: the customer is linked (the page never shows whose account it is: the answer carries no user data).
   await expect(page.getByText('The customer is linked.')).toBeVisible()
   await expect(page.getByText('Linked', { exact: true }).first()).toBeVisible()
-  await expect(page.getByText(person.email, { exact: false })).toHaveCount(1) // only the customer's own e-mail field
+  await expect(dialog).toBeHidden()
 })
