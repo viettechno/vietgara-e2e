@@ -1,40 +1,53 @@
 // E2E-LIC-002 · Owner switches from the trial to a paid plan
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+//
+// Release 5.2: the owner quotes the plan, declares the bank transfer with a
+// screenshot (both in the owner web), and a platform admin approves it in the
+// review queue of the admin web. The plan applies at once. The amounts and
+// the other rules (credit, one open request, rejection) are in the blackbox
+// suite.
 import { expect, test } from '../../src/fixtures/index.js'
+import { openAdminPage } from '../../src/fixtures/admin-page.js'
+import { AdminPaymentRequestsPage } from '../../src/pages/admin/AdminPages.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'
 
-test('E2E-LIC-002 owner switches from the trial to a paid plan', async ({ page, signIn, freshOwner, adminApi }) => {
+// A valid 1x1 PNG: the transfer screenshot.
+const SCREENSHOT = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64')
+
+test('E2E-LIC-002 owner switches from the trial to a paid plan', async ({ page, browser, signIn, freshOwner, adminSession }) => {
   const owner = await freshOwner('lic002')
   await signIn(owner.session)
 
+  // Steps 1 and 2: choose Starter and get the payment details.
   const subscription = new SubscriptionPage(page)
   await subscription.goto()
-
-  // Release 5.2: choosing quotes a bank transfer; the test quotes in the
-  // UI, declares and approves over the API, then reads the result in the UI.
   await subscription.choosePlan('Starter')
   await expect(page.getByText('Payment details for Starter are ready below.')).toBeVisible()
+  await expect(page.getByText('Transfer reference')).toBeVisible()
+  await expect(page.getByText('Amount to transfer')).toBeVisible()
+  await expect(page.getByText('299,000').first()).toBeVisible() // a trial has no credit
 
-  const quoted = await owner.api.getMySubscription()
-  const requestId = quoted.openRequest?.id ?? ''
-  if (!requestId) throw new Error('no open payment request after quoting Starter')
-  await owner.api.post(`/v1/me/subscription/payment-requests/${requestId}:submit`, {
+  // Step 3: declare the transfer with its screenshot.
+  await subscription.declareTransfer({
     payerName: 'QA Payer',
-    transferredAmount: quoted.openRequest?.amountDue ?? '0',
-    paidAt: new Date().toISOString(),
-    evidence: {
-      content: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
-      contentType: 'image/png',
-    },
+    evidence: { name: 'transfer.png', mimeType: 'image/png', buffer: SCREENSHOT },
   })
-  await adminApi.post(`/v1/admin/plan-payment-requests/${requestId}:approve`, {})
+  await expect(page.getByText('Waiting for review').first()).toBeVisible()
 
+  // Step 4: the platform admin approves it in the admin web.
+  const admin = await openAdminPage(browser, adminSession)
+  const adminPage = admin.page
+  const queue = new AdminPaymentRequestsPage(adminPage)
+  await queue.goto()
+  await expect(queue.row(owner.email)).toBeVisible()
+  await queue.approve(owner.email)
+  await expect(adminPage.getByText('Approved: the plan applies now.')).toBeVisible()
+  await admin.close()
+
+  // Step 5: the owner sees the plan applied at once.
   await subscription.goto()
   await expect(page.getByText('Your payment for the Starter plan was approved')).toBeVisible()
-  await expect(page.getByText('Starter').first()).toBeVisible()
-  await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
-  // The Starter card is now the current plan: its button reads Renew.
   await expect(subscription.planCard('Starter').getByRole('button', { name: 'Renew' })).toBeVisible()
-  // The trial banner is gone.
+  await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('days left in your free trial')).toBeHidden()
 })
