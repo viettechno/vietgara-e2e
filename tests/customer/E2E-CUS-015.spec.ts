@@ -18,9 +18,6 @@ test('E2E-CUS-015 a link request is confirmed with the one-time code', async ({ 
   })
   await signIn(advisor.session, garage.id)
 
-  // The user's inbox already holds the sign-up code: remember it to recognise the new one.
-  const signUpCode = mailpit.extractOtp(await mailpit.waitForMessage(person.email))
-
   await page.goto(`/customers/${customer.id}`)
   await expect(page.getByRole('button', { name: 'Request link' })).toBeVisible()
 
@@ -31,7 +28,8 @@ test('E2E-CUS-015 a link request is confirmed with the one-time code', async ({ 
   await expect(dialog.getByText('Ask the customer for the code we sent them, then enter it here.')).toBeVisible()
 
   // Step 2: the user reads the code out of their mail; the advisor types it.
-  const code = await mailpit.waitForNewOtp(person.email, signUpCode)
+  // The inbox also holds the sign-up code and the welcome mail, so the link mail is found by its subject.
+  const code = mailpit.extractOtp(await mailpit.waitForMessage(person.email, { subjectContains: 'link your VietGara account' }))
 
   await dialog.getByLabel('Code the customer read out').fill(code)
   await dialog.getByRole('button', { name: 'Confirm link' }).click()

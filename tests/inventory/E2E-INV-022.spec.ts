@@ -50,7 +50,7 @@ test('E2E-INV-022 two drafts merge into one; uncounted lines are skipped on comp
   // Step 4: D is cancelled, has no lines, and points to the count it went into.
   await count.goto(shelfD.id ?? '')
   await expect(count.status).toHaveText('Cancelled')
-  await expect(page.getByText('This count was cancelled; no stock changed.')).toBeVisible()
+  await expect(page.getByText('This count was cancelled; any differences it had posted were reversed.')).toBeVisible()
   await expect(page.getByText('Add the parts to count.')).toBeVisible()
   expect((await owner.api.getStockCount(gid, shelfD.id ?? '')).notes).toContain(`Merged into ${shelfC.number}`)
 
