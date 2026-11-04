@@ -109,6 +109,9 @@ services:
 
   admin-web:
     image: ghcr.io/viettechno/vietgara-admin-web:${ADMIN_WEB_TAG:?set ADMIN_WEB_TAG}
+    environment:
+      # The owner web, which the support page opens for an active grant (the same gateway).
+      OWNER_WEB_URL: http://localhost:8000
 
   # The single entry point: the web app at / and the API at /api.
   gateway:
