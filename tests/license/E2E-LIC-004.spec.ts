@@ -91,9 +91,10 @@ test('E2E-LIC-004 staff limit counts members and pending invitations once per pe
   // Revoke viewer's invitation (staff lives at /staff, not /garages/:id/staff)
   await page.goto('/staff')
   await page.getByRole('row', { name: 'QA Viewer LIC004' }).getByRole('button', { name: 'Revoke' }).click()
+  // The invitation stops counting only once the server has revoked it (the row stays, marked Revoked).
+  const revoked = page.waitForResponse((r) => r.request().method() !== 'GET' && /invitation/i.test(r.url()) && r.ok())
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click()
-  // The invitation is gone only once the server has revoked it; inviting before that still counts it.
-  await expect(page.getByRole('row', { name: 'QA Viewer LIC004' })).toBeHidden()
+  await revoked
 
   // Now invite advisor should succeed (asserted over the API: the UI shows
   // no toast for API-made invitations).
