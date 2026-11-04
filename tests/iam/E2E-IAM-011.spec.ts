@@ -21,7 +21,8 @@ test('E2E-IAM-011 reset a forgotten password', async ({ page, mailpit, freshOwne
   await page.getByRole('button', { name: 'Send code' }).click()
   await expect(page.getByRole('heading', { name: 'Enter the code' })).toBeVisible()
 
-  const message = await mailpit.waitForMessage(owner.email)
+  // The inbox also holds the sign-up code and the welcome mail (no code): find the reset mail by its subject.
+  const message = await mailpit.waitForMessage(owner.email, { subjectContains: 'password reset' })
   await page.getByLabel('Verification code').fill(mailpit.extractOtp(message))
   await page.getByRole('button', { name: 'Confirm code' }).click()
   await expect(page.getByRole('heading', { name: 'Choose a new password' })).toBeVisible()
