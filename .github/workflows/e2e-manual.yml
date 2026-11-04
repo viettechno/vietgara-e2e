@@ -37,7 +37,7 @@ on:
         required: false
         default: ''
       web_base_url:
-        description: 'Instead of starting the stack, test an environment that is already running, e.g. https://vietgara-staging.viettechno.com (tags are ignored)'
+        description: 'Instead of starting the stack, test an environment that is already running, e.g. https://staging.vietgara.vn (tags are ignored)'
         type: string
         required: false
         default: ''

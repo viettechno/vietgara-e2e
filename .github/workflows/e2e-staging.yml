@@ -22,4 +22,4 @@ jobs:
     # The secrets of an existing environment (MAILPIT_URL, TEST_PASSWORD, ADMIN_PASSWORD).
     secrets: inherit
     with:
-      web_base_url: ${{ vars.STAGING_WEB_BASE_URL || 'https://vietgara-staging.viettechno.com' }}
+      web_base_url: ${{ vars.STAGING_WEB_BASE_URL || 'https://staging.vietgara.vn' }}
