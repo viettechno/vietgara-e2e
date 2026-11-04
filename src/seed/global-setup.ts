@@ -1,11 +1,12 @@
 // Playwright global setup: idempotent baseline seed (owners, plans,
 // garages, platform-admin user) from the pinned shared dataset. Never
 // blocks the run: without `.testdata/` or without a reachable stack it
-// logs why and lets the specs self-provision as before.
+// logs why and lets the specs self-provision as before. An existing
+// environment (EXISTING_ENV) gets no baseline, only its platform admin.
 import { request } from '@playwright/test'
 import type { FullConfig } from '@playwright/test'
 import { env } from '../fixtures/env.js'
-import { seedBaseline } from './seed.js'
+import { provisionPlatformAdmin, seedBaseline } from './seed.js'
 
 async function globalSetup(_config: FullConfig): Promise<void> {
   if (process.env.SEED_BASELINE === 'false' || process.env.SEED_BASELINE === '0') {
@@ -16,8 +17,17 @@ async function globalSetup(_config: FullConfig): Promise<void> {
   // someone else's dev stack): the seed creates real users. Those runs set
   // EXISTING_ENV=true (see .github/workflows/e2e.yml) and provision — or
   // skip — the baseline explicitly instead.
-  if (process.env.EXISTING_ENV === 'true') {
+  if (env.existingEnv) {
     console.log('[seed] EXISTING_ENV=true: skipping the baseline seed on a foreign environment')
+    // The one thing it does need: a platform admin, which the environment's test-user cleanup removes daily.
+    const context = await request.newContext({ baseURL: env.apiBaseUrl })
+    try {
+      console.log(`[seed] platform admin: ${await provisionPlatformAdmin(context, env, env.platformAdminEmail, env.platformAdminPassword)}`)
+    } catch (error) {
+      console.warn(`[seed] platform admin could not be provisioned (the admin specs will skip): ${String(error)}`)
+    } finally {
+      await context.dispose()
+    }
     return
   }
   const context = await request.newContext({ baseURL: env.apiBaseUrl })

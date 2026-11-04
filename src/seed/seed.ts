@@ -71,8 +71,8 @@ function seedEnvPassword(seedEnv: string, ref: string): string {
   return value
 }
 
-export async function seedBaseline(request: APIRequestContext, seedEnv: SeedEnv): Promise<SeedSummary> {
-  const summary: SeedSummary = {
+function emptySummary(): SeedSummary {
+  return {
     usersCreated: [],
     usersExisting: [],
     plansChanged: [],
@@ -80,6 +80,37 @@ export async function seedBaseline(request: APIRequestContext, seedEnv: SeedEnv)
     garagesExisting: [],
     adminNeedsBackendRestart: false,
   }
+}
+
+/**
+ * Makes sure the platform admin of an existing environment can sign in: registers and verifies it
+ * (through the test inbox) when it cannot. Staging deletes every user on its test domain after 24 h,
+ * the admin included, so a run a day later would find no admin and skip every admin scenario.
+ * The backend makes a verified user in PLATFORM_ADMIN_EMAILS a platform admin at once, so no restart
+ * is needed. Only an address on the test domain is ever registered: nothing here can create a real user.
+ * Returns what it did, for the log.
+ */
+export async function provisionPlatformAdmin(
+  request: APIRequestContext,
+  target: { apiBaseUrl: string; mailpitUrl: string; testEmailDomain: string },
+  adminEmail: string,
+  adminPassword: string,
+): Promise<string> {
+  if (!adminEmail.toLowerCase().endsWith(`@${target.testEmailDomain.toLowerCase()}`)) {
+    return `${adminEmail} is not on the test domain ${target.testEmailDomain}; leaving it alone`
+  }
+  const summary = emptySummary()
+  const api = new ApiClient(request)
+  const mailpit = new MailpitClient(request, target.mailpitUrl)
+  const session = await loginOrRegister(api, mailpit, summary, adminEmail, adminPassword, 'QA Platform Admin', undefined, 'admin')
+  const state = summary.usersCreated.length > 0 ? 'registered and verified' : 'already there'
+  return session.user?.platformAdmin === true
+    ? `${adminEmail} ${state}`
+    : `${adminEmail} ${state}, but it is not a platform admin: is it in the backend's PLATFORM_ADMIN_EMAILS?`
+}
+
+export async function seedBaseline(request: APIRequestContext, seedEnv: SeedEnv): Promise<SeedSummary> {
+  const summary = emptySummary()
 
   let dataset: Dataset
   try {

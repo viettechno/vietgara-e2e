@@ -10,6 +10,7 @@ import { env, expect, test } from '../../src/fixtures/index.js'
 import { datasetAvailable, email, garage, loadDataset, stubbedPassword, user } from '../../src/testdata/dataset.js'
 
 test('seeded baseline users own the dataset garages', async ({ api }) => {
+  test.skip(env.existingEnv, 'the baseline is not seeded on an existing environment')
   test.skip(!(await datasetAvailable()), 'needs the pinned dataset: run `npm run testdata`')
   test.skip(env.seedEnv !== 'stubbed', 'baseline passwords exist only on the stubbed stack')
 
