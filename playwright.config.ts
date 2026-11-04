@@ -25,7 +25,9 @@ export default defineConfig({
   reporter: process.env.CI
     ? [['github'], ['html', { open: 'never' }], ['junit', { outputFile: 'test-results/junit.xml' }]]
     : [['list'], ['html', { open: 'never' }]],
-  timeout: 30_000,
+  // The longest scenarios (E2E-QUO-015, -REP-016, -INV-026) take 26-29 s against staging, so 30 s failed them
+  // whenever staging was a little slower. Assertions below still fail after 20 s, so a hung page is reported early.
+  timeout: 60_000,
   // Generous assertions on CI: page loads share the runner with the stack.
   expect: { timeout: process.env.CI ? 20_000 : 10_000 },
 
