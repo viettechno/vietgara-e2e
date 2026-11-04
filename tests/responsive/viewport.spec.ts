@@ -3,7 +3,7 @@
 // main content visible at desktop (1440), tablet (820) and phone (390) px.
 //
 // NON-smoke by default: 9 page loads keep it slower than the gate wants,
-// and it joins @smoke only after a green nightly proves its timing. Uses
+// and it joins @smoke only after a green scheduled run proves its timing. Uses
 // the existing page objects; overflow is measured, not eyeballed.
 import type { Page } from '@playwright/test'
 import { expect, test } from '../../src/fixtures/index.js'

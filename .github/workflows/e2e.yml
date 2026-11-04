@@ -14,11 +14,11 @@ on:
       - '.github/workflows/e2e-manual.yml'
       - 'playwright.config.ts'
       - 'package.json'
-  # Nightly full run on the stubbed stack (Release 4.2): newest release
+  # Weekly full run on the stubbed stack (Release 4.2): newest release
   # images, every non-quarantined spec including the NON-smoke P1 batch.
-  # 18:00 UTC is 01:00 ICT — the suite owns the runner alone overnight.
+  # Sunday 00:07 UTC is 07:07 ICT; it was nightly until the CI cost was cut.
   schedule:
-    - cron: '0 18 * * *'
+    - cron: '7 0 * * 0'
   workflow_call:
     inputs:
       backend_tag:
@@ -203,7 +203,7 @@ jobs:
   smoke:
     # Fast @smoke gate on every pull request: same setup and stack as `e2e`
     # but runs only the @smoke-tagged subset (`npm run test:smoke`). The
-    # full suite stays on `e2e`; the nightly split is a later item.
+    # full suite stays on `e2e`; a split of the scheduled run is a later item.
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
