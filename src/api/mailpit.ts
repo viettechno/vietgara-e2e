@@ -13,15 +13,30 @@ export class MailpitClient {
     private readonly baseUrl: string,
   ) {}
 
-  /** The newest message sent to `email`, waiting for it to arrive if needed. */
-  async waitForMessage(email: string, options: { timeoutMs?: number; subjectContains?: string } = {}): Promise<MailpitMessage> {
+  /** The ids of the messages already in the inbox of `email`. */
+  async messageIds(email: string): Promise<Set<string>> {
+    const search = await this.request.fetch(`${this.baseUrl}/api/v1/search?query=${encodeURIComponent(`to:${email}`)}`)
+    const body = (await search.json()) as MailpitSearchResponse
+    return new Set(body.messages.map((m) => m.ID))
+  }
+
+  /**
+   * The newest message sent to `email`, waiting for it to arrive if needed. `ignore` lists messages
+   * that were there before: a fixed address (the platform admin's) keeps the codes of its earlier
+   * sign-ups, and the newest one may be a stale code.
+   */
+  async waitForMessage(
+    email: string,
+    options: { timeoutMs?: number; subjectContains?: string; ignore?: ReadonlySet<string> } = {},
+  ): Promise<MailpitMessage> {
     const timeoutMs = options.timeoutMs ?? 15_000
     const deadline = Date.now() + timeoutMs
 
     for (;;) {
       const search = await this.request.fetch(`${this.baseUrl}/api/v1/search?query=${encodeURIComponent(`to:${email}`)}`)
       const body = (await search.json()) as MailpitSearchResponse
-      const candidates = options.subjectContains ? await this.filterBySubject(body.messages, options.subjectContains) : body.messages
+      const fresh = options.ignore ? body.messages.filter((m) => !options.ignore?.has(m.ID)) : body.messages
+      const candidates = options.subjectContains ? await this.filterBySubject(fresh, options.subjectContains) : fresh
 
       if (candidates.length > 0) {
         const newest = [...candidates].sort((a, b) => Date.parse(b.Created) - Date.parse(a.Created))[0]

@@ -44,12 +44,12 @@ The types in `src/api/` are generated from the same `vietgara-proto` OpenAPI doc
 
 ## Scope
 
-The suite automates the P1 scenarios of the stable modules (plus the viewport check), currently 29 specs: 6 smoke on every pull request, the rest nightly.
+The suite automates the P1 scenarios of the stable modules (plus the viewport check), currently 29 specs: 6 smoke on every pull request, the rest weekly.
 
 - **Shared test data.** The public repository `vietgara-testdata` holds the YAML dataset (users, garages, staff, customers, vehicles, suppliers, parts, plans) with short names (`owner1`, `gara1-1`, `gara1-2`, `advisor1-1`, `customer1-1-1`) and a Go and a TypeScript loader. This suite pins a tag of it in `testdata.version` (`npm run testdata` clones it into `.testdata/`, gitignored) and reads it through the vendored loader in `src/testdata/` — no spec hardcodes a dataset persona without the loader and the pin behind it. Fixed names are for the read-mostly baseline; scenario-owned data (sign-up, password reset, destructive scenarios) is still created with a unique suffix and deleted in teardown.
 - **Passwords.** One shared test password for the baseline users on the stubbed stack; on staging it comes from a CI secret (`passwordRef` in the dataset), never from the repository. The platform admin has its own secret. Two-step verification (MFA) is optional, so no baseline user has it: the MFA specs (`E2E-IAM-022` to `025`) turn it on for fresh users, and need `MFA_ENCRYPTION_KEY` on the backend (set in `ci/compose.yml`).
 - **Seed and purge.** The Playwright global setup seeds the dataset's owners, plans and garages plus the platform-admin user through the public API (the backend `make seed` scope, extended with the admin the admin-web suite needs); staff, customers, suppliers and the catalogue still wait for the backend seeder. A privileged, test-only purge removes every user under the test domain after the run (the API cannot remove used records because of the delete-or-deactivate rule). It is off in production and refuses anything outside the test domain.
-- **Coverage.** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set nightly against the stubbed stack, and against staging by hand (a weekly staging schedule is planned but not set up yet). Mobile device tests are deliberately left for later.
+- **Coverage.** All P1 and selected P2 scenarios for `vietgara-owner-web` and `vietgara-admin-web`, a `@smoke` set on every pull request, the full set weekly against the stubbed stack and weekly against staging. Mobile device tests are deliberately left for later.
 
 ## Prerequisites
 
@@ -99,11 +99,11 @@ The backend makes a verified user whose e-mail is in `PLATFORM_ADMIN_EMAILS` a p
 
 ### Schedules
 
-- **Nightly (stubbed stack):** the **E2E** workflow runs the full non-quarantined suite on schedule (`0 18 * * *` UTC, 01:00 ICT) with the newest release images — this is where the NON-smoke P1 batch earns `@smoke`.
-- **Staging, weekly:** the **E2E (staging, weekly)** workflow (`.github/workflows/e2e-staging.yml`) runs the whole suite against staging every Sunday at 18:23 UTC (Monday 01:23 ICT), the Phase 4.2 Definition of Done. `STAGING_WEB_BASE_URL` (repository variable) overrides the default `https://vietgara-staging.viettechno.com`. It tests what is deployed there.
+- **Weekly (stubbed stack):** the **E2E** workflow runs the full non-quarantined suite on schedule (`7 0 * * 0`: Sunday 00:07 UTC, 07:07 ICT) with the newest release images — this is where the NON-smoke P1 batch earns `@smoke`.
+- **Staging, weekly:** the **E2E (staging, weekly)** workflow (`.github/workflows/e2e-staging.yml`) runs the whole suite against staging every Sunday at 00:37 UTC (07:37 ICT), the Phase 4.2 Definition of Done. `STAGING_WEB_BASE_URL` (repository variable) overrides the default `https://vietgara-staging.viettechno.com`. It tests what is deployed there.
 - **Staging or another environment, by hand:** the **E2E (manual)** workflow with the `web_base_url` input. It needs the repository secrets `MAILPIT_URL` (the staging test inbox, with its credentials), `TEST_PASSWORD` (the users' password, passed as `TEST_USER_PASSWORD`) and `ADMIN_PASSWORD` (the platform admin's, passed as `PLATFORM_ADMIN_PASSWORD`), `STAGING_ADMIN_WEB_BASE_URL` (the platform admin console's URL, passed as `ADMIN_WEB_BASE_URL`), and optionally the repository variable `STAGING_TEST_EMAIL_DOMAIN` (default `blackbox.vietgara.test`, staging's `TEST_USERS_EMAIL_DOMAIN`): the specs sign up users under that domain so that the backend delivers their OTP e-mail to Mailpit.
 - **The platform admin on staging.** The suite never seeds the baseline on a foreign environment, but its global setup registers and verifies the platform admin (`admin@<domain>`, password `ADMIN_PASSWORD`) through the test inbox when it cannot sign in, because staging deletes every user on its test domain after 24 hours, the admin included. The admin address must be in the backend's `PLATFORM_ADMIN_EMAILS`.
-- **Five tests skip on staging, by design:** E2E-LIC-010 (two tests) and E2E-LIC-011 move the period end with SQL (`DATABASE_URL`), which staging does not allow; `testdata/baseline` asserts the seeded baseline; E2E-IAM-020 needs the pinned dataset. The first three run in the nightly stubbed-stack job.
+- **Five tests skip on staging, by design:** E2E-LIC-010 (two tests) and E2E-LIC-011 move the period end with SQL (`DATABASE_URL`), which staging does not allow; `testdata/baseline` asserts the seeded baseline; E2E-IAM-020 needs the pinned dataset. The first three run in the weekly stubbed-stack job.
 
 ### Quarantine (flaky tests)
 
@@ -169,7 +169,7 @@ Baseline personas (`owner1`, `gara1-1`, `51A-111.11`, …) always come from the 
 
 Per [`01_Test_Strategy.md` §5](https://github.com/viettechno/vietgara-docs/blob/master/docs/05-Testing/01_Test_Strategy.md#5-end-to-end-testing), P1 scenarios come first, starting with the flows every release depends on. `@smoke` runs on every pull request (under 10 minutes); everything else runs nightly:
 
-- **Smoke (PR gate):** E2E-IAM-001, E2E-TEN-001, E2E-QUO-001, E2E-REP-001, E2E-INV-001, E2E-INV-008. No new spec joins `@smoke` until a green nightly proves it fast and deterministic.
+- **Smoke (PR gate):** E2E-IAM-001, E2E-TEN-001, E2E-QUO-001, E2E-REP-001, E2E-INV-001, E2E-INV-008. No new spec joins `@smoke` until a green scheduled run proves it fast and deterministic.
 - **Identity:** E2E-IAM-008 (sign in, wrong credentials, case-insensitive e-mail), E2E-IAM-009 (sign out ends the session), E2E-IAM-011 (password reset; cross-browser revocation stays manual), E2E-IAM-020 (platform admin in the admin web, owner denied).
 - **Platform staff:** E2E-PLT-001 (an invited user accepts, sees subscriptions read-only, loses access when removed from the group), E2E-PLT-002 (a role change applies at once; a role in use cannot be deleted), E2E-PLT-006 (a support request the owner approves, then revokes).
 - **Tenant:** E2E-TEN-004 (trial garage limit), E2E-TEN-005 (switch active garage), E2E-TEN-007 (invite by e-mail, second-actor accept from the Mailpit link).
@@ -189,5 +189,5 @@ Deliberately deferred, with reasons (review before automating):
 - E2E-BIL-006 — API-level idempotency: blackbox territory, not browser.
 - E2E-BIL-007 — visual PDF check: manual only.
 - E2E-BIL-010, E2E-QUO-012 — need the transaction-limit plan plus faked clocks.
-- E2E-REP-004/005/007, E2E-TEN-014/015/017 — Kanban board and role-editor widget structures are unverified without a running browser; next after the first green nightly.
+- E2E-REP-004/005/007, E2E-TEN-014/015/017 — Kanban board and role-editor widget structures are unverified without a running browser; next after the first green scheduled run.
 - E2E-IAM-014..017, E2E-IAM-021, E2E-QUO-007/009/011/013, E2E-CUS rest — manual-only, P2/P3, or covered by the same page objects later.

@@ -235,8 +235,9 @@ async function loginOrRegister(
   }
   // Not registered (or unverified half of a crashed seed): register, then
   // verify with the OTP from Mailpit — the same flow as `make seed`.
+  const known = await mailpit.messageIds(address)
   const initial = await api.register({ email: address, password, fullName, phone })
-  const message = await mailpit.waitForMessage(address, { subjectContains: 'VietGara' })
+  const message = await mailpit.waitForMessage(address, { subjectContains: 'VietGara', ignore: known })
   const verified = await api.withToken(initial.accessToken).verifyEmail(mailpit.extractOtp(message), initial.refreshToken ?? '')
   summary.usersCreated.push(key)
   return verified
