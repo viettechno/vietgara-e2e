@@ -45,6 +45,8 @@ test('E2E-IAM-018 interface and e-mail language', async ({ page, api, mailpit })
   await accountMenu.signOut()
   await login.goto()
   await login.forgotPassword.click()
+  // The sign-in form has an Email field too: wait for the new page, or the address is typed into the old one.
+  await expect(page.getByRole('heading', { name: 'Forgot password' })).toBeVisible()
   await page.getByLabel('Email').fill(email)
   await page.getByRole('button', { name: 'Send code' }).click()
   await expect(page.getByRole('heading', { name: 'Enter the code' })).toBeVisible()

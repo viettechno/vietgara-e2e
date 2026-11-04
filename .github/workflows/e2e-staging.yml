@@ -1,0 +1,24 @@
+name: E2E (staging, weekly)
+
+# The weekly run of the whole suite against staging (Phase 4.2 Definition of Done).
+# It tests what is deployed there; to test other versions or another environment use
+# "E2E (manual)". The nightly run on the stubbed stack is in e2e.yml.
+#
+# Sunday 18:23 UTC is Monday 01:23 ICT, when nobody is using staging.
+# A failed run notifies whoever last changed this schedule; the report is attached to the run.
+
+on:
+  schedule:
+    - cron: '23 18 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    uses: ./.github/workflows/e2e.yml
+    # The secrets of an existing environment (MAILPIT_URL, TEST_PASSWORD, ADMIN_PASSWORD).
+    secrets: inherit
+    with:
+      web_base_url: ${{ vars.STAGING_WEB_BASE_URL || 'https://vietgara-staging.viettechno.com' }}

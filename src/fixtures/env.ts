@@ -26,6 +26,8 @@ export const env = {
   // passwords from (`stubbed`). Staging keeps only `passwordRef`s there, so
   // the value comes from the TEST_USER_PASSWORD / ADMIN_PASSWORD secrets.
   seedEnv: process.env.SEED_ENV ?? 'stubbed',
+  // True when the suite runs against an environment someone else runs (staging), which gets no baseline seed.
+  existingEnv: process.env.EXISTING_ENV === 'true',
 }
 
 function ensureTrailingSlash(url: string): string {
