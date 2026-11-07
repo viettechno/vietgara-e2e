@@ -1,9 +1,10 @@
 // E2E-RPT-007 · The report screens
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/17_Reports.md
 //
-// A closed repair order whose parts were issued shows its profit; the Reports
-// page has the technician report and, for those who may see cost, the profit
-// report grouped by job, technician and repair order.
+// A closed repair order shows its profit (here without a cost: no part was
+// issued, and the screens say so); the Reports page has the technician report
+// and, for those who may see cost, the profit report grouped by job,
+// technician and repair order.
 import { expect, test } from '../../src/fixtures/index.js'
 import { closedRepairOrder } from '../../src/fixtures/order-chain.js'
 
@@ -27,7 +28,7 @@ test('E2E-RPT-007 report screens: technicians, profit and the order profit', asy
   await page.goto('/reports')
   await expect(page.getByRole('tab', { name: 'Technicians' })).toBeVisible()
   await expect(page.getByRole('tab', { name: 'Profit' })).toBeVisible()
-  await expect(page.getByText(/No line was completed in this period|No technician assigned/)).toBeVisible()
+  await expect(page.getByText(/No line was completed in this period|No technician assigned/).first()).toBeVisible()
 
   // Profit: the three groupings, totals and the note for an order without a cost.
   await page.getByRole('tab', { name: 'Profit' }).click()

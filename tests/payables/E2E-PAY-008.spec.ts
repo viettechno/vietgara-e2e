@@ -21,8 +21,8 @@ test('E2E-PAY-008 pay a supplier: payables, voucher and void', async ({ page, si
 
   await page.goto('/payables')
   // The aging table sums them (1,500,000); each receipt has its own row.
-  await expect(page.locator('tbody tr', { hasText: /PN-\d+-0001/ })).toContainText('1,000,000')
-  await expect(page.locator('tbody tr', { hasText: /PN-\d+-0002/ })).toContainText('500,000')
+  await expect(page.locator('tbody tr', { hasText: /PN-\d+-0001(?!\d)/ })).toContainText('1,000,000')
+  await expect(page.locator('tbody tr', { hasText: /PN-\d+-0002(?!\d)/ })).toContainText('500,000')
 
   await page.getByRole('button', { name: 'New payment voucher' }).first().click()
   const dialog = page.getByRole('dialog')
@@ -33,7 +33,7 @@ test('E2E-PAY-008 pay a supplier: payables, voucher and void', async ({ page, si
   // The payments of 1,200,000 fill the older 1,000,000 receipt, then 200,000 of the other.
   await expect(dialog.getByText(/^Unallocated:/)).toHaveText(/Unallocated:\s*₫0$/)
   // An allocation above the voucher is refused beside the field.
-  await dialog.getByLabel(/PN-\d+-0002/).fill('2000000')
+  await dialog.getByLabel(/PN-\d+-0002(?!\d)/).fill('2000000')
   await expect(dialog.getByText('The amounts applied exceed the voucher amount.')).toBeVisible()
   await dialog.getByRole('button', { name: 'Apply to the oldest first' }).click()
   await dialog.getByRole('button', { name: 'New payment voucher' }).click()
@@ -42,8 +42,8 @@ test('E2E-PAY-008 pay a supplier: payables, voucher and void', async ({ page, si
   await page.getByRole('tab', { name: 'Payment vouchers' }).click()
   const voucher = page.locator('tbody tr', { hasText: /PC-\d{4}-\d{5}/ })
   await expect(voucher).toContainText('1,200,000')
-  const number = (await voucher.locator('td').first().innerText()).trim().split(/\s/)[0]
-  expect(number).toMatch(/^PC-\d{4}-\d{5}$/)
+  const number = /PC-\d{4}-\d{5}/.exec(await voucher.innerText())?.[0] ?? ''
+  expect(number).not.toBe('')
 
   // Voiding asks for a reason; the payables reopen.
   await page.getByRole('button', { name: `Void voucher: ${number}` }).click()
@@ -54,5 +54,5 @@ test('E2E-PAY-008 pay a supplier: payables, voucher and void', async ({ page, si
   await expect(page.getByText('Payment voucher voided.')).toBeVisible()
   await page.getByRole('checkbox', { name: 'Include voided' }).check()
   await expect(page.locator('tbody tr', { hasText: number })).toContainText('Voided')
-  await expect.poll(async () => ((await owner.api.listSupplierPayables(gid)).data ?? []).map((p) => p.paidAmount)).toEqual(['0', '0'])
+  await expect.poll(async () => ((await owner.api.listSupplierPayables(gid)).data ?? []).map((p) => Number(p.paidAmount))).toEqual([0, 0])
 })

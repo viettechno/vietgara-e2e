@@ -11,7 +11,8 @@ test('E2E-PO-008 purchase orders: from low stock to a received order', async ({ 
   const owner = await freshOwner('po008')
   const garage = await owner.api.createGarage({ name: 'QA Gara PO008' })
   const gid = garage.id ?? ''
-  const email = `sales.po008@${env.testEmailDomain}`
+  // One address per run: the inbox keeps the mail of earlier runs, and order numbers restart in every garage.
+  const email = `sales.po008.${Date.now()}@${env.testEmailDomain}`
   const supplier = await owner.api.createSupplier(gid, { name: 'QA Supplier PO008', contact: { email } })
   const part = await owner.api.createSimplePart(gid, { sku: 'OIL-PO008', name: 'Oil PO008', reorderThreshold: '10' })
   await owner.api.putPartSuppliers(gid, part.id ?? '', [{ supplierId: supplier.id ?? '', isDefault: true }])
