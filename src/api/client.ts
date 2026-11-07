@@ -53,6 +53,9 @@ import type {
   Unit,
   Subscription,
   Vehicle,
+  Receivable,
+  ReceivableSettings,
+  SupplierPayable,
 } from './types.js'
 
 export type RegisterInput = { email: string; password: string; fullName: string; phone?: string; locale?: string }
@@ -363,7 +366,10 @@ export class ApiClient {
 
   // ---- Supplier (FRD 3.23) ------------------------------------------------
 
-  createSupplier(garageId: string, input: { name: string; taxCode?: string }): Promise<Supplier> {
+  createSupplier(
+    garageId: string,
+    input: { name: string; taxCode?: string; contact?: { contactPerson?: string; phone?: string; email?: string } },
+  ): Promise<Supplier> {
     return this.post(`/v1/garages/${garageId}/suppliers`, input)
   }
 
@@ -811,6 +817,28 @@ export class ApiClient {
     idempotencyKey: string,
   ): Promise<Settlement> {
     return this.postIdempotent(`/v1/garages/${garageId}/settlements/${settlementId}/payments`, input, idempotencyKey)
+  }
+
+  // ---- Phase 13: receivables, payables, purchase orders, data requests -----
+
+  listReceivables(garageId: string, params: { includePaid?: boolean; overdueOnly?: boolean } = {}): Promise<ListResponse<Receivable>> {
+    return this.get(`/v1/garages/${garageId}/receivables${query({ page: 1, pageSize: 50, ...params })}`)
+  }
+
+  getReceivableSettings(garageId: string): Promise<ReceivableSettings> {
+    return this.get(`/v1/garages/${garageId}/receivable-settings`)
+  }
+
+  listSupplierPayables(
+    garageId: string,
+    params: { supplierId?: string; includePaid?: boolean } = {},
+  ): Promise<ListResponse<SupplierPayable>> {
+    return this.get(`/v1/garages/${garageId}/supplier-payables${query({ page: 1, pageSize: 50, ...params })}`)
+  }
+
+  /** Makes a part's supplier its default, so low-stock orders go to it. */
+  putPartSuppliers(garageId: string, partId: string, suppliers: Array<{ supplierId: string; isDefault?: boolean }>): Promise<unknown> {
+    return this.put(`/v1/garages/${garageId}/parts/${partId}/suppliers`, { data: suppliers })
   }
 }
 
