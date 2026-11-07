@@ -4,6 +4,60 @@
  */
 
 export interface paths {
+  '/api/v1/admin/audit-log': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Reads the platform audit log. Needs PLATFORM_PERMISSION_AUDIT_READ. */
+    get: operations['PlatformStaffService_ListPlatformAuditLog']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/garages': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches garages by name, owner name or owner e-mail. Needs
+     *     PLATFORM_PERMISSION_GARAGE_DIRECTORY_READ.
+     */
+    get: operations['SupportService_ListGarageDirectory']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/me/permissions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The platform permissions of the caller (menus in the admin web and app). */
+    get: operations['PlatformAccessService_GetMyPlatformAccess']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/payment-settings': {
     parameters: {
       query?: never
@@ -140,6 +194,160 @@ export interface paths {
     patch: operations['LicenseAdminService_UpdatePlan']
     trace?: never
   }
+  '/api/v1/admin/platform-groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PlatformStaffService_ListPlatformGroups']
+    put?: never
+    post: operations['PlatformStaffService_CreatePlatformGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/platform-groups/{groupId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** One group with its members. */
+    get: operations['PlatformStaffService_GetPlatformGroup']
+    put?: never
+    post?: never
+    /** Removes the group's members and revokes its pending invitations. */
+    delete: operations['PlatformStaffService_DeletePlatformGroup']
+    options?: never
+    head?: never
+    patch: operations['PlatformStaffService_UpdatePlatformGroup']
+    trace?: never
+  }
+  '/api/v1/admin/platform-groups/{groupId}/members/{userId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /** Takes a user out of one group; their access from other groups stays. */
+    delete: operations['PlatformStaffService_RemovePlatformStaffMember']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/platform-invitations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PlatformStaffService_ListPlatformInvitations']
+    put?: never
+    /** Invites an existing user into a group and e-mails them. */
+    post: operations['PlatformStaffService_CreatePlatformInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/platform-invitations/{invitationId}/revoke': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['PlatformStaffService_RevokePlatformInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/platform-permissions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Lists the permission catalogue. */
+    get: operations['PlatformStaffService_ListPlatformPermissions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/platform-roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PlatformStaffService_ListPlatformRoles']
+    put?: never
+    post: operations['PlatformStaffService_CreatePlatformRole']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/platform-roles/{roleId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PlatformStaffService_GetPlatformRole']
+    put?: never
+    post?: never
+    /** Fails with PLATFORM_ROLE_IN_USE while a group uses the role. */
+    delete: operations['PlatformStaffService_DeletePlatformRole']
+    options?: never
+    head?: never
+    patch: operations['PlatformStaffService_UpdatePlatformRole']
+    trace?: never
+  }
+  '/api/v1/admin/platform-staff': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Every user with platform access: the Platform Admins and the members of
+     *     the groups.
+     */
+    get: operations['PlatformStaffService_ListPlatformStaff']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/subscriptions': {
     parameters: {
       query?: never
@@ -183,6 +391,82 @@ export interface paths {
     put?: never
     /** A correction: renewals and plan changes go through payment requests. */
     post: operations['LicenseAdminService_ExtendSubscription']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support-grants': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The caller's own grants, newest first. Needs PLATFORM_PERMISSION_SUPPORT_READ. */
+    get: operations['SupportService_ListSupportGrants']
+    put?: never
+    /**
+     * Requests read-only access to one garage. Needs PLATFORM_PERMISSION_SUPPORT_
+     *     WRITE. A Platform Admin's grant is active at once and the owner is told;
+     *     any other staff member waits for the owner's approval.
+     */
+    post: operations['SupportService_RequestSupportGrant']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support-grants/{grantId}/notifications': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The notification log of the garage's owner and staff. Same rules. */
+    get: operations['SupportService_ListSupportNotifications']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support-grants/{grantId}/outbox-events': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Delivery status of the garage's outbox events. Needs an active grant of
+     *     the caller and PLATFORM_PERMISSION_SUPPORT_WRITE; the read is logged.
+     */
+    get: operations['SupportService_ListSupportOutboxEvents']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/support-grants/{grantId}:end': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Ends the caller's own active or pending grant. Needs PLATFORM_PERMISSION_SUPPORT_WRITE. */
+    post: operations['SupportService_EndSupportGrant']
     delete?: never
     options?: never
     head?: never
@@ -552,6 +836,28 @@ export interface paths {
     patch: operations['CustomerService_UpdateCustomer']
     trace?: never
   }
+  '/api/v1/garages/{garageId}/customers/{customerId}/data-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Records a request a customer made in person and acts on it at once: a
+     *     view is answered with the data held, a deletion anonymizes the customer
+     *     and their vehicles, and a correction waits for the garage to make it and
+     *     complete the request.
+     */
+    post: operations['DataRequestService_CreateDataRequest']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/customers/{customerId}/tax-profiles': {
     parameters: {
       query?: never
@@ -680,6 +986,55 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/data-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['DataRequestService_ListDataRequests']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/data-requests/{requestId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['DataRequestService_GetDataRequest']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/data-requests/{requestId}:complete': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Completes a waiting correction with what was done, or declines it. */
+    post: operations['DataRequestService_CompleteDataRequest']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/entitlements': {
     parameters: {
       query?: never
@@ -796,6 +1151,22 @@ export interface paths {
     get: operations['DocumentService_ExportGoodsReceiptPdf']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/goods-receipts/{goodsReceiptId}/pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintGoodsReceiptPdf']
     delete?: never
     options?: never
     head?: never
@@ -1009,6 +1380,44 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/notification-log': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The garage's sends, newest first. Needs PERMISSION_GARAGE_WRITE: the
+     *     log holds customers' e-mail addresses.
+     */
+    get: operations['NotificationService_ListNotificationLog']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/notification-settings': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Any member of the garage can read the settings (PERMISSION_GARAGE_READ). */
+    get: operations['NotificationService_GetNotificationSettings']
+    /** Replaces the settings. Needs PERMISSION_GARAGE_WRITE. */
+    put: operations['NotificationService_UpdateNotificationSettings']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/part-categories': {
     parameters: {
       query?: never
@@ -1181,6 +1590,288 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/payment-out-vouchers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PayableService_ListPaymentOutVouchers']
+    put?: never
+    /**
+     * Issues a voucher and applies its allocations to the payables of the
+     *     same supplier, in one transaction.
+     */
+    post: operations['PayableService_CreatePaymentOutVoucher']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/payment-out-vouchers/{voucherId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PayableService_GetPaymentOutVoucher']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/payment-out-vouchers/{voucherId}/pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-BIL-07 (Release 13.0): a payment-out voucher (phiếu chi) as a PDF. */
+    get: operations['DocumentService_ExportPaymentOutVoucherPdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/payment-out-vouchers/{voucherId}/pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintPaymentOutVoucherPdf']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/payment-out-vouchers/{voucherId}:void': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Voids a voucher: it stays on file with its number and reason, and its
+     *     allocations are taken back off the payables.
+     */
+    post: operations['PayableService_VoidPaymentOutVoucher']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/print-settings': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-DOC-04, FR-DOC-05 (Release 10.0): the garage's print choice for each
+     *     document type, defaults filled in. Needs membership of the garage.
+     */
+    get: operations['DocumentService_GetPrintSettings']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/print-settings/{documentType}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * FR-DOC-04 (Release 10.0): replaces the paper size and the copy mark of
+     *     one document type; an omitted copy_mark means false, and the type is the
+     *     one in the path. An unspecified document type or paper size, and a size
+     *     the type has no template for, are refused (INVALID_ARGUMENT).
+     */
+    put: operations['DocumentService_UpdatePrintSetting']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PurchaseOrderService_ListPurchaseOrders']
+    put?: never
+    post: operations['PurchaseOrderService_CreatePurchaseOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PurchaseOrderService_GetPurchaseOrder']
+    /** Replaces a draft order's supplier, expected date, notes and lines. */
+    put: operations['PurchaseOrderService_UpdatePurchaseOrder']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}/pdf': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-INV-16 (Release 13.0): a purchase order as a PDF. */
+    get: operations['DocumentService_ExportPurchaseOrderPdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}/pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintPurchaseOrderPdf']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}:cancel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Cancels an order that has no open draft goods receipt; what was already
+     *     received stays received.
+     */
+    post: operations['PurchaseOrderService_CancelPurchaseOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}:receive': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Creates a draft goods receipt for what the order still waits for, with
+     *     the supplier and the quantities pre-filled and linked to the order. The
+     *     order must be SENT or PARTIALLY_RECEIVED and have no open draft receipt
+     *     (PURCHASE_ORDER_RECEIPT_OPEN).
+     */
+    post: operations['PurchaseOrderService_ReceivePurchaseOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}:send': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * E-mails the order, as a PDF, to the supplier's e-mail on file and marks
+     *     it sent. A supplier with no e-mail on file is refused
+     *     (SUPPLIER_EMAIL_REQUIRED).
+     */
+    post: operations['PurchaseOrderService_SendPurchaseOrder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/purchase-orders:from-low-stock': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * From the low-stock list: one draft order per supplier, each part on the
+     *     order of its default supplier, for the quantity that brings the stock
+     *     back to twice its reorder threshold. Parts without a default supplier
+     *     are returned, not ordered.
+     */
+    post: operations['PurchaseOrderService_CreatePurchaseOrdersFromLowStock']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/quotes': {
     parameters: {
       query?: never
@@ -1296,6 +1987,29 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/quotes/{quoteId}/pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-DOC-05 (Release 10.0): the Print* RPCs render like the matching
+     *     Export*Pdf RPC (the garage's paper size, the template version of the
+     *     document's first print), add the copy mark of a reprint when the garage
+     *     turned it on, and write the print log. Each needs the permission of the
+     *     data it renders.
+     */
+    post: operations['DocumentService_PrintQuotePdf']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/quotes/{quoteId}/sending': {
     parameters: {
       query?: never
@@ -1312,6 +2026,61 @@ export interface paths {
      *     RecordQuoteDecision.
      */
     post: operations['QuoteService_SendQuote']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/receivable-settings': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The payment terms and reminder schedule. */
+    get: operations['ReceivableService_GetReceivableSettings']
+    /**
+     * Replaces the payment terms and reminder schedule (FR-REC-03). New terms
+     *     apply to settlements issued afterwards; the schedule applies at once.
+     */
+    put: operations['ReceivableService_UpdateReceivableSettings']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/receivables': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-REC-01: the garage's receivables, most overdue first, with totals. */
+    get: operations['ReceivableService_ListReceivables']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/receivables/{receivableId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** One receivable with its ledger and reminder log. */
+    get: operations['ReceivableService_GetReceivable']
+    put?: never
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -1491,6 +2260,42 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintRepairOrderPdf']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/profit': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-RPT-05: the profit of one repair order. Needs repair_order.read and
+     *     inventory.cost.read.
+     */
+    get: operations['ReportingService_GetRepairOrderProfit']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/stock-issue': {
     parameters: {
       query?: never
@@ -1523,6 +2328,43 @@ export interface paths {
      *     (phiếu xuất kho) as a PDF.
      */
     get: operations['DocumentService_ExportStockIssuePdf']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/repair-orders/{repairOrderId}/stock-issue/pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintStockIssuePdf']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/profit': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-RPT-05: revenue less the cost snapshots of the consumed parts, by
+     *     repair order, job or technician, for the repair orders closed in a
+     *     period. Needs report.read and inventory.cost.read.
+     */
+    get: operations['ReportingService_GetProfitReport']
     put?: never
     post?: never
     delete?: never
@@ -1565,6 +2407,63 @@ export interface paths {
      *     inventory.cost.read.
      */
     get: operations['DocumentService_ExportPurchasesExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/receivable-reconciliation': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-REC-04: the reconciliation of a period. */
+    get: operations['ReceivableService_GetReconciliationReport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/receivable-reconciliation/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-REC-04 (Release 13.0): the reconciliation of a period
+     *     (ReceivableService.GetReconciliationReport) as an Excel workbook.
+     */
+    get: operations['DocumentService_ExportReceivableReconciliationExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/receivables/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-DOC-02 (Release 13.0): the receivables list
+     *     (ReceivableService.ListReceivables) as an Excel workbook.
+     */
+    get: operations['DocumentService_ExportReceivablesExcel']
     put?: never
     post?: never
     delete?: never
@@ -1689,6 +2588,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/reports/supplier-payables/excel': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** FR-INV-17 (Release 13.0): the supplier payables as an Excel workbook. */
+    get: operations['DocumentService_ExportSupplierPayablesExcel']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/reports/technicians': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * FR-RPT-02: completed lines and average turnaround per technician for a
+     *     period. Needs report.read.
+     */
+    get: operations['ReportingService_GetTechnicianReport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/settlements': {
     parameters: {
       query?: never
@@ -1773,6 +2709,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}/voucher-pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintPaymentVoucherPdf']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/settlements/{settlementId}/payments/{paymentId}:void': {
     parameters: {
       query?: never
@@ -1805,6 +2757,22 @@ export interface paths {
     get: operations['DocumentService_ExportSettlementReceiptPdf']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/settlements/{settlementId}/receipt-pdf:print': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['DocumentService_PrintSettlementReceiptPdf']
     delete?: never
     options?: never
     head?: never
@@ -2097,6 +3065,40 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/garages/{garageId}/supplier-payables': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The payables, oldest first. */
+    get: operations['PayableService_ListSupplierPayables']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/supplier-payables/aging': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The open payables by supplier and age. */
+    get: operations['PayableService_GetSupplierPayablesAging']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/garages/{garageId}/supplier-returns': {
     parameters: {
       query?: never
@@ -2197,6 +3199,77 @@ export interface paths {
     put?: never
     /** Reactivates a deactivated supplier. */
     post: operations['SupplierService_ActivateSupplier']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/support-access-log': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Every read made by support, newest first. */
+    get: operations['GarageSupportService_ListSupportAccessLog']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/support-grants': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The garage's grants, newest first. */
+    get: operations['GarageSupportService_ListGarageSupportGrants']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/support-grants/{grantId}:approve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Approves a pending request; the session starts now and lasts its
+     *     requested number of hours.
+     */
+    post: operations['GarageSupportService_ApproveSupportGrant']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/garages/{garageId}/support-grants/{grantId}:revoke': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Ends an active grant at once, or declines a pending one. */
+    post: operations['GarageSupportService_RevokeSupportGrant']
     delete?: never
     options?: never
     head?: never
@@ -2487,6 +3560,78 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/me/google-link': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-IAM-06 (Release 10.3), mobile apps: links the Google account of a
+     *     Google ID token (obtained natively, verified like SignInWithGoogleIdToken)
+     *     to the signed-in user, who confirms with the password. Linking the account
+     *     that is already linked changes nothing. Errors: PASSWORD_INCORRECT (403),
+     *     NO_PASSWORD (412), GOOGLE_ALREADY_LINKED and GOOGLE_LINK_EXISTS (409),
+     *     GOOGLE_TOKEN_INVALID (401) and GOOGLE_NOT_CONFIGURED.
+     */
+    post: operations['AuthService_LinkGoogle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/google-link:complete': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-IAM-06 (Release 10.3), web consoles: the console opens the Google popup
+     *     (GET /api/v1/auth/google/login?link=1); its callback verifies the Google
+     *     account and posts a single-use proof (5 minutes) to the console window
+     *     that opened it, restricted to the console's origin. This call links that
+     *     Google account to the signed-in user, who confirms with the password. The
+     *     proof reaches only the page that opened the popup, so a page of another
+     *     origin cannot make a user link their Google account to someone else.
+     *     Errors as LinkGoogle, and LINK_PROOF_INVALID.
+     */
+    post: operations['AuthService_CompleteGoogleLink']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/google-link:unlink': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-IAM-06 (Release 10.3): removes the linked Google account, after the
+     *     password. The last way to sign in is never removed (NO_PASSWORD), and a
+     *     user with no Google account answers GOOGLE_NOT_LINKED (412). Every other
+     *     session of the user is revoked, and the call answers a new one.
+     */
+    post: operations['AuthService_UnlinkGoogle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/me/invitations': {
     parameters: {
       query?: never
@@ -2647,6 +3792,55 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/me/platform-invitations': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['PlatformAccessService_ListMyPlatformInvitations']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/platform-invitations/{invitationId}/accept': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** Joins the group of the invitation. */
+    post: operations['PlatformAccessService_AcceptPlatformInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/me/platform-invitations/{invitationId}/decline': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['PlatformAccessService_DeclinePlatformInvitation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/me/subscription': {
     parameters: {
       query?: never
@@ -2761,6 +3955,27 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/me/support-sessions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * The caller's active grants: the garages they can read now. It needs no
+     *     platform permission (it is empty for an ordinary user), so the owner web
+     *     can ask it of every signed-in user.
+     */
+    get: operations['SupportService_ListMySupportSessions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/payment-settings': {
     parameters: {
       query?: never
@@ -2805,6 +4020,38 @@ export interface paths {
     get: operations['LicenseService_ListPlans']
     put?: never
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/public/data-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['PublicDataRequestService_SubmitPublicDataRequest']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/public/data-requests:confirm': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['PublicDataRequestService_ConfirmPublicDataRequest']
     delete?: never
     options?: never
     head?: never
@@ -2929,6 +4176,23 @@ export interface components {
     CustomerPortalServiceUnlinkGarageLinkBody: Record<string, never>
     CustomerServiceActivateCustomerBody: Record<string, never>
     CustomerTaxProfileServiceActivateCustomerTaxProfileBody: Record<string, never>
+    DataRequestServiceCompleteDataRequestBody: {
+      /**
+       * @description What was done, or why the request is declined; required, at most 2000
+       *     characters.
+       */
+      outcome: string
+      /** @description Declines the request instead of completing it. */
+      declined?: boolean
+    }
+    DataRequestServiceCreateDataRequestBody: {
+      type: components['schemas']['v1DataRequestType']
+      details?: string
+    }
+    DocumentServiceUpdatePrintSettingBody: {
+      paperSize: components['schemas']['v1PaperSize']
+      copyMark?: boolean
+    }
     FileServiceUploadFileBody: {
       kind: components['schemas']['v1FileKind']
       entityType: string
@@ -2949,6 +4213,8 @@ export interface components {
       /** @description image/png, image/jpeg or image/webp. */
       contentType: string
     }
+    GarageSupportServiceApproveSupportGrantBody: Record<string, never>
+    GarageSupportServiceRevokeSupportGrantBody: Record<string, never>
     ImportServiceConfirmImportBody: {
       fileName?: string
       /**
@@ -3058,8 +4324,42 @@ export interface components {
       paidAt?: string
       evidence?: components['schemas']['v1PaymentEvidence']
     }
+    NotificationServiceUpdateNotificationSettingsBody: {
+      /** @description At most 100 characters. */
+      senderName?: string
+      /**
+       * @description The types to change; a type left out is switched on. An unspecified type
+       *     or a duplicate is refused (INVALID_ARGUMENT).
+       */
+      types?: components['schemas']['v1NotificationTypeSetting'][]
+    }
+    PayableServiceVoidPaymentOutVoucherBody: {
+      /** @description Required, at most 500 characters. */
+      reason: string
+    }
+    PlatformAccessServiceAcceptPlatformInvitationBody: Record<string, never>
+    PlatformAccessServiceDeclinePlatformInvitationBody: Record<string, never>
+    PlatformStaffServiceRevokePlatformInvitationBody: Record<string, never>
     PublicQuoteServiceDecidePublicQuoteBody: {
       decisions: components['schemas']['v1QuoteLineDecisionInput'][]
+    }
+    PurchaseOrderServiceCancelPurchaseOrderBody: Record<string, never>
+    PurchaseOrderServiceCreatePurchaseOrdersFromLowStockBody: {
+      /**
+       * @description Limits the order to these parts; empty means every part at or below its
+       *     reorder threshold.
+       */
+      partIds?: string[]
+      /** @description "YYYY-MM-DD"; copied to every order created. */
+      expectedDate?: string
+    }
+    PurchaseOrderServiceReceivePurchaseOrderBody: Record<string, never>
+    PurchaseOrderServiceSendPurchaseOrderBody: {
+      /**
+       * @description Plain text added to the e-mail above the order, at most 1000
+       *     characters. The order always goes to the supplier's e-mail on file.
+       */
+      message?: string
     }
     QuoteServiceAddQuoteJobBody: {
       jobId: string
@@ -3094,6 +4394,7 @@ export interface components {
       reason: string
     }
     SupplierServiceActivateSupplierBody: Record<string, never>
+    SupportServiceEndSupportGrantBody: Record<string, never>
     VehicleServiceActivateVehicleBody: Record<string, never>
     VehicleServiceChangeVehicleOwnerBody: {
       /** @description The customer the vehicle moves to; must belong to the same garage. */
@@ -3307,6 +4608,9 @@ export interface components {
     v1AcceptInvitationResponse: {
       invitation?: components['schemas']['v1Invitation']
     }
+    v1AcceptPlatformInvitationResponse: {
+      invitation?: components['schemas']['v1PlatformInvitation']
+    }
     v1ActivateCustomerResponse: {
       customer?: components['schemas']['v1Customer']
     }
@@ -3357,6 +4661,9 @@ export interface components {
     }
     v1ApprovePlanPaymentResponse: {
       subscription?: components['schemas']['v1Subscription']
+    }
+    v1ApproveSupportGrantResponse: {
+      grant?: components['schemas']['v1SupportGrant']
     }
     /**
      * @description AuthProvider is how the user signed up (FR-IAM-01).
@@ -3424,6 +4731,15 @@ export interface components {
     v1CompleteGoodsReceiptResponse: {
       goodsReceipt?: components['schemas']['v1GoodsReceipt']
     }
+    v1CompleteGoogleLinkRequest: {
+      /** @description The proof the Google popup posted to the console. */
+      linkProof: string
+      /** @description The signed-in user's current password. */
+      password: string
+    }
+    v1CompleteGoogleLinkResponse: {
+      user?: components['schemas']['v1User']
+    }
     v1CompleteStockCountResponse: {
       stockCount?: components['schemas']['v1StockCount']
     }
@@ -3440,6 +4756,18 @@ export interface components {
     v1ConfirmMfaEnrollmentResponse: {
       /** @description One-time recovery codes, shown only once. */
       recoveryCodes?: string[]
+    }
+    v1ConfirmPublicDataRequestRequest: {
+      token: string
+    }
+    v1ConfirmPublicDataRequestResponse: {
+      /**
+       * Format: int32
+       * @description How many garages' records the request reached. A view is e-mailed to the
+       *     confirmed address, a deletion is carried out, a correction is passed to
+       *     each garage.
+       */
+      readonly garageCount?: number
     }
     v1ConvertQuoteResponse: {
       quote?: components['schemas']['v1Quote']
@@ -3485,6 +4813,25 @@ export interface components {
     }
     v1CreatePlanResponse: {
       plan?: components['schemas']['v1Plan']
+    }
+    v1CreatePlatformGroupResponse: {
+      group?: components['schemas']['v1PlatformStaffGroup']
+    }
+    v1CreatePlatformInvitationRequest: {
+      /** @description The e-mail of an existing, verified user. */
+      email: string
+      groupId: string
+    }
+    v1CreatePlatformInvitationResponse: {
+      invitation?: components['schemas']['v1PlatformInvitation']
+    }
+    v1CreatePlatformRoleResponse: {
+      role?: components['schemas']['v1PlatformRole']
+    }
+    v1CreatePurchaseOrdersFromLowStockResponse: {
+      /** @description One draft order per supplier. */
+      orders?: components['schemas']['v1PurchaseOrder'][]
+      unassignedParts?: components['schemas']['v1UnassignedPart'][]
     }
     v1CreateQuoteResponse: {
       quote?: components['schemas']['v1Quote']
@@ -3571,6 +4918,22 @@ export interface components {
        */
       readonly isActive?: boolean
       linkStatus?: components['schemas']['v1CustomerUserLinkStatus']
+      /**
+       * @description The language of the e-mails sent to the customer: `vi` (default) or `en`.
+       *     A customer linked to a user gets e-mails in the user's language instead.
+       */
+      locale?: string
+      /**
+       * @description Whether the customer opted out of non-essential e-mails (Release 10.1).
+       *     Staff set it to record a customer's choice made outside the e-mail; every
+       *     change is logged with the consent.
+       */
+      emailOptOut?: boolean
+      /**
+       * Format: date-time
+       * @description When the customer opted out; unset while opted in.
+       */
+      readonly emailOptOutAt?: string
     }
     /**
      * @description CustomerTaxProfile is a legal identity a customer can be billed under
@@ -3645,6 +5008,69 @@ export interface components {
       open?: string
       close?: string
     }
+    /**
+     * @description DataRequest is one request about one customer's data, with its outcome. It
+     *     is kept as a record of the garage's answer. It holds the customer id and,
+     *     for a correction, the text of what to correct (`details`); anonymizing the
+     *     customer clears the `details` of all their requests. The data a view
+     *     returns is never stored.
+     */
+    v1DataRequest: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly customerId?: string
+      type?: components['schemas']['v1DataRequestType']
+      status?: components['schemas']['v1DataRequestStatus']
+      source?: components['schemas']['v1DataRequestSource']
+      /**
+       * @description What the person asked to correct; required for a correction, at most
+       *     2000 characters.
+       */
+      details?: string
+      /**
+       * @description What the garage did, for example "Anonymized 1 customer and 2
+       *     vehicles"; filled when the request is completed.
+       */
+      readonly outcome?: string
+      /**
+       * @description For a view request: the data held, as JSON text. Answered only by
+       *     CreateDataRequest, never stored, and empty in List and Get.
+       */
+      readonly exportJson?: string
+      /** Format: date-time */
+      readonly requestedAt?: string
+      /** Format: date-time */
+      readonly completedAt?: string
+      /** @description The staff member who completed it; empty when it completed itself. */
+      readonly completedByName?: string
+    }
+    /**
+     * @description DataRequestSource is how a request reached the garage.
+     *
+     *      - DATA_REQUEST_SOURCE_STAFF: Recorded by a staff member for a customer who asked in person.
+     *      - DATA_REQUEST_SOURCE_PUBLIC: The public page, confirmed by e-mail.
+     * @enum {string}
+     */
+    v1DataRequestSource: 'DATA_REQUEST_SOURCE_STAFF' | 'DATA_REQUEST_SOURCE_PUBLIC'
+    /**
+     * @description DataRequestStatus is where a request stands.
+     *
+     *      - DATA_REQUEST_STATUS_PENDING: Confirmed and waiting for the garage to act (a correction).
+     *      - DATA_REQUEST_STATUS_REJECTED: The garage declined it, with the reason in `outcome`.
+     * @enum {string}
+     */
+    v1DataRequestStatus: 'DATA_REQUEST_STATUS_PENDING' | 'DATA_REQUEST_STATUS_COMPLETED' | 'DATA_REQUEST_STATUS_REJECTED'
+    /**
+     * @description DataRequestType is what a person asks about their personal data (FR-CUS-05,
+     *     Decree 13/2023/ND-CP).
+     *
+     *      - DATA_REQUEST_TYPE_VIEW: To see what the garage holds.
+     *      - DATA_REQUEST_TYPE_CORRECT: To correct it.
+     *      - DATA_REQUEST_TYPE_DELETE: To erase it. The customer's and vehicles' personal fields are made
+     *     anonymous; the financial documents the law requires stay.
+     * @enum {string}
+     */
+    v1DataRequestType: 'DATA_REQUEST_TYPE_VIEW' | 'DATA_REQUEST_TYPE_CORRECT' | 'DATA_REQUEST_TYPE_DELETE'
     v1DecidePublicQuoteResponse: {
       quote?: components['schemas']['v1PublicQuote']
     }
@@ -3653,6 +5079,9 @@ export interface components {
     }
     v1DeclineInvitationResponse: {
       invitation?: components['schemas']['v1Invitation']
+    }
+    v1DeclinePlatformInvitationResponse: {
+      invitation?: components['schemas']['v1PlatformInvitation']
     }
     v1DeleteCustomerResponse: {
       outcome?: components['schemas']['v1DeleteOutcome']
@@ -3687,6 +5116,8 @@ export interface components {
     v1DeletePartResponse: {
       outcome?: components['schemas']['v1DeleteOutcome']
     }
+    v1DeletePlatformGroupResponse: Record<string, never>
+    v1DeletePlatformRoleResponse: Record<string, never>
     v1DeleteQuoteResponse: Record<string, never>
     v1DeleteRepairOrderLineResponse: {
       repairOrder?: components['schemas']['v1RepairOrder']
@@ -3711,6 +5142,25 @@ export interface components {
       code: string
     }
     v1DisableMfaResponse: Record<string, never>
+    /**
+     * @description DocumentType is a document a garage can print (FR-DOC-04).
+     *
+     *      - DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER: Release 13.0 (FR-BIL-07): the payment-out voucher (phiếu chi).
+     *      - DOCUMENT_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): the purchase order.
+     * @enum {string}
+     */
+    v1DocumentType:
+      | 'DOCUMENT_TYPE_QUOTE'
+      | 'DOCUMENT_TYPE_REPAIR_ORDER'
+      | 'DOCUMENT_TYPE_SETTLEMENT'
+      | 'DOCUMENT_TYPE_PAYMENT_VOUCHER'
+      | 'DOCUMENT_TYPE_GOODS_RECEIPT'
+      | 'DOCUMENT_TYPE_STOCK_ISSUE'
+      | 'DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER'
+      | 'DOCUMENT_TYPE_PURCHASE_ORDER'
+    v1EndSupportGrantResponse: {
+      grant?: components['schemas']['v1SupportGrant']
+    }
     v1EnrollMfaRequest: Record<string, never>
     v1EnrollMfaResponse: {
       /** @description Base32 secret for manual entry. */
@@ -3851,6 +5301,14 @@ export interface components {
       owner?: boolean
       permissions?: components['schemas']['v1Permission'][]
     }
+    /** @description GarageDirectoryEntry is a garage's name and owner, nothing more. */
+    v1GarageDirectoryEntry: {
+      garageId?: string
+      name?: string
+      ownerName?: string
+      ownerEmail?: string
+      active?: boolean
+    }
     /**
      * @description GarageLink is a garage's customer profile that is linked, or is waiting to
      *     be linked, to the signed-in user (FR-CUS-06, FR-CAPP-05). Suppliers never
@@ -3916,6 +5374,9 @@ export interface components {
     v1GetMyPlanPaymentRequestResponse: {
       request?: components['schemas']['v1PlanPaymentRequest']
     }
+    v1GetMyPlatformAccessResponse: {
+      access?: components['schemas']['v1MyPlatformAccess']
+    }
     v1GetMySubscriptionResponse: {
       subscription?: components['schemas']['v1Subscription']
     }
@@ -3935,8 +5396,39 @@ export interface components {
     v1GetPlanPaymentRequestResponse: {
       request?: components['schemas']['v1AdminPlanPaymentRequest']
     }
+    v1GetPlatformGroupResponse: {
+      group?: components['schemas']['v1PlatformStaffGroup']
+      members?: components['schemas']['v1PlatformStaffMember'][]
+    }
     v1GetPlatformPaymentSettingsResponse: {
       settings?: components['schemas']['v1PlatformPaymentSettings']
+    }
+    v1GetPlatformRoleResponse: {
+      role?: components['schemas']['v1PlatformRole']
+    }
+    v1GetPrintSettingsResponse: {
+      /** @description One entry for each document type, defaults filled in. */
+      settings?: components['schemas']['v1PrintSetting'][]
+    }
+    v1GetProfitReportResponse: {
+      /**
+       * @description Most profitable first.
+       *     A line shared by technicians is split between them, so the rows add up
+       *     to the totals whichever way the report is grouped.
+       */
+      rows?: components['schemas']['v1ProfitRow'][]
+      /** Format: int64 */
+      totalRevenue?: string
+      /** Format: int64 */
+      totalCost?: string
+      /** Format: int64 */
+      totalProfit?: string
+      /**
+       * Format: int32
+       * @description Repair orders of the report whose stock issue is not posted yet: their
+       *     cost counts as zero, so the profit is overstated by the cost to come.
+       */
+      ordersWithoutCost?: number
     }
     v1GetPublicQuoteResponse: {
       quote?: components['schemas']['v1PublicQuote']
@@ -3989,11 +5481,19 @@ export interface components {
        */
       readonly at?: string
     }
+    v1GetSupplierPayablesAgingResponse: {
+      suppliers?: components['schemas']['v1SupplierAging'][]
+      totals?: components['schemas']['v1SupplierAging']
+    }
     v1GetSupplierResponse: {
       supplier?: components['schemas']['v1Supplier']
     }
     v1GetSupplierReturnResponse: {
       supplierReturn?: components['schemas']['v1SupplierReturn']
+    }
+    v1GetTechnicianReportResponse: {
+      /** @description Most completed lines first. */
+      technicians?: components['schemas']['v1TechnicianPerformance'][]
     }
     v1GetVehicleHistoryResponse: {
       data?: components['schemas']['v1VehicleHistoryEntry'][]
@@ -4045,6 +5545,12 @@ export interface components {
       readonly createdAt?: string
       /** Format: date-time */
       readonly updatedAt?: string
+      /**
+       * @description The purchase order this receipt was created from (FR-INV-16); completing
+       *     the receipt counts its lines against that order.
+       */
+      readonly purchaseOrderId?: string
+      readonly purchaseOrderNumber?: string
     }
     /**
      * @description GoodsReceiptLine is one part on a goods receipt. Every line carries its
@@ -4099,6 +5605,11 @@ export interface components {
      * @enum {string}
      */
     v1GoodsReceiptStatus: 'GOODS_RECEIPT_STATUS_DRAFT' | 'GOODS_RECEIPT_STATUS_COMPLETED' | 'GOODS_RECEIPT_STATUS_CANCELLED'
+    /** @description GroupRef names a group a staff member belongs to. */
+    v1GroupRef: {
+      id?: string
+      name?: string
+    }
     /** @description ImportPreview is the result of checking a file without writing anything. */
     v1ImportPreview: {
       importType?: components['schemas']['v1ImportType']
@@ -4291,6 +5802,15 @@ export interface components {
        */
       readonly partIsActive?: boolean
     }
+    v1LinkGoogleRequest: {
+      /** @description The ID token (a JWT) returned by Google Sign-In on the device. */
+      idToken: string
+      /** @description The signed-in user's current password. */
+      password: string
+    }
+    v1LinkGoogleResponse: {
+      user?: components['schemas']['v1User']
+    }
     v1ListAllPlansResponse: {
       data?: components['schemas']['v1Plan'][]
     }
@@ -4300,6 +5820,17 @@ export interface components {
     v1ListCustomersResponse: {
       data?: components['schemas']['v1Customer'][]
       pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListDataRequestsResponse: {
+      data?: components['schemas']['v1DataRequest'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListGarageDirectoryResponse: {
+      data?: components['schemas']['v1GarageDirectoryEntry'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListGarageSupportGrantsResponse: {
+      data?: components['schemas']['v1SupportGrant'][]
     }
     v1ListGaragesResponse: {
       /**
@@ -4332,6 +5863,12 @@ export interface components {
     v1ListMyPlanPaymentRequestsResponse: {
       data?: components['schemas']['v1PlanPaymentRequest'][]
     }
+    v1ListMyPlatformInvitationsResponse: {
+      data?: components['schemas']['v1PlatformInvitation'][]
+    }
+    v1ListMySupportSessionsResponse: {
+      data?: components['schemas']['v1SupportGrant'][]
+    }
     v1ListMyVehiclesResponse: {
       /**
        * @description One entry per garage whose customer record carries the user's
@@ -4347,12 +5884,20 @@ export interface components {
        */
       data?: components['schemas']['v1WorkOrder'][]
     }
+    v1ListNotificationLogResponse: {
+      data?: components['schemas']['v1NotificationLogEntry'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
     /** @description The whole tree as a flat list with parent ids. */
     v1ListPartCategoriesResponse: {
       data?: components['schemas']['v1PartCategory'][]
     }
     v1ListPartsResponse: {
       data?: components['schemas']['v1Part'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListPaymentOutVouchersResponse: {
+      data?: components['schemas']['v1PaymentOutVoucher'][]
       pagination?: components['schemas']['v1Pagination']
     }
     v1ListPermissionsResponse: {
@@ -4366,9 +5911,38 @@ export interface components {
       /** @description Public, active plans, cheapest first. */
       data?: components['schemas']['v1Plan'][]
     }
+    v1ListPlatformAuditLogResponse: {
+      /** @description Newest first. */
+      data?: components['schemas']['v1PlatformAuditEntry'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListPlatformGroupsResponse: {
+      data?: components['schemas']['v1PlatformStaffGroup'][]
+    }
+    v1ListPlatformInvitationsResponse: {
+      data?: components['schemas']['v1PlatformInvitation'][]
+    }
+    v1ListPlatformPermissionsResponse: {
+      data?: components['schemas']['v1PlatformPermissionInfo'][]
+    }
+    v1ListPlatformRolesResponse: {
+      data?: components['schemas']['v1PlatformRole'][]
+    }
+    v1ListPlatformStaffResponse: {
+      data?: components['schemas']['v1PlatformStaffMember'][]
+    }
+    v1ListPurchaseOrdersResponse: {
+      data?: components['schemas']['v1PurchaseOrder'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
     v1ListQuotesResponse: {
       data?: components['schemas']['v1Quote'][]
       pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListReceivablesResponse: {
+      data?: components['schemas']['v1Receivable'][]
+      pagination?: components['schemas']['v1Pagination']
+      summary?: components['schemas']['v1ReceivablesSummary']
     }
     v1ListRepairOrderPartReturnsResponse: {
       data?: components['schemas']['v1RepairOrderPartReturn'][]
@@ -4406,12 +5980,32 @@ export interface components {
       data?: components['schemas']['v1SubscriptionSummary'][]
       pagination?: components['schemas']['v1Pagination']
     }
+    v1ListSupplierPayablesResponse: {
+      data?: components['schemas']['v1SupplierPayable'][]
+      pagination?: components['schemas']['v1Pagination']
+      summary?: components['schemas']['v1SupplierPayablesSummary']
+    }
     v1ListSupplierReturnsResponse: {
       data?: components['schemas']['v1SupplierReturn'][]
       pagination?: components['schemas']['v1Pagination']
     }
     v1ListSuppliersResponse: {
       data?: components['schemas']['v1Supplier'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListSupportAccessLogResponse: {
+      data?: components['schemas']['v1SupportAccessEvent'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListSupportGrantsResponse: {
+      data?: components['schemas']['v1SupportGrant'][]
+    }
+    v1ListSupportNotificationsResponse: {
+      data?: components['schemas']['v1SupportNotification'][]
+      pagination?: components['schemas']['v1Pagination']
+    }
+    v1ListSupportOutboxEventsResponse: {
+      data?: components['schemas']['v1SupportOutboxEvent'][]
       pagination?: components['schemas']['v1Pagination']
     }
     v1ListUnitsResponse: {
@@ -4473,6 +6067,97 @@ export interface components {
       readonly customerName?: string
       /** @description The vehicles on that customer record. */
       readonly vehicles?: components['schemas']['v1Vehicle'][]
+    }
+    /**
+     * @description MyPlatformAccess is what the signed-in user may do on the platform: it
+     *     decides whether the admin web and the admin app open and which menus they
+     *     show.
+     */
+    v1MyPlatformAccess: {
+      /** @description Configured in the deployment; holds every permission. */
+      platformAdmin?: boolean
+      /** @description The effective permissions (the full catalogue for a Platform Admin). */
+      permissions?: components['schemas']['v1PlatformPermission'][]
+      /**
+       * Format: int32
+       * @description Invitations waiting for an answer.
+       */
+      pendingInvitationCount?: number
+    }
+    /** @enum {string} */
+    v1NotificationAudience: 'NOTIFICATION_AUDIENCE_CUSTOMER' | 'NOTIFICATION_AUDIENCE_STAFF'
+    /** @description NotificationLogEntry is one send, failed attempt or skip of a garage. */
+    v1NotificationLogEntry: {
+      id?: string
+      type?: components['schemas']['v1NotificationType']
+      recipient?: string
+      customerId?: string
+      /** @description What the e-mail is about, for example `quote` and the quote's id. */
+      entityType?: string
+      entityId?: string
+      status?: components['schemas']['v1NotificationStatus']
+      reason?: components['schemas']['v1NotificationSkipReason']
+      error?: string
+      /** Format: date-time */
+      createdAt?: string
+    }
+    v1NotificationSettings: {
+      /** @description The display name of the sender; empty means the garage's name. */
+      senderName?: string
+      /** @description One entry for each type, defaults (enabled) filled in. */
+      types?: components['schemas']['v1NotificationTypeSetting'][]
+    }
+    /**
+     * @description NotificationSkipReason says why a notification was not sent.
+     *
+     *      - NOTIFICATION_SKIP_REASON_DISABLED: The garage switched the type off.
+     *      - NOTIFICATION_SKIP_REASON_OPTED_OUT: The customer opted out of non-essential e-mails.
+     *      - NOTIFICATION_SKIP_REASON_SUPPRESSED: The address bounced for good or complained.
+     *      - NOTIFICATION_SKIP_REASON_NO_EMAIL: The customer has no e-mail address.
+     * @enum {string}
+     */
+    v1NotificationSkipReason:
+      | 'NOTIFICATION_SKIP_REASON_DISABLED'
+      | 'NOTIFICATION_SKIP_REASON_OPTED_OUT'
+      | 'NOTIFICATION_SKIP_REASON_SUPPRESSED'
+      | 'NOTIFICATION_SKIP_REASON_NO_EMAIL'
+    /** @enum {string} */
+    v1NotificationStatus: 'NOTIFICATION_STATUS_SENT' | 'NOTIFICATION_STATUS_FAILED' | 'NOTIFICATION_STATUS_SKIPPED'
+    /**
+     * @description NotificationType is one e-mail a garage can switch off (FR-NOT-05,
+     *     FR-INV-04).
+     *
+     *      - NOTIFICATION_TYPE_QUOTE_READY: Customer: the quote with the link to approve it. Essential.
+     *      - NOTIFICATION_TYPE_QUOTE_DECIDED: Staff: a quote was approved or rejected.
+     *      - NOTIFICATION_TYPE_VEHICLE_READY: Customer: the vehicle is ready for pick-up.
+     *      - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Customer: a payment was recorded and a balance is left.
+     *      - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.
+     *      - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.
+     *      - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.
+     *      - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 13.0 (FR-REC-03): a reminder that a settlement is overdue.
+     *      - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not
+     *     switchable: it appears in the log only, never in the settings.
+     * @enum {string}
+     */
+    v1NotificationType:
+      | 'NOTIFICATION_TYPE_QUOTE_READY'
+      | 'NOTIFICATION_TYPE_QUOTE_DECIDED'
+      | 'NOTIFICATION_TYPE_VEHICLE_READY'
+      | 'NOTIFICATION_TYPE_PAYMENT_RECEIVED'
+      | 'NOTIFICATION_TYPE_SETTLEMENT_RECEIPT'
+      | 'NOTIFICATION_TYPE_SETTLEMENT_PAID'
+      | 'NOTIFICATION_TYPE_LOW_STOCK'
+      | 'NOTIFICATION_TYPE_PAYMENT_REMINDER'
+      | 'NOTIFICATION_TYPE_PURCHASE_ORDER'
+    v1NotificationTypeSetting: {
+      type?: components['schemas']['v1NotificationType']
+      enabled?: boolean
+      audience?: components['schemas']['v1NotificationAudience']
+      /**
+       * @description An essential e-mail carries what the customer needs to act and ignores a
+       *     customer's opt-out; the garage can still switch it off.
+       */
+      readonly essential?: boolean
     }
     /**
      * @description NumberingTemplates configures document numbers (FR-TEN-05). Placeholders:
@@ -4549,6 +6234,12 @@ export interface components {
        */
       pageSize?: number
     }
+    /**
+     * @description PaperSize is the paper a document prints on: A4 (210 x 297 mm) or A5
+     *     (148 x 210 mm).
+     * @enum {string}
+     */
+    v1PaperSize: 'PAPER_SIZE_A4' | 'PAPER_SIZE_A5'
     /** @description Part is one part code of a garage (FR-INV-01, FR-CAT-01..04, FR-CAT-09). */
     v1Part: {
       readonly id?: string
@@ -4645,6 +6336,13 @@ export interface components {
       readonly lastUnitCost?: string
       isDefault?: boolean
     }
+    /**
+     * @description PayableStatus is the payment state of one supplier payable (FR-INV-17).
+     *
+     *      - PAYABLE_STATUS_CANCELLED: Its goods receipt was cancelled; it leaves the lists and the aging.
+     * @enum {string}
+     */
+    v1PayableStatus: 'PAYABLE_STATUS_OPEN' | 'PAYABLE_STATUS_PAID' | 'PAYABLE_STATUS_CANCELLED'
     /** @description PaymentEvidence is the screenshot of the transfer. */
     v1PaymentEvidence: {
       /** Format: byte */
@@ -4673,6 +6371,60 @@ export interface components {
      * @enum {string}
      */
     v1PaymentMethod: 'PAYMENT_METHOD_CASH' | 'PAYMENT_METHOD_BANK_TRANSFER' | 'PAYMENT_METHOD_ONLINE'
+    /** @description PaymentOutAllocation applies part of a voucher to one payable. */
+    v1PaymentOutAllocation: {
+      payableId: string
+      readonly goodsReceiptNumber?: string
+      /**
+       * Format: int64
+       * @description Integer VND, positive, not more than the payable's remaining amount.
+       */
+      amount: string
+    }
+    /**
+     * @description PaymentOutVoucher is a payment-out voucher (phiếu chi, FR-BIL-07): money
+     *     the garage paid out, here to a supplier. It has its own numbering and is
+     *     never deleted, only voided.
+     */
+    v1PaymentOutVoucher: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Numbered from the garage's payment-out voucher template. */
+      readonly number?: string
+      supplierId: string
+      readonly supplierName?: string
+      /** @description Who received the money: defaults to the supplier's name. */
+      payeeName?: string
+      payeeAddress?: string
+      /**
+       * Format: int64
+       * @description Integer VND, positive and at least the sum of the allocations. An
+       *     allocation goes only to an OPEN payable of the voucher's supplier, once
+       *     per payable and for at most its remaining amount, checked under a lock so
+       *     that two vouchers cannot take the same remainder (INVALID_ALLOCATION).
+       *     Voiding takes the allocations off the payables that still exist; one
+       *     whose goods receipt was cancelled in the meantime stays cancelled.
+       */
+      amount: string
+      method: components['schemas']['v1PaymentMethod']
+      /** @description Printed on the voucher; defaults to a standard text. */
+      reason?: string
+      note?: string
+      allocations?: components['schemas']['v1PaymentOutAllocation'][]
+      /**
+       * Format: int64
+       * @description The part of the amount applied to no payable (an advance).
+       */
+      readonly unallocatedAmount?: string
+      /** @description The staff member who issued it. */
+      readonly issuerName?: string
+      readonly voided?: boolean
+      readonly voidReason?: string
+      /** Format: date-time */
+      readonly voidedAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
     /**
      * @description Permission is one action a staff member may perform in a garage
      *     (FR-IAM-03). The catalog is fixed by the platform and grouped by module,
@@ -4855,6 +6607,58 @@ export interface components {
       | 'PLAN_PAYMENT_STATUS_APPROVED'
       | 'PLAN_PAYMENT_STATUS_REJECTED'
       | 'PLAN_PAYMENT_STATUS_CANCELLED'
+    /**
+     * @description One entry of the platform audit log: a change made at platform level (a
+     *     plan, platform staff, platform payment settings) or a platform sign-in.
+     *     Entries that belong to a garage are not here; the garage sees its own.
+     */
+    v1PlatformAuditEntry: {
+      readonly id?: string
+      /** @description The user who made the change; empty for the system. */
+      readonly actorUserId?: string
+      readonly actorName?: string
+      /** @description For example "plan.updated" or "platform.signed_in". */
+      readonly action?: string
+      readonly entityType?: string
+      readonly entityId?: string
+      /**
+       * @description The state before and after the change, as JSON text; empty when the
+       *     entry has none.
+       */
+      readonly beforeJson?: string
+      readonly afterJson?: string
+      readonly ip?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /**
+     * @description PlatformInvitation asks an existing user to join a platform staff group.
+     *     It is e-mailed to the user and expires after 7 days.
+     */
+    v1PlatformInvitation: {
+      readonly id?: string
+      groupId?: string
+      readonly groupName?: string
+      readonly roleName?: string
+      readonly userId?: string
+      readonly fullName?: string
+      readonly email?: string
+      status?: components['schemas']['v1PlatformInvitationStatus']
+      readonly invitedByName?: string
+      /** Format: date-time */
+      readonly expiresAt?: string
+      /** Format: date-time */
+      readonly respondedAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /** @enum {string} */
+    v1PlatformInvitationStatus:
+      | 'PLATFORM_INVITATION_STATUS_PENDING'
+      | 'PLATFORM_INVITATION_STATUS_ACCEPTED'
+      | 'PLATFORM_INVITATION_STATUS_DECLINED'
+      | 'PLATFORM_INVITATION_STATUS_REVOKED'
+      | 'PLATFORM_INVITATION_STATUS_EXPIRED'
     /** @description PlatformPaymentSettings are the details owners transfer to (FR-LIC-10). */
     v1PlatformPaymentSettings: {
       bankName?: string
@@ -4867,11 +6671,141 @@ export interface components {
       /** Format: date-time */
       readonly updatedAt?: string
     }
+    /**
+     * @description PlatformPermission is one action a platform user may perform (FR-IAM-10).
+     *     The catalogue is fixed and grouped by module, like the garage catalogue,
+     *     but it is a separate scope: it has no garage. A write permission includes
+     *     the read permission of its module. A Platform Admin (configured in the
+     *     deployment) holds every permission; admin staff hold the union of the
+     *     roles of their platform staff groups. Permissions are evaluated on every
+     *     request from the database, so a removal applies at once.
+     *
+     *      - PLATFORM_PERMISSION_PLAN_READ: Plans, and the platform payment details.
+     *      - PLATFORM_PERMISSION_SUBSCRIPTION_READ: Subscriptions, payment requests and credit.
+     *      - PLATFORM_PERMISSION_STATS_READ: Platform dashboards (Phase 12).
+     *      - PLATFORM_PERMISSION_GARAGE_DIRECTORY_READ: Names and owners of garages, no business data.
+     *      - PLATFORM_PERMISSION_USER_READ: Look up a user; never password or token data.
+     *      - PLATFORM_PERMISSION_PLATFORM_STAFF_READ: Platform roles, groups, staff and invitations.
+     *      - PLATFORM_PERMISSION_SUPPORT_READ: Open and use support grants (Release 8.2).
+     *      - PLATFORM_PERMISSION_AUDIT_READ: Read the platform audit log.
+     * @enum {string}
+     */
+    v1PlatformPermission:
+      | 'PLATFORM_PERMISSION_PLAN_READ'
+      | 'PLATFORM_PERMISSION_PLAN_WRITE'
+      | 'PLATFORM_PERMISSION_SUBSCRIPTION_READ'
+      | 'PLATFORM_PERMISSION_SUBSCRIPTION_WRITE'
+      | 'PLATFORM_PERMISSION_STATS_READ'
+      | 'PLATFORM_PERMISSION_GARAGE_DIRECTORY_READ'
+      | 'PLATFORM_PERMISSION_USER_READ'
+      | 'PLATFORM_PERMISSION_PLATFORM_STAFF_READ'
+      | 'PLATFORM_PERMISSION_PLATFORM_STAFF_WRITE'
+      | 'PLATFORM_PERMISSION_SUPPORT_READ'
+      | 'PLATFORM_PERMISSION_SUPPORT_WRITE'
+      | 'PLATFORM_PERMISSION_AUDIT_READ'
+    /** @description PlatformPermissionInfo describes one catalogue entry. */
+    v1PlatformPermissionInfo: {
+      permission?: components['schemas']['v1PlatformPermission']
+      /** @description Module the permission belongs to, e.g. "plan": groups the role editor. */
+      module?: string
+      /** @description "read" or "write": the permission's column in the role editor. */
+      action?: string
+    }
+    /** @description PlatformRole is a named set of platform permissions. */
+    v1PlatformRole: {
+      readonly id?: string
+      name: string
+      description?: string
+      permissions?: components['schemas']['v1PlatformPermission'][]
+      /**
+       * Format: int32
+       * @description Number of platform staff groups using the role.
+       */
+      readonly groupCount?: number
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description PlatformStaffGroup is a set of users that all receive the permissions of
+     *     the group's role.
+     */
+    v1PlatformStaffGroup: {
+      readonly id?: string
+      name: string
+      description?: string
+      roleId: string
+      readonly roleName?: string
+      /** Format: int32 */
+      readonly memberCount?: number
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /**
+     * @description PlatformStaffMember is a user with platform access: a Platform Admin, or a
+     *     member of at least one platform staff group.
+     */
+    v1PlatformStaffMember: {
+      userId?: string
+      fullName?: string
+      email?: string
+      /**
+       * @description Configured in the deployment (PLATFORM_ADMIN_EMAILS): holds every
+       *     permission and cannot be removed here.
+       */
+      platformAdmin?: boolean
+      groups?: components['schemas']['v1GroupRef'][]
+    }
     v1PostStockIssueResponse: {
       stockIssue?: components['schemas']['v1StockIssue']
     }
     v1PreviewImportResponse: {
       preview?: components['schemas']['v1ImportPreview']
+    }
+    /**
+     * @description PrintSetting is a garage's printing choice for one document type
+     *     (FR-DOC-04). A garage that never changed it prints on A4 without the
+     *     copy mark.
+     */
+    v1PrintSetting: {
+      documentType?: components['schemas']['v1DocumentType']
+      paperSize?: components['schemas']['v1PaperSize']
+      /** @description Whether a reprint carries a "copy" mark. */
+      copyMark?: boolean
+      /** @description The sizes the document type has a template for. */
+      readonly availablePaperSizes?: components['schemas']['v1PaperSize'][]
+    }
+    /**
+     * @description ProfitGroupBy chooses what a profit report adds up by (FR-RPT-05).
+     * @enum {string}
+     */
+    v1ProfitGroupBy: 'PROFIT_GROUP_BY_REPAIR_ORDER' | 'PROFIT_GROUP_BY_JOB' | 'PROFIT_GROUP_BY_TECHNICIAN'
+    /** @description ProfitRow is the profit of one repair order, job or technician. */
+    v1ProfitRow: {
+      /**
+       * @description The repair order, job or technician id; empty for the row of lines
+       *     that belong to no job or no technician.
+       */
+      readonly key?: string
+      /** @description The repair order number, job name or technician name. */
+      readonly label?: string
+      /** Format: int32 */
+      readonly repairOrders?: number
+      /**
+       * Format: int64
+       * @description The billable lines' totals, integer VND.
+       */
+      readonly revenue?: string
+      /**
+       * Format: int64
+       * @description The cost snapshots of the parts consumed, integer VND.
+       */
+      readonly cost?: string
+      /** Format: int64 */
+      readonly profit?: string
     }
     /**
      * @description PublicQuote is what an unauthenticated customer sees through the
@@ -4921,6 +6855,90 @@ export interface components {
        */
       readonly amount?: string
     }
+    /**
+     * @description PurchaseOrder is a numbered order to one supplier (FR-INV-16). It can be
+     *     printed and e-mailed to the supplier, and a goods receipt can be pre-filled
+     *     from what it still waits for.
+     */
+    v1PurchaseOrder: {
+      readonly id?: string
+      readonly garageId?: string
+      /** @description Rendered from the garage's purchase_order numbering template. */
+      readonly number?: string
+      status?: components['schemas']['v1PurchaseOrderStatus']
+      supplierId?: string
+      readonly supplierName?: string
+      /** @description The supplier's e-mail on file; the order is sent to it. */
+      readonly supplierEmail?: string
+      /** @description "YYYY-MM-DD" in the garage's timezone: the day the order was created. */
+      readonly orderDate?: string
+      /** @description "YYYY-MM-DD"; empty when no date is expected. */
+      expectedDate?: string
+      notes?: string
+      lines?: components['schemas']['v1PurchaseOrderLine'][]
+      /**
+       * Format: int64
+       * @description Sum of the lines' amounts. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly totalAmount?: string
+      /** Format: date-time */
+      readonly sentAt?: string
+      /** @description The address the order was sent to. */
+      readonly sentTo?: string
+      /** Format: date-time */
+      readonly cancelledAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+    }
+    /** @description PurchaseOrderLine is one part on a purchase order. */
+    v1PurchaseOrderLine: {
+      readonly id?: string
+      partId: string
+      readonly partSku?: string
+      readonly partName?: string
+      readonly baseUnitAbbreviation?: string
+      /** @description The packaging unit the quantity is typed in; unset means the base unit. */
+      unitId?: string
+      readonly unitAbbreviation?: string
+      /** @description In the entered unit unless unit_id is unset. Positive. */
+      enteredQuantity?: string
+      /** @description The base-unit amount derived from entered_quantity on save. */
+      readonly quantity?: string
+      /** @description The base-unit amount delivered so far by completed goods receipts. */
+      readonly receivedQuantity?: string
+      /**
+       * Format: int64
+       * @description The expected price in VND per entered unit; zero means unknown. Omitted
+       *     from answers when the caller lacks PERMISSION_INVENTORY_COST_READ; such
+       *     a caller cannot set it either. On update, lines are matched by id: a
+       *     caller without the permission keeps the stored cost of the lines it sends
+       *     back, and a new line costs zero; changing the part or unit of a line resets
+       *     its cost to zero.
+       */
+      unitCost?: string
+      /**
+       * Format: int64
+       * @description entered_quantity times unit_cost, rounded half up to whole VND per line
+       *     as on a goods receipt; total_amount is the sum of these. Omitted without
+       *     PERMISSION_INVENTORY_COST_READ.
+       */
+      readonly lineAmount?: string
+    }
+    /**
+     * @description PurchaseOrderStatus is the lifecycle of a purchase order (FR-INV-16):
+     *     saved as a draft, sent to the supplier, received in part or in full, or
+     *     cancelled.
+     * @enum {string}
+     */
+    v1PurchaseOrderStatus:
+      | 'PURCHASE_ORDER_STATUS_DRAFT'
+      | 'PURCHASE_ORDER_STATUS_SENT'
+      | 'PURCHASE_ORDER_STATUS_PARTIALLY_RECEIVED'
+      | 'PURCHASE_ORDER_STATUS_RECEIVED'
+      | 'PURCHASE_ORDER_STATUS_CANCELLED'
     v1PutPartSuppliersResponse: {
       data?: components['schemas']['v1PartSupplier'][]
     }
@@ -5047,6 +7065,200 @@ export interface components {
      * @enum {string}
      */
     v1QuoteStatus: 'QUOTE_STATUS_DRAFT' | 'QUOTE_STATUS_SENT' | 'QUOTE_STATUS_APPROVED' | 'QUOTE_STATUS_REJECTED' | 'QUOTE_STATUS_CONVERTED'
+    /**
+     * @description Receivable is what a customer still owes for one settlement (FR-REC-01).
+     *     The module keeps its own state, fed by the settlement and payment events
+     *     of Billing & Settlement.
+     */
+    v1Receivable: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly settlementId?: string
+      readonly settlementNumber?: string
+      /** @description The customer the settlement is billed through; empty when unknown. */
+      readonly customerId?: string
+      readonly customerName?: string
+      readonly vehicleLicensePlate?: string
+      /**
+       * Format: int64
+       * @description Integer VND.
+       */
+      readonly totalAmount?: string
+      /** Format: int64 */
+      readonly paidAmount?: string
+      /** Format: int64 */
+      readonly remainingAmount?: string
+      /**
+       * @description "YYYY-MM-DD" in the garage's timezone: the settlement's date plus the
+       *     garage's payment terms.
+       */
+      readonly dueDate?: string
+      /** @description Open and past its due date. */
+      readonly overdue?: boolean
+      /**
+       * Format: int32
+       * @description Days past the due date; 0 when not overdue.
+       */
+      readonly daysOverdue?: number
+      status?: components['schemas']['v1ReceivableStatus']
+      /** Format: int32 */
+      readonly remindersSent?: number
+      /** Format: date-time */
+      readonly lastReminderAt?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+      /** Format: date-time */
+      readonly updatedAt?: string
+      /** @description Only on GetReceivable. */
+      readonly entries?: components['schemas']['v1ReceivableEntry'][]
+      readonly reminders?: components['schemas']['v1ReceivableReminder'][]
+    }
+    /** @description ReceivableEntry is one line of a receivable's ledger. */
+    v1ReceivableEntry: {
+      readonly id?: string
+      kind?: components['schemas']['v1ReceivableEntryKind']
+      /**
+       * Format: int64
+       * @description Integer VND, always positive; the kind gives the sign.
+       */
+      readonly amount?: string
+      /** @description The settlement number for a charge, the voucher number otherwise. */
+      readonly reference?: string
+      method?: components['schemas']['v1PaymentMethod']
+      /** Format: date-time */
+      readonly occurredAt?: string
+    }
+    /**
+     * @description ReceivableEntryKind is one movement of a receivable's ledger.
+     *
+     *      - RECEIVABLE_ENTRY_KIND_CHARGE: The settlement was issued: the amount becomes receivable.
+     *      - RECEIVABLE_ENTRY_KIND_PAYMENT: A payment voucher was recorded against it.
+     *      - RECEIVABLE_ENTRY_KIND_VOID: A payment voucher was voided: the amount is receivable again.
+     * @enum {string}
+     */
+    v1ReceivableEntryKind: 'RECEIVABLE_ENTRY_KIND_CHARGE' | 'RECEIVABLE_ENTRY_KIND_PAYMENT' | 'RECEIVABLE_ENTRY_KIND_VOID'
+    /**
+     * @description ReceivableReminder is one reminder the schedule produced; each
+     *     (receivable, offset) pair is logged once.
+     */
+    v1ReceivableReminder: {
+      readonly id?: string
+      /**
+       * Format: int32
+       * @description Days after the due date this reminder was scheduled for.
+       */
+      readonly offsetDays?: number
+      /** @description "email" today; push joins with Release 11.0. */
+      readonly channel?: string
+      outcome?: components['schemas']['v1ReminderOutcome']
+      /** @description For a skip: DISABLED, OPTED_OUT, SUPPRESSED, NO_EMAIL or SUPERSEDED. */
+      readonly reason?: string
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /**
+     * @description ReceivableSettings is a garage's payment terms and reminder schedule
+     *     (FR-REC-03). A garage that never saved them has 7 days of terms and
+     *     reminders at 3 and 7 days overdue. An update replaces all of it: it is
+     *     refused (INVALID_ARGUMENT) when payment_terms_days or reminders_enabled is
+     *     missing, so that an incomplete request cannot switch reminders off.
+     */
+    v1ReceivableSettings: {
+      /**
+       * Format: int32
+       * @description Days from the settlement's date to its due date, 0 to 365.
+       */
+      paymentTermsDays?: number
+      remindersEnabled?: boolean
+      /**
+       * @description Days overdue at which a reminder goes out: up to 5 distinct values from
+       *     1 to 90, ascending.
+       */
+      reminderOffsetDays?: number[]
+    }
+    /**
+     * @description ReceivableStatus is the collection state of one receivable (FR-REC-01).
+     *
+     *      - RECEIVABLE_STATUS_OPEN: Something is still to be collected.
+     *      - RECEIVABLE_STATUS_PAID: Fully collected.
+     * @enum {string}
+     */
+    v1ReceivableStatus: 'RECEIVABLE_STATUS_OPEN' | 'RECEIVABLE_STATUS_PAID'
+    /**
+     * @description ReceivablesSummary totals the open receivables a list matched, across all
+     *     its pages.
+     */
+    v1ReceivablesSummary: {
+      /** Format: int32 */
+      readonly openCount?: number
+      /** Format: int64 */
+      readonly outstandingAmount?: string
+      /** Format: int32 */
+      readonly overdueCount?: number
+      /** Format: int64 */
+      readonly overdueAmount?: string
+    }
+    /** @description ReconciliationLine is one movement of the period. */
+    v1ReconciliationLine: {
+      /** @description "YYYY-MM-DD" in the garage's timezone. */
+      readonly date?: string
+      kind?: components['schemas']['v1ReceivableEntryKind']
+      readonly reference?: string
+      readonly customerName?: string
+      /** Format: int64 */
+      readonly amount?: string
+      method?: components['schemas']['v1PaymentMethod']
+    }
+    /** @description ReconciliationMethodTotal is the amount collected by one payment method. */
+    v1ReconciliationMethodTotal: {
+      method?: components['schemas']['v1PaymentMethod']
+      /** Format: int64 */
+      readonly amount?: string
+    }
+    /**
+     * @description ReconciliationReport reconciles a period's receivables with the
+     *     settlements and vouchers behind them (FR-REC-04):
+     *     closing_balance = opening_balance + charged_amount - collected_amount +
+     *     voided_amount, as of the end of the period. `matches` and `difference`
+     *     check the ledger itself: its balance today against the remaining amounts of
+     *     the receivables today, whatever the period.
+     */
+    v1ReconciliationReport: {
+      readonly from?: string
+      readonly to?: string
+      /** Format: int64 */
+      readonly openingBalance?: string
+      /** Format: int64 */
+      readonly chargedAmount?: string
+      /** Format: int64 */
+      readonly collectedAmount?: string
+      /** Format: int64 */
+      readonly voidedAmount?: string
+      /** Format: int64 */
+      readonly closingBalance?: string
+      /** Format: int32 */
+      readonly settlementCount?: number
+      /** Format: int32 */
+      readonly paymentCount?: number
+      readonly collectedByMethod?: components['schemas']['v1ReconciliationMethodTotal'][]
+      /**
+       * Format: int64
+       * @description Payment-out vouchers (phiếu chi) issued in the period, net of voids;
+       *     shown beside the receivables, not part of the balance.
+       */
+      readonly paidOutAmount?: string
+      /**
+       * @description Whether the ledger's balance today equals the sum of the receivables'
+       *     remaining amounts today.
+       */
+      readonly matches?: boolean
+      /**
+       * Format: int64
+       * @description The ledger's balance today less the sum of the remaining amounts.
+       */
+      readonly difference?: string
+      readonly lines?: components['schemas']['v1ReconciliationLine'][]
+    }
     v1RecordQuoteDecisionResponse: {
       quote?: components['schemas']['v1Quote']
     }
@@ -5080,9 +7292,19 @@ export interface components {
     v1RejectPlanPaymentResponse: {
       request?: components['schemas']['v1PlanPaymentRequest']
     }
+    /**
+     * @description ReminderOutcome is what became of one scheduled reminder (FR-REC-03).
+     *
+     *      - REMINDER_OUTCOME_SKIPPED: Not sent, with a reason: the customer has no e-mail, opted out or is
+     *     suppressed, the garage switched the type off, or a later reminder
+     *     replaced it.
+     * @enum {string}
+     */
+    v1ReminderOutcome: 'REMINDER_OUTCOME_SENT' | 'REMINDER_OUTCOME_SKIPPED' | 'REMINDER_OUTCOME_FAILED'
     v1RemovePartImageResponse: {
       part?: components['schemas']['v1Part']
     }
+    v1RemovePlatformStaffMemberResponse: Record<string, never>
     /**
      * @description RepairOrder is a repair job for one vehicle (FR-REP-01), either
      *     converted from an approved quote (Release 1.2's ConvertQuote) or
@@ -5199,6 +7421,20 @@ export interface components {
       readonly createdAt?: string
     }
     /**
+     * @description RepairOrderProfit is the profit of one repair order, shown on its detail
+     *     (FR-RPT-05). Cost is known once the stock issue is posted; before that
+     *     `cost_known` is false and the profit is not shown.
+     */
+    v1RepairOrderProfit: {
+      /** Format: int64 */
+      readonly revenue?: string
+      /** Format: int64 */
+      readonly cost?: string
+      /** Format: int64 */
+      readonly profit?: string
+      readonly costKnown?: boolean
+    }
+    /**
      * @description RepairOrderStatus is the lifecycle of a repair order (FR-REP-01..06),
      *     shown as the Kanban board's columns (UI Design Spec Section 3.3).
      *
@@ -5229,6 +7465,18 @@ export interface components {
     v1RequestPasswordResetResponse: {
       challenge?: components['schemas']['v1OtpChallenge']
     }
+    v1RequestSupportGrantRequest: {
+      garageId: string
+      reason: string
+      /**
+       * Format: int32
+       * @description 1 to 168 hours; 24 when omitted.
+       */
+      ttlHours?: number
+    }
+    v1RequestSupportGrantResponse: {
+      grant?: components['schemas']['v1SupportGrant']
+    }
     v1ResetPasswordRequest: {
       resetToken: string
       /** @description At least 8 characters. */
@@ -5258,6 +7506,12 @@ export interface components {
     }
     v1RevokeInvitationResponse: {
       invitation?: components['schemas']['v1Invitation']
+    }
+    v1RevokePlatformInvitationResponse: {
+      invitation?: components['schemas']['v1PlatformInvitation']
+    }
+    v1RevokeSupportGrantResponse: {
+      grant?: components['schemas']['v1SupportGrant']
     }
     /**
      * @description Role is a named set of permissions defined by a garage owner and shared
@@ -5840,6 +8094,16 @@ export interface components {
     v1SubmitPlanPaymentResponse: {
       request?: components['schemas']['v1PlanPaymentRequest']
     }
+    v1SubmitPublicDataRequestRequest: {
+      /** @description The address the person is known by; the confirmation goes to it. */
+      email: string
+      type: components['schemas']['v1DataRequestType']
+      /** @description What to correct; required for a correction. */
+      details?: string
+      /** @description The language of the confirmation e-mail: "vi" (default) or "en". */
+      locale?: string
+    }
+    v1SubmitPublicDataRequestResponse: Record<string, never>
     /**
      * @description Subscription belongs to an owner user and covers all their garages
      *     (FR-LIC-01..04).
@@ -5914,11 +8178,74 @@ export interface components {
       /** @description False once the supplier was deactivated instead of deleted (FR-CAT-07). */
       readonly isActive?: boolean
     }
+    /** @description SupplierAging is the open payables of one supplier by age of the receipt. */
+    v1SupplierAging: {
+      readonly supplierId?: string
+      readonly supplierName?: string
+      /** Format: int64 */
+      readonly total?: string
+      /**
+       * Format: int64
+       * @description 0 to 30 days.
+       */
+      readonly current?: string
+      /**
+       * Format: int64
+       * @description 31 to 60 days.
+       */
+      readonly days3160?: string
+      /**
+       * Format: int64
+       * @description 61 to 90 days.
+       */
+      readonly days6190?: string
+      /**
+       * Format: int64
+       * @description More than 90 days.
+       */
+      readonly over90?: string
+    }
     v1SupplierContact: {
       contactPerson?: string
       phone?: string
       email?: string
       address?: string
+    }
+    /**
+     * @description SupplierPayable is what the garage owes one supplier for the lines of one
+     *     completed goods receipt (FR-INV-17). A receipt with lines from two
+     *     suppliers produces two payables.
+     */
+    v1SupplierPayable: {
+      readonly id?: string
+      readonly garageId?: string
+      readonly goodsReceiptId?: string
+      readonly goodsReceiptNumber?: string
+      readonly supplierId?: string
+      readonly supplierName?: string
+      /** @description The receipt's date, "YYYY-MM-DD"; the age of the payable counts from it. */
+      readonly receiptDate?: string
+      /**
+       * Format: int64
+       * @description Integer VND.
+       */
+      readonly totalAmount?: string
+      /** Format: int64 */
+      readonly paidAmount?: string
+      /** Format: int64 */
+      readonly remainingAmount?: string
+      /** Format: int32 */
+      readonly ageDays?: number
+      status?: components['schemas']['v1PayableStatus']
+      /** Format: date-time */
+      readonly createdAt?: string
+    }
+    /** @description SupplierPayablesSummary totals the open payables a list matched. */
+    v1SupplierPayablesSummary: {
+      /** Format: int32 */
+      readonly openCount?: number
+      /** Format: int64 */
+      readonly outstandingAmount?: string
     }
     /**
      * @description SupplierReturn is a numbered document that reduces stock and records the
@@ -5982,11 +8309,133 @@ export interface components {
       readonly lineAmount?: string
     }
     /**
+     * @description SupportAccessEvent is one read made under a grant: the call and the entity
+     *     it named. Shown to the owner in the Support access log.
+     */
+    v1SupportAccessEvent: {
+      readonly id?: string
+      grantId?: string
+      staffName?: string
+      /** @description Kind of the entity, e.g. "settlement", "customers". */
+      entityType?: string
+      /** @description Id from the request; empty for a list. */
+      entityId?: string
+      /** @description The API call, e.g. "GetSettlement". */
+      method?: string
+      /** Format: date-time */
+      createdAt?: string
+    }
+    /**
+     * @description SupportGrant lets one admin staff member read one garage's data, read-only,
+     *     for a limited time (FR-IAM-11). The garage owner approves it; a Platform
+     *     Admin's grant is active at once and only notifies the owner.
+     */
+    v1SupportGrant: {
+      readonly id?: string
+      garageId?: string
+      readonly garageName?: string
+      readonly staffUserId?: string
+      readonly staffName?: string
+      readonly staffEmail?: string
+      /** @description A reason or ticket reference. */
+      reason?: string
+      status?: components['schemas']['v1SupportGrantStatus']
+      /**
+       * Format: int32
+       * @description Length of the session in hours, counted from the approval.
+       */
+      ttlHours?: number
+      /** Format: date-time */
+      readonly requestedAt?: string
+      /** Format: date-time */
+      readonly approvedAt?: string
+      /** @description Empty when a Platform Admin opened the garage. */
+      readonly approvedByName?: string
+      /**
+       * Format: date-time
+       * @description Set at the approval.
+       */
+      readonly expiresAt?: string
+      /** Format: date-time */
+      readonly revokedAt?: string
+      /** @description The grant needed no approval because a Platform Admin opened it. */
+      readonly grantedByPlatformAdmin?: boolean
+    }
+    /**
+     * @description SupportGrantStatus is derived from the grant's times, never stored.
+     *
+     *      - SUPPORT_GRANT_STATUS_PENDING: Requested; waiting for the garage owner (a request lapses after 7 days).
+     *      - SUPPORT_GRANT_STATUS_ACTIVE: Approved and not yet expired or revoked: the staff member can read.
+     *      - SUPPORT_GRANT_STATUS_EXPIRED: The time ran out, before or after approval.
+     *      - SUPPORT_GRANT_STATUS_REVOKED: Revoked by the owner (or declined while pending), or ended by the staff.
+     * @enum {string}
+     */
+    v1SupportGrantStatus:
+      'SUPPORT_GRANT_STATUS_PENDING' | 'SUPPORT_GRANT_STATUS_ACTIVE' | 'SUPPORT_GRANT_STATUS_EXPIRED' | 'SUPPORT_GRANT_STATUS_REVOKED'
+    /**
+     * @description SupportNotification is one entry of the notification log of the garage's
+     *     people (owner and staff).
+     */
+    v1SupportNotification: {
+      id?: string
+      channel?: string
+      template?: string
+      recipient?: string
+      status?: string
+      error?: string
+      /** Format: date-time */
+      createdAt?: string
+    }
+    /** @description SupportOutboxEvent is the delivery status of one event of the garage. */
+    v1SupportOutboxEvent: {
+      id?: string
+      eventType?: string
+      status?: string
+      /** Format: int32 */
+      attempts?: number
+      lastError?: string
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      publishedAt?: string
+    }
+    /**
      * @description TaxProfileKind: a customer has at most one personal tax profile and any
      *     number of company tax profiles (FR-CUS-07).
      * @enum {string}
      */
     v1TaxProfileKind: 'TAX_PROFILE_KIND_PERSONAL' | 'TAX_PROFILE_KIND_COMPANY'
+    /** @description TechnicianPerformance is one technician's work in a period (FR-RPT-02). */
+    v1TechnicianPerformance: {
+      readonly technicianId?: string
+      readonly technicianName?: string
+      /**
+       * Format: int32
+       * @description Lines the technician was assigned to that were completed in the period;
+       *     a line shared by two technicians counts for both.
+       */
+      readonly completedLines?: number
+      /**
+       * Format: int32
+       * @description Repair orders those lines belong to.
+       */
+      readonly repairOrders?: number
+      /**
+       * Format: int64
+       * @description Mean time from a line being started to it being completed, in whole
+       *     minutes; 0 when no completed line has both times.
+       */
+      readonly averageTurnaroundMinutes?: string
+    }
+    /**
+     * @description UnassignedPart is a low-stock part that no order could take because it
+     *     has no default supplier.
+     */
+    v1UnassignedPart: {
+      readonly partId?: string
+      readonly partSku?: string
+      readonly partName?: string
+    }
     /**
      * @description Unit is one unit of measure of a garage (FR-CAT-01). A unit is per
      *     garage; the factor between two units lives on the part, not here.
@@ -6007,6 +8456,13 @@ export interface components {
     }
     v1UnlinkGarageLinkResponse: {
       link?: components['schemas']['v1GarageLink']
+    }
+    v1UnlinkGoogleRequest: {
+      /** @description The signed-in user's current password. */
+      password: string
+    }
+    v1UnlinkGoogleResponse: {
+      session?: components['schemas']['v1Session']
     }
     v1UpdateCustomerResponse: {
       customer?: components['schemas']['v1Customer']
@@ -6035,8 +8491,14 @@ export interface components {
     v1UpdatePlanResponse: {
       plan?: components['schemas']['v1Plan']
     }
+    v1UpdatePlatformGroupResponse: {
+      group?: components['schemas']['v1PlatformStaffGroup']
+    }
     v1UpdatePlatformPaymentSettingsResponse: {
       settings?: components['schemas']['v1PlatformPaymentSettings']
+    }
+    v1UpdatePlatformRoleResponse: {
+      role?: components['schemas']['v1PlatformRole']
     }
     v1UpdateQuoteResponse: {
       quote?: components['schemas']['v1Quote']
@@ -6118,6 +8580,16 @@ export interface components {
       readonly updatedAt?: string
       /** @description True when the user has turned on a TOTP second factor (FR-IAM-09). */
       readonly mfaEnabled?: boolean
+      /**
+       * @description True when a Google account is linked: by signing in with Google or by
+       *     LinkGoogle (FR-IAM-06).
+       */
+      readonly googleLinked?: boolean
+      /**
+       * @description True when the user can sign in with a password. A user created by Google
+       *     has none until it resets one.
+       */
+      readonly hasPassword?: boolean
     }
     /**
      * @description UserStatus is the lifecycle of a VietGara user (Database Design 2.1).
@@ -6323,9 +8795,19 @@ export interface components {
         'application/json': components['schemas']['v1Unit']
       }
     }
+    v1PlatformRole: {
+      content: {
+        'application/json': components['schemas']['v1PlatformRole']
+      }
+    }
     v1GoodsReceipt: {
       content: {
         'application/json': components['schemas']['v1GoodsReceipt']
+      }
+    }
+    v1PlatformStaffGroup: {
+      content: {
+        'application/json': components['schemas']['v1PlatformStaffGroup']
       }
     }
     v1Garage: {
@@ -6353,6 +8835,11 @@ export interface components {
         'application/json': components['schemas']['v1Part']
       }
     }
+    v1PurchaseOrder: {
+      content: {
+        'application/json': components['schemas']['v1PurchaseOrder']
+      }
+    }
     v1StaffGroup: {
       content: {
         'application/json': components['schemas']['v1StaffGroup']
@@ -6374,6 +8861,107 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  PlatformStaffService_ListPlatformAuditLog: {
+    parameters: {
+      query?: {
+        /** @description Matches the start of the action, so "plan." finds every plan change. */
+        action?: string
+        entityType?: string
+        actorUserId?: string
+        /** @description Entries from this time on, and before this time. */
+        from?: string
+        to?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlatformAuditLogResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupportService_ListGarageDirectory: {
+    parameters: {
+      query?: {
+        /** @description Matches the garage or owner name or the owner's e-mail. */
+        query?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListGarageDirectoryResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformAccessService_GetMyPlatformAccess: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1MyPlatformAccess']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   LicenseAdminService_GetPlatformPaymentSettings: {
     parameters: {
       query?: never
@@ -6700,6 +9288,496 @@ export interface operations {
       }
     }
   }
+  PlatformStaffService_ListPlatformGroups: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlatformGroupsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_CreatePlatformGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PlatformStaffGroup']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformStaffGroup']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_GetPlatformGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        groupId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetPlatformGroupResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_DeletePlatformGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        groupId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeletePlatformGroupResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_UpdatePlatformGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        groupId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PlatformStaffGroup']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformStaffGroup']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_RemovePlatformStaffMember: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        groupId: string
+        userId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RemovePlatformStaffMemberResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_ListPlatformInvitations: {
+    parameters: {
+      query?: {
+        /** @description Unspecified lists every status. */
+        status?:
+          | 'PLATFORM_INVITATION_STATUS_PENDING'
+          | 'PLATFORM_INVITATION_STATUS_ACCEPTED'
+          | 'PLATFORM_INVITATION_STATUS_DECLINED'
+          | 'PLATFORM_INVITATION_STATUS_REVOKED'
+          | 'PLATFORM_INVITATION_STATUS_EXPIRED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlatformInvitationsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_CreatePlatformInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1CreatePlatformInvitationRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformInvitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_RevokePlatformInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlatformStaffServiceRevokePlatformInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformInvitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_ListPlatformPermissions: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlatformPermissionsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_ListPlatformRoles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlatformRolesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_CreatePlatformRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PlatformRole']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformRole']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_GetPlatformRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        roleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformRole']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_DeletePlatformRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        roleId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DeletePlatformRoleResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_UpdatePlatformRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        roleId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PlatformRole']
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformRole']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformStaffService_ListPlatformStaff: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPlatformStaffResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   LicenseAdminService_ListSubscriptions: {
     parameters: {
       query?: {
@@ -6795,6 +9873,182 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1Subscription']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupportService_ListSupportGrants: {
+    parameters: {
+      query?: {
+        /**
+         * @description Unspecified lists every status.
+         *
+         *      - SUPPORT_GRANT_STATUS_PENDING: Requested; waiting for the garage owner (a request lapses after 7 days).
+         *      - SUPPORT_GRANT_STATUS_ACTIVE: Approved and not yet expired or revoked: the staff member can read.
+         *      - SUPPORT_GRANT_STATUS_EXPIRED: The time ran out, before or after approval.
+         *      - SUPPORT_GRANT_STATUS_REVOKED: Revoked by the owner (or declined while pending), or ended by the staff.
+         */
+        status?:
+          'SUPPORT_GRANT_STATUS_PENDING' | 'SUPPORT_GRANT_STATUS_ACTIVE' | 'SUPPORT_GRANT_STATUS_EXPIRED' | 'SUPPORT_GRANT_STATUS_REVOKED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSupportGrantsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupportService_RequestSupportGrant: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1RequestSupportGrantRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupportGrant']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupportService_ListSupportNotifications: {
+    parameters: {
+      query?: {
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        grantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSupportNotificationsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupportService_ListSupportOutboxEvents: {
+    parameters: {
+      query?: {
+        /** @description "pending", "published" or "failed"; empty lists all. */
+        status?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        grantId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSupportOutboxEventsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  SupportService_EndSupportGrant: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        grantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SupportServiceEndSupportGrantBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupportGrant']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -7574,6 +10828,42 @@ export interface operations {
       }
     }
   }
+  DataRequestService_CreateDataRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        customerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DataRequestServiceCreateDataRequestBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DataRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   CustomerTaxProfileService_ListCustomerTaxProfiles: {
     parameters: {
       query?: {
@@ -7920,6 +11210,121 @@ export interface operations {
       }
     }
   }
+  DataRequestService_ListDataRequests: {
+    parameters: {
+      query?: {
+        customerId?: string
+        /**
+         * @description - DATA_REQUEST_TYPE_VIEW: To see what the garage holds.
+         *      - DATA_REQUEST_TYPE_CORRECT: To correct it.
+         *      - DATA_REQUEST_TYPE_DELETE: To erase it. The customer's and vehicles' personal fields are made
+         *     anonymous; the financial documents the law requires stay.
+         */
+        type?: 'DATA_REQUEST_TYPE_VIEW' | 'DATA_REQUEST_TYPE_CORRECT' | 'DATA_REQUEST_TYPE_DELETE'
+        /**
+         * @description - DATA_REQUEST_STATUS_PENDING: Confirmed and waiting for the garage to act (a correction).
+         *      - DATA_REQUEST_STATUS_REJECTED: The garage declined it, with the reason in `outcome`.
+         */
+        status?: 'DATA_REQUEST_STATUS_PENDING' | 'DATA_REQUEST_STATUS_COMPLETED' | 'DATA_REQUEST_STATUS_REJECTED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListDataRequestsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DataRequestService_GetDataRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DataRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DataRequestService_CompleteDataRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        requestId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DataRequestServiceCompleteDataRequestBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1DataRequest']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   LicenseService_GetGarageEntitlements: {
     parameters: {
       query?: never
@@ -8183,6 +11588,38 @@ export interface operations {
     }
   }
   DocumentService_ExportGoodsReceiptPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        goodsReceiptId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_PrintGoodsReceiptPdf: {
     parameters: {
       query?: never
       header?: never
@@ -8758,6 +12195,131 @@ export interface operations {
       }
     }
   }
+  NotificationService_ListNotificationLog: {
+    parameters: {
+      query?: {
+        /**
+         * @description Filters; unspecified means all.
+         *
+         *      - NOTIFICATION_TYPE_QUOTE_READY: Customer: the quote with the link to approve it. Essential.
+         *      - NOTIFICATION_TYPE_QUOTE_DECIDED: Staff: a quote was approved or rejected.
+         *      - NOTIFICATION_TYPE_VEHICLE_READY: Customer: the vehicle is ready for pick-up.
+         *      - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Customer: a payment was recorded and a balance is left.
+         *      - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.
+         *      - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.
+         *      - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.
+         *      - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 13.0 (FR-REC-03): a reminder that a settlement is overdue.
+         *      - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not
+         *     switchable: it appears in the log only, never in the settings.
+         */
+        type?:
+          | 'NOTIFICATION_TYPE_QUOTE_READY'
+          | 'NOTIFICATION_TYPE_QUOTE_DECIDED'
+          | 'NOTIFICATION_TYPE_VEHICLE_READY'
+          | 'NOTIFICATION_TYPE_PAYMENT_RECEIVED'
+          | 'NOTIFICATION_TYPE_SETTLEMENT_RECEIPT'
+          | 'NOTIFICATION_TYPE_SETTLEMENT_PAID'
+          | 'NOTIFICATION_TYPE_LOW_STOCK'
+          | 'NOTIFICATION_TYPE_PAYMENT_REMINDER'
+          | 'NOTIFICATION_TYPE_PURCHASE_ORDER'
+        status?: 'NOTIFICATION_STATUS_SENT' | 'NOTIFICATION_STATUS_FAILED' | 'NOTIFICATION_STATUS_SKIPPED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListNotificationLogResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  NotificationService_GetNotificationSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1NotificationSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  NotificationService_UpdateNotificationSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NotificationServiceUpdateNotificationSettingsBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1NotificationSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   CatalogueService_ListPartCategories: {
     parameters: {
       query?: {
@@ -9293,6 +12855,630 @@ export interface operations {
       }
     }
   }
+  PayableService_ListPaymentOutVouchers: {
+    parameters: {
+      query?: {
+        supplierId?: string
+        /** @description Voided vouchers are left out unless this is set. */
+        includeVoided?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPaymentOutVouchersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PayableService_CreatePaymentOutVoucher: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1PaymentOutVoucher']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PaymentOutVoucher']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PayableService_GetPaymentOutVoucher: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        voucherId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PaymentOutVoucher']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportPaymentOutVoucherPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        voucherId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_PrintPaymentOutVoucherPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        voucherId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PayableService_VoidPaymentOutVoucher: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        voucherId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PayableServiceVoidPaymentOutVoucherBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PaymentOutVoucher']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_GetPrintSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetPrintSettingsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_UpdatePrintSetting: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        documentType:
+          | 'DOCUMENT_TYPE_QUOTE'
+          | 'DOCUMENT_TYPE_REPAIR_ORDER'
+          | 'DOCUMENT_TYPE_SETTLEMENT'
+          | 'DOCUMENT_TYPE_PAYMENT_VOUCHER'
+          | 'DOCUMENT_TYPE_GOODS_RECEIPT'
+          | 'DOCUMENT_TYPE_STOCK_ISSUE'
+          | 'DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER'
+          | 'DOCUMENT_TYPE_PURCHASE_ORDER'
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DocumentServiceUpdatePrintSettingBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PrintSetting']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_ListPurchaseOrders: {
+    parameters: {
+      query?: {
+        /** @description Matches the number, the supplier's name or notes. */
+        query?: string
+        supplierId?: string
+        status?:
+          | 'PURCHASE_ORDER_STATUS_DRAFT'
+          | 'PURCHASE_ORDER_STATUS_SENT'
+          | 'PURCHASE_ORDER_STATUS_PARTIALLY_RECEIVED'
+          | 'PURCHASE_ORDER_STATUS_RECEIVED'
+          | 'PURCHASE_ORDER_STATUS_CANCELLED'
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListPurchaseOrdersResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_CreatePurchaseOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PurchaseOrder']
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PurchaseOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_GetPurchaseOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PurchaseOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_UpdatePurchaseOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: components['requestBodies']['v1PurchaseOrder']
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PurchaseOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportPurchaseOrderPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_PrintPurchaseOrderPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_CancelPurchaseOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PurchaseOrderServiceCancelPurchaseOrderBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PurchaseOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_ReceivePurchaseOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PurchaseOrderServiceReceivePurchaseOrderBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GoodsReceipt']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_SendPurchaseOrder: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        purchaseOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PurchaseOrderServiceSendPurchaseOrderBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PurchaseOrder']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PurchaseOrderService_CreatePurchaseOrdersFromLowStock: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PurchaseOrderServiceCreatePurchaseOrdersFromLowStockBody']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1CreatePurchaseOrdersFromLowStockResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   QuoteService_ListQuotes: {
     parameters: {
       query?: {
@@ -9610,6 +13796,38 @@ export interface operations {
       }
     }
   }
+  DocumentService_PrintQuotePdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        quoteId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   QuoteService_SendQuote: {
     parameters: {
       query?: never
@@ -9633,6 +13851,146 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1SendQuoteResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReceivableService_GetReceivableSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ReceivableSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReceivableService_UpdateReceivableSettings: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1ReceivableSettings']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ReceivableSettings']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReceivableService_ListReceivables: {
+    parameters: {
+      query?: {
+        /** @description Only this customer's receivables. */
+        customerId?: string
+        /** @description Only the open ones past their due date. */
+        overdueOnly?: boolean
+        /** @description Paid receivables are left out unless this is set. */
+        includePaid?: boolean
+        /** @description Matches the settlement number, customer name or license plate. */
+        query?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListReceivablesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReceivableService_GetReceivable: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        receivableId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Receivable']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -10044,6 +14402,70 @@ export interface operations {
       }
     }
   }
+  DocumentService_PrintRepairOrderPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReportingService_GetRepairOrderProfit: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1RepairOrderProfit']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   InventoryService_GetRepairOrderStockIssue: {
     parameters: {
       query?: never
@@ -10108,6 +14530,79 @@ export interface operations {
       }
     }
   }
+  DocumentService_PrintStockIssuePdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        repairOrderId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReportingService_GetProfitReport: {
+    parameters: {
+      query: {
+        /** @description Required: PROFIT_GROUP_BY_UNSPECIFIED is refused (INVALID_ARGUMENT). */
+        groupBy: 'PROFIT_GROUP_BY_REPAIR_ORDER' | 'PROFIT_GROUP_BY_JOB' | 'PROFIT_GROUP_BY_TECHNICIAN'
+        /**
+         * @description Repair orders closed from this day, inclusive, "YYYY-MM-DD" in the
+         *     garage's timezone.
+         */
+        from: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetProfitReportResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   InventoryService_GetPurchasesReport: {
     parameters: {
       query?: {
@@ -10154,6 +14649,115 @@ export interface operations {
         from?: string
         /** @description Exclusive, "YYYY-MM-DD". */
         to?: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReceivableService_GetReconciliationReport: {
+    parameters: {
+      query: {
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone. */
+        from: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ReconciliationReport']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportReceivableReconciliationExcel: {
+    parameters: {
+      query: {
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone. */
+        from: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_ExportReceivablesExcel: {
+    parameters: {
+      query?: {
+        /** @description Same optional filters as ReceivableService.ListReceivables. */
+        customerId?: string
+        overdueOnly?: boolean
+        includePaid?: boolean
+        query?: string
       }
       header?: never
       path: {
@@ -10425,6 +15029,77 @@ export interface operations {
       }
     }
   }
+  DocumentService_ExportSupplierPayablesExcel: {
+    parameters: {
+      query?: {
+        /** @description Same optional filters as PayableService.ListSupplierPayables. */
+        supplierId?: string
+        includePaid?: boolean
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  ReportingService_GetTechnicianReport: {
+    parameters: {
+      query: {
+        /** @description Inclusive, "YYYY-MM-DD" in the garage's timezone. */
+        from: string
+        /** @description Exclusive, "YYYY-MM-DD". */
+        to: string
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetTechnicianReportResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   SettlementService_ListSettlements: {
     parameters: {
       query?: {
@@ -10641,6 +15316,39 @@ export interface operations {
       }
     }
   }
+  DocumentService_PrintPaymentVoucherPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+        paymentId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   SettlementService_VoidSettlementPayment: {
     parameters: {
       query?: never
@@ -10678,6 +15386,38 @@ export interface operations {
     }
   }
   DocumentService_ExportSettlementReceiptPdf: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        settlementId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['apiHttpBody']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  DocumentService_PrintSettlementReceiptPdf: {
     parameters: {
       query?: never
       header?: never
@@ -11450,6 +16190,74 @@ export interface operations {
       }
     }
   }
+  PayableService_ListSupplierPayables: {
+    parameters: {
+      query?: {
+        supplierId?: string
+        /** @description Paid payables are left out unless this is set. */
+        includePaid?: boolean
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSupplierPayablesResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PayableService_GetSupplierPayablesAging: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1GetSupplierPayablesAgingResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   InventoryService_ListSupplierReturns: {
     parameters: {
       query?: {
@@ -11775,6 +16583,154 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1Supplier']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageSupportService_ListSupportAccessLog: {
+    parameters: {
+      query?: {
+        /** @description Only the reads of one grant. */
+        grantId?: string
+        page?: number
+        pageSize?: number
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListSupportAccessLogResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageSupportService_ListGarageSupportGrants: {
+    parameters: {
+      query?: {
+        /**
+         * @description Unspecified lists every status.
+         *
+         *      - SUPPORT_GRANT_STATUS_PENDING: Requested; waiting for the garage owner (a request lapses after 7 days).
+         *      - SUPPORT_GRANT_STATUS_ACTIVE: Approved and not yet expired or revoked: the staff member can read.
+         *      - SUPPORT_GRANT_STATUS_EXPIRED: The time ran out, before or after approval.
+         *      - SUPPORT_GRANT_STATUS_REVOKED: Revoked by the owner (or declined while pending), or ended by the staff.
+         */
+        status?:
+          'SUPPORT_GRANT_STATUS_PENDING' | 'SUPPORT_GRANT_STATUS_ACTIVE' | 'SUPPORT_GRANT_STATUS_EXPIRED' | 'SUPPORT_GRANT_STATUS_REVOKED'
+      }
+      header?: never
+      path: {
+        garageId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListGarageSupportGrantsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageSupportService_ApproveSupportGrant: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        grantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GarageSupportServiceApproveSupportGrantBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupportGrant']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  GarageSupportService_RevokeSupportGrant: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        garageId: string
+        grantId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GarageSupportServiceRevokeSupportGrantBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SupportGrant']
         }
       }
       /** @description Error (API Specification Section 1.1). */
@@ -12569,6 +17525,103 @@ export interface operations {
       }
     }
   }
+  AuthService_LinkGoogle: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1LinkGoogleRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1User']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_CompleteGoogleLink: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1CompleteGoogleLinkRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1User']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_UnlinkGoogle: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1UnlinkGoogleRequest']
+      }
+    }
+    responses: {
+      /** @description A new session: every other one of the user was revoked. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   InvitationService_ListMyInvitations: {
     parameters: {
       query?: {
@@ -12865,6 +17918,111 @@ export interface operations {
       }
     }
   }
+  PlatformAccessService_ListMyPlatformInvitations: {
+    parameters: {
+      query?: {
+        /** @description Unspecified lists every status. */
+        status?:
+          | 'PLATFORM_INVITATION_STATUS_PENDING'
+          | 'PLATFORM_INVITATION_STATUS_ACCEPTED'
+          | 'PLATFORM_INVITATION_STATUS_DECLINED'
+          | 'PLATFORM_INVITATION_STATUS_REVOKED'
+          | 'PLATFORM_INVITATION_STATUS_EXPIRED'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMyPlatformInvitationsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformAccessService_AcceptPlatformInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlatformAccessServiceAcceptPlatformInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformInvitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PlatformAccessService_DeclinePlatformInvitation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        invitationId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlatformAccessServiceDeclinePlatformInvitationBody']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1PlatformInvitation']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   LicenseService_GetMySubscription: {
     parameters: {
       query?: never
@@ -13096,6 +18254,35 @@ export interface operations {
       }
     }
   }
+  SupportService_ListMySupportSessions: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ListMySupportSessionsResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
   LicenseService_GetPaymentInstructions: {
     parameters: {
       query?: never
@@ -13169,6 +18356,72 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1ListPlansResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PublicDataRequestService_SubmitPublicDataRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1SubmitPublicDataRequestRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1SubmitPublicDataRequestResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  PublicDataRequestService_ConfirmPublicDataRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1ConfirmPublicDataRequestRequest']
+      }
+    }
+    responses: {
+      /** @description A successful response. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ConfirmPublicDataRequestResponse']
         }
       }
       /** @description Error (API Specification Section 1.1). */
