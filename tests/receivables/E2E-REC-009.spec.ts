@@ -20,7 +20,9 @@ test('E2E-REC-009 receivables screen: filter, detail and the reminder schedule',
   await signIn(owner.session, garage.id)
 
   await page.goto('/receivables')
-  const row = page.locator('tbody tr', { hasText: settlement.number })
+  const number = settlement.number ?? ''
+  expect(number).not.toBe('')
+  const row = page.locator('tbody tr', { hasText: number })
   await expect(row).toContainText('QA Customer An REC009')
   await expect(row).toContainText('970,000')
   await expect(page.getByText('Outstanding', { exact: true }).first()).toBeVisible()
@@ -32,8 +34,8 @@ test('E2E-REC-009 receivables screen: filter, detail and the reminder schedule',
   await expect(row).toBeVisible()
 
   // The detail shows the ledger and the settlement it links to.
-  await row.getByRole('link', { name: settlement.number }).click()
-  await expect(page.getByRole('heading', { name: settlement.number })).toBeVisible()
+  await row.getByRole('link', { name: number }).click()
+  await expect(page.getByRole('heading', { name: number })).toBeVisible()
   await expect(page.getByRole('cell', { name: 'Charge', exact: true })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Open the settlement to record a payment' })).toHaveAttribute(
     'href',

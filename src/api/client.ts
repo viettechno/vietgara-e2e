@@ -53,9 +53,6 @@ import type {
   Unit,
   Subscription,
   Vehicle,
-  DataRequest,
-  PaymentOutVoucher,
-  PurchaseOrder,
   Receivable,
   ReceivableSettings,
   SupplierPayable,
@@ -839,21 +836,9 @@ export class ApiClient {
     return this.get(`/v1/garages/${garageId}/supplier-payables${query({ page: 1, pageSize: 50, ...params })}`)
   }
 
-  listPaymentOutVouchers(garageId: string, params: { includeVoided?: boolean } = {}): Promise<ListResponse<PaymentOutVoucher>> {
-    return this.get(`/v1/garages/${garageId}/payment-out-vouchers${query({ page: 1, pageSize: 50, ...params })}`)
-  }
-
-  listPurchaseOrders(garageId: string): Promise<ListResponse<PurchaseOrder>> {
-    return this.get(`/v1/garages/${garageId}/purchase-orders${query({ page: 1, pageSize: 50 })}`)
-  }
-
   /** Makes a part's supplier its default, so low-stock orders go to it. */
   putPartSuppliers(garageId: string, partId: string, suppliers: Array<{ supplierId: string; isDefault?: boolean }>): Promise<unknown> {
     return this.put(`/v1/garages/${garageId}/parts/${partId}/suppliers`, { data: suppliers })
-  }
-
-  listDataRequests(garageId: string, params: { customerId?: string } = {}): Promise<ListResponse<DataRequest>> {
-    return this.get(`/v1/garages/${garageId}/data-requests${query({ page: 1, pageSize: 50, ...params })}`)
   }
 }
 

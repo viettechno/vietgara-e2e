@@ -16,12 +16,7 @@ test('E2E-BIL-005 void a payment and restore the outstanding amount', async ({ p
   const vehicle = await owner.api.createVehicle(garage.id ?? '', { customerId: customer.id ?? '', licensePlate: '51A-511.51' })
   const order = await closedRepairOrder(owner.api, garage.id ?? '', customer.id ?? '', vehicle.id ?? '')
   const settlement = await pendingSettlement(owner.api, garage.id ?? '', order.id ?? '')
-  await owner.api.recordSettlementPayment(
-    garage.id ?? '',
-    settlement.id ?? '',
-    { amount: '500000', method: 'PAYMENT_METHOD_CASH' },
-    newIdempotencyKey(),
-  )
+  await owner.api.recordSettlementPayment(garage.id ?? '', settlement.id ?? '', { amount: '500000', method: 'PAYMENT_METHOD_CASH' }, newIdempotencyKey())
   const paid = await owner.api.recordSettlementPayment(
     garage.id ?? '',
     settlement.id ?? '',
