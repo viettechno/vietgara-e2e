@@ -31,10 +31,9 @@ test('E2E-PAY-008 pay a supplier: payables, voucher and void', async ({ page, si
   await dialog.getByLabel('Amount', { exact: true }).fill('1200000')
   await dialog.getByRole('button', { name: 'Apply to the oldest first' }).click()
   // The payments of 1,200,000 fill the older 1,000,000 receipt, then 200,000 of the other.
-  await expect(dialog.getByText('Unallocated')).toContainText('0')
+  await expect(dialog.getByText(/^Unallocated:/)).toHaveText(/Unallocated:\s*₫0$/)
   // An allocation above the voucher is refused beside the field.
-  const inputs = dialog.locator('input[type="number"]')
-  await inputs.nth(1).fill('2000000')
+  await dialog.getByLabel(/PN-\d+-0002/).fill('2000000')
   await expect(dialog.getByText('The amounts applied exceed the voucher amount.')).toBeVisible()
   await dialog.getByRole('button', { name: 'Apply to the oldest first' }).click()
   await dialog.getByRole('button', { name: 'New payment voucher' }).click()
@@ -55,5 +54,5 @@ test('E2E-PAY-008 pay a supplier: payables, voucher and void', async ({ page, si
   await expect(page.getByText('Payment voucher voided.')).toBeVisible()
   await page.getByRole('checkbox', { name: 'Include voided' }).check()
   await expect(page.locator('tbody tr', { hasText: number })).toContainText('Voided')
-  await expect.poll(async () => (await owner.api.listSupplierPayables(gid)).data?.every((p) => p.paidAmount === '0')).toBe(true)
+  await expect.poll(async () => ((await owner.api.listSupplierPayables(gid)).data ?? []).map((p) => p.paidAmount)).toEqual(['0', '0'])
 })

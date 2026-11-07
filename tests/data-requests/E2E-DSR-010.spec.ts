@@ -37,7 +37,7 @@ test('E2E-DSR-010 data requests: the public page and the customer page', async (
   await signIn(owner.session, garage.id)
   await page.goto(`/customers/${customer.id}`)
   await expect(page.getByText('Personal-data requests')).toBeVisible()
-  await expect(page.getByText('See the data')).toBeVisible()
+  await expect(page.getByText('See the data').first()).toBeVisible()
 
   // A view in person shows the data held.
   await page.getByRole('button', { name: 'Record a request' }).click()

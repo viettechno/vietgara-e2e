@@ -30,7 +30,7 @@ test('E2E-PO-008 purchase orders: from low stock to a received order', async ({ 
   await created.click()
 
   await expect(page.getByRole('heading', { name: number })).toBeVisible()
-  await expect(page.getByText('Draft', { exact: true })).toBeVisible()
+  await expect(page.getByText('Draft', { exact: true }).first()).toBeVisible()
   await expect(page.getByRole('spinbutton', { name: 'Quantity 1' })).toHaveValue('16')
   await page.getByRole('spinbutton', { name: 'Quantity 1' }).fill('20')
   const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10)

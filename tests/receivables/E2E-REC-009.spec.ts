@@ -34,7 +34,7 @@ test('E2E-REC-009 receivables screen: filter, detail and the reminder schedule',
   // The detail shows the ledger and the settlement it links to.
   await row.getByRole('link', { name: settlement.number }).click()
   await expect(page.getByRole('heading', { name: settlement.number })).toBeVisible()
-  await expect(page.getByRole('cell', { name: 'Charge' })).toBeVisible()
+  await expect(page.getByRole('cell', { name: 'Charge', exact: true })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Open the settlement to record a payment' })).toHaveAttribute(
     'href',
     `/settlements/${settlement.id}`,
