@@ -101,9 +101,34 @@ The backend makes a verified user whose e-mail is in `PLATFORM_ADMIN_EMAILS` a p
 
 - **Weekly (stubbed stack):** the **E2E** workflow runs the full non-quarantined suite on schedule (`7 0 * * 0`: Sunday 00:07 UTC, 07:07 ICT) with the newest release images — this is where the NON-smoke P1 batch earns `@smoke`.
 - **Staging, weekly:** the **E2E (staging, weekly)** workflow (`.github/workflows/e2e-staging.yml`) runs the whole suite against staging every Sunday at 00:37 UTC (07:37 ICT), the Phase 4.2 Definition of Done. `STAGING_WEB_BASE_URL` (repository variable) overrides the default `https://staging.vietgara.vn`. It tests what is deployed there.
-- **Staging or another environment, by hand:** the **E2E (manual)** workflow with the `web_base_url` input. It needs the repository secrets `MAILPIT_URL` (the staging test inbox, with its credentials), `TEST_PASSWORD` (the users' password, passed as `TEST_USER_PASSWORD`) and `ADMIN_PASSWORD` (the platform admin's, passed as `PLATFORM_ADMIN_PASSWORD`), `STAGING_ADMIN_WEB_BASE_URL` (the platform admin console's URL, passed as `ADMIN_WEB_BASE_URL`), and optionally the repository variable `STAGING_TEST_EMAIL_DOMAIN` (default `blackbox.vietgara.test`, staging's `TEST_USERS_EMAIL_DOMAIN`): the specs sign up users under that domain so that the backend delivers their OTP e-mail to Mailpit.
+- **Staging or another environment, by hand:** the **E2E (manual)** workflow with the `web_base_url` input. It needs the repository secrets and variables listed in [Repository secrets and variables for staging](#repository-secrets-and-variables-for-staging): the specs sign up users under staging's test e-mail domain so that the backend delivers their OTP e-mail to Mailpit.
 - **The platform admin on staging.** The suite never seeds the baseline on a foreign environment, but its global setup registers and verifies the platform admin (`admin@<domain>`, password `ADMIN_PASSWORD`) through the test inbox when it cannot sign in, because staging deletes every user on its test domain after 24 hours, the admin included. The admin address must be in the backend's `PLATFORM_ADMIN_EMAILS`.
 - **Five tests skip on staging, by design:** E2E-LIC-010 (two tests) and E2E-LIC-011 move the period end with SQL (`DATABASE_URL`), which staging does not allow; `testdata/baseline` asserts the seeded baseline; E2E-IAM-020 needs the pinned dataset. The first three run in the weekly stubbed-stack job.
+
+### Repository secrets and variables for staging
+
+The **E2E (staging, weekly)** and **E2E (manual)** workflows test a deployed environment, so they need its addresses and passwords. They are not in the repository: set them in Settings, Secrets and variables, Actions. Mind the tab: the first four are **secrets**, the last two are **variables**.
+
+| Name | Kind | Value | Needed |
+| --- | --- | --- | --- |
+| `MAILPIT_URL` | secret | The test inbox with its login: `https://blackbox:<MAILPIT_PASSWORD>@mailpit-staging.vietgara.vn` (the `BLACKBOX_MAILPIT_URL` that `make blackbox-env` prints on the VM) | yes |
+| `TEST_PASSWORD` | secret | The password of the users the suite signs up: any strong value (`TEST_USER_PASSWORD`) | yes |
+| `ADMIN_PASSWORD` | secret | The password of `admin@<email domain>` (`PLATFORM_ADMIN_PASSWORD`). The **same value as in `vietgara-backend`**: it is one user on staging | yes |
+| `STAGING_ADMIN_WEB_BASE_URL` | secret | The platform admin console: `https://admin-staging.vietgara.vn` (`ADMIN_WEB_BASE_URL`) | yes |
+| `STAGING_WEB_BASE_URL` | variable | The owner web: `https://staging.vietgara.vn`. The API is `<this>/api` | no, this is the default |
+| `STAGING_TEST_EMAIL_DOMAIN` | variable | Staging's `TEST_USERS_EMAIL_DOMAIN` | no, `blackbox.vietgara.test` is the default |
+
+The API host is not a setting: the suite calls `<web base url>/api`, as the browser does, so `BLACKBOX_STAGING_API_URL` (a secret of `vietgara-backend`) is not used here. Set them from the staging VM's `make blackbox-env` output (`vietgara-infra`, `staging/README.md` §7.5), without printing the Mailpit password:
+
+```bash
+ssh <user>@<vm> 'cd ~/vietgara-infra/staging && make -s blackbox-env' \
+  | sed -n 's/^export BLACKBOX_MAILPIT_URL=//p' | gh secret set MAILPIT_URL
+gh secret set TEST_PASSWORD      # prompts for the value
+gh secret set ADMIN_PASSWORD
+printf 'https://admin-staging.vietgara.vn' | gh secret set STAGING_ADMIN_WEB_BASE_URL
+```
+
+When staging's host or the Mailpit password changes, set `MAILPIT_URL` and the URLs again; a run that fails with `ENOTFOUND` or HTTP 401 from Mailpit has an old value here.
 
 ### Quarantine (flaky tests)
 
