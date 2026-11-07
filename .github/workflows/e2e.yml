@@ -53,6 +53,23 @@ jobs:
       WEB_BASE_URL: ${{ inputs.web_base_url || 'http://localhost:8000' }}
       EXISTING_ENV: ${{ (inputs.web_base_url || '') != '' }}
     steps:
+      # Fails here, with the names, instead of deep in a step that sees an empty value.
+      - name: Check the repository secrets
+        if: ${{ env.EXISTING_ENV == 'true' }}
+        env:
+          MAILPIT_URL: ${{ secrets.MAILPIT_URL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          STAGING_ADMIN_WEB_BASE_URL: ${{ secrets.STAGING_ADMIN_WEB_BASE_URL }}
+        run: |
+          missing=""
+          for name in MAILPIT_URL TEST_PASSWORD ADMIN_PASSWORD STAGING_ADMIN_WEB_BASE_URL; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error title=Repository secrets not set::Not set:$missing. What each one holds and how to set it: https://github.com/viettechno/vietgara-e2e#repository-secrets-and-variables-for-staging"
+            exit 1
+          fi
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
