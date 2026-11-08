@@ -118,7 +118,7 @@ The **E2E (staging, weekly)** and **E2E (manual)** workflows test a deployed env
 | `STAGING_WEB_BASE_URL` | variable | The owner web: `https://staging.vietgara.vn`. The API is `<this>/api` | no, this is the default |
 | `STAGING_TEST_EMAIL_DOMAIN` | variable | Staging's `TEST_USERS_EMAIL_DOMAIN` | no, `blackbox.vietgara.test` is the default |
 
-The API host is not a setting: the suite calls `<web base url>/api`, as the browser does, so `BLACKBOX_STAGING_API_URL` (a secret of `vietgara-backend`) is not used here. Set them from the staging VM's `make blackbox-env` output (`vietgara-infra`, `staging/README.md` §7.5), without printing the Mailpit password:
+The API host is not a setting here: the suite calls `<web base url>/api`, as the browser does. `BLACKBOX_STAGING_API_URL` (the API-only host `api-staging.vietgara.vn`) is a secret of `vietgara-backend` only, where the blackbox and load-test workflows use it; do not add it, or `STAGING_API_BASE_URL`, to this repository. Set them from the staging VM's `make blackbox-env` output (`vietgara-infra`, `staging/README.md` §7.5), without printing the Mailpit password:
 
 ```bash
 ssh <user>@<vm> 'cd ~/vietgara-infra/staging && make -s blackbox-env' \
