@@ -36,9 +36,12 @@ test('E2E-PO-008 purchase orders: from low stock to a received order', async ({ 
   await page.getByRole('spinbutton', { name: 'Quantity 1' }).fill('20')
   const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10)
   await page.getByLabel('Expected date').fill(tomorrow)
+  // The toast comes as soon as the save is answered; the order is read again after it. Wait for that
+  // read before opening the dialog, so that a reload does not land under it.
+  const reloaded = page.waitForResponse((r) => r.request().method() === 'GET' && /\/purchase-orders\/[^/?]+$/.test(r.url()))
   await page.getByRole('button', { name: 'Save draft' }).click()
-  // The editor reloads what the server kept: wait for it before sending.
   await expect(page.getByText('Changes saved.')).toBeVisible()
+  await reloaded
   await expect(page.getByRole('spinbutton', { name: 'Quantity 1' })).toHaveValue('20')
 
   await page.getByRole('button', { name: 'Send order' }).click()
