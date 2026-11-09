@@ -1,10 +1,10 @@
-// E2E-LIC-021 · A plan's billing cycle can be changed only while nobody uses it
+// E2E-LIC-021 · A plan's price and billing cycle can be changed only while nobody uses it
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
 // Runs in the admin-chromium project (admin origin).
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'
 
-test("E2E-LIC-021 a plan's billing cycle can be changed only while nobody uses it", async ({
+test("E2E-LIC-021 a plan's price and billing cycle can be changed only while nobody uses it", async ({
   page,
   adminSession,
   adminApi,
@@ -30,12 +30,15 @@ test("E2E-LIC-021 a plan's billing cycle can be changed only while nobody uses i
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByText('Changes saved.').first()).toBeVisible()
 
+  // Nobody uses QA Empty: its cycle and price change, and change back.
   await plansPage.row(emptyCode).getByRole('button', { name: 'Edit' }).click()
   await page.getByLabel('Billing cycle').selectOption('BILLING_CYCLE_MONTHLY')
+  await page.getByLabel('Price').fill('450000')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await expect(page.getByText('Changes saved.').first()).toBeVisible()
   await plansPage.row(emptyCode).getByRole('button', { name: 'Edit' }).click()
   await page.getByLabel('Billing cycle').selectOption('BILLING_CYCLE_YEARLY')
+  await page.getByLabel('Price').fill('5000000')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await expect(page.getByText('Changes saved.').first()).toBeVisible()
 
@@ -57,25 +60,30 @@ test("E2E-LIC-021 a plan's billing cycle can be changed only while nobody uses i
   await owner.api.changeMyPlan(subscribedPlan.id, adminApi)
   const before = await owner.api.getMySubscription()
 
+  const locked = "This plan has subscribers, so its price, billing cycle, limits and features can't change. Create a new plan instead."
   await plansPage.row(subscribedCode).getByRole('button', { name: 'Edit' }).click()
   const cycle = page.getByLabel('Billing cycle')
   await cycle.selectOption('BILLING_CYCLE_MONTHLY')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await expect(page.getByText("The billing cycle can't be changed while this plan has subscribers.")).toBeVisible()
+  await expect(page.getByText(locked)).toBeVisible()
   await page.getByRole('button', { name: 'Cancel' }).click()
 
+  // The price is a term too.
   await plansPage.row(subscribedCode).getByRole('button', { name: 'Edit' }).click()
   await expect(cycle).toHaveValue('BILLING_CYCLE_YEARLY')
   await page.getByLabel('Price').fill('1500000')
+  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await expect(page.getByText(locked)).toBeVisible()
+  await page.getByRole('button', { name: 'Cancel' }).click()
+
+  // A form that sends every term back unchanged is not a change.
+  await plansPage.row(subscribedCode).getByRole('button', { name: 'Edit' }).click()
+  await page.getByLabel('Description').fill('Same terms, new words')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await expect(page.getByText('Changes saved.').first()).toBeVisible()
 
   const after = await owner.api.getMySubscription()
   expect(after.currentPeriodEnd).toBe(before.currentPeriodEnd)
   expect(after.periodPaidAmount).toBe(before.periodPaidAmount)
-  const nextQuote = await owner.api.post<{ quotedAmount?: string }>('/v1/me/subscription/payment-requests', {
-    planId: subscribedPlan.id,
-    kind: 'PLAN_PAYMENT_KIND_RENEW',
-  })
-  expect(nextQuote.quotedAmount).toBe('1500000')
+  expect(after.plan?.price).toBe('1000000')
 })

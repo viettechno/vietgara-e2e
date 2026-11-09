@@ -1,16 +1,10 @@
-// E2E-LIC-006 · Platform admin changes a plan's limits; owners see them at once
+// E2E-LIC-006 · A plan's limits can change while nobody uses it; once it has subscribers they are locked
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
 // Runs in the admin-chromium project (admin origin).
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'
 
-test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', async ({
-  page,
-  freshOwner,
-  signIn,
-  adminSession,
-  adminApi,
-}) => {
+test("E2E-LIC-006 a plan's limits are locked once it has subscribers", async ({ page, freshOwner, signIn, adminSession, adminApi }) => {
   await signIn(adminSession, undefined)
 
   // Create a test plan (unique code: retries share one DB)
@@ -34,14 +28,23 @@ test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', 
   const created = (listed.data ?? []).find((p) => p.code === limitCode)
   await owner.api.changeMyPlan(created?.id ?? '', adminApi)
 
-  // Admin changes max staff from 2 to 3
+  // Admin tries to change max staff from 2 to 3: the plan has a subscriber now.
   await plansPage.row(limitCode).getByRole('button', { name: 'Edit' }).click()
   await page.getByLabel('Max staff').fill('3')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await expect(page.getByText('Changes saved.').first()).toBeVisible()
+  await expect(
+    page.getByText("This plan has subscribers, so its price, billing cycle, limits and features can't change. Create a new plan instead."),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Cancel' }).click()
 
-  // The existing subscriber receives the updated limit without changing its period.
-  const updatedSubscription = await owner.api.getMySubscription()
-  expect(updatedSubscription.plan?.limits?.maxStaff).toBe(3)
+  // The subscriber keeps the limit it bought.
+  const unchanged = await owner.api.getMySubscription()
+  expect(unchanged.plan?.limits?.maxStaff).toBe(2)
+
+  // The description is not a term: it saves.
+  await plansPage.row(limitCode).getByRole('button', { name: 'Edit' }).click()
+  await page.getByLabel('Description').fill('Limits are locked while the plan has subscribers')
+  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await expect(page.getByText('Changes saved.').first()).toBeVisible()
   await expect(plansPage.row(limitCode)).toBeVisible()
 })
