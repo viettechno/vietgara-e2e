@@ -15,6 +15,7 @@ import type {
   Supplier,
   ConvertQuoteResponse,
   Customer,
+  CreditLedgerEntry,
   Entitlements,
   Garage,
   GoodsReceipt,
@@ -57,6 +58,8 @@ import type {
   ReceivableSettings,
   SupplierPayable,
 } from './types.js'
+
+type CountedTransactionKind = 'TRANSACTION_KIND_REPAIR_ORDER' | 'TRANSACTION_KIND_QUOTE' | 'TRANSACTION_KIND_SETTLEMENT'
 
 export type RegisterInput = { email: string; password: string; fullName: string; phone?: string; locale?: string }
 export type GarageInput = { name: string; address?: string; timezone?: string; defaultQuoteApprovalMode?: QuoteApprovalMode }
@@ -272,6 +275,18 @@ export class ApiClient {
     return this.get('/v1/me/subscription')
   }
 
+  listMyCreditLedger(): Promise<ListResponse<CreditLedgerEntry>> {
+    return this.get('/v1/me/subscription/credit-ledger')
+  }
+
+  listMyPlanPaymentRequests(): Promise<ListResponse<PlanPaymentRequest>> {
+    return this.get('/v1/me/subscription/payment-requests')
+  }
+
+  getMyPlanPaymentRequest(requestId: string): Promise<PlanPaymentRequest> {
+    return this.get(`/v1/me/subscription/payment-requests/${encodeURIComponent(requestId)}`)
+  }
+
   /**
    * Moves the owner onto a plan the way Release 5.2 does it: a plan-change
    * payment request, the transfer declared with evidence, and a platform
@@ -306,6 +321,7 @@ export class ApiClient {
     maxGarages: number
     maxStaff: number
     maxTransactionsPerDay: number
+    countedTransactionKinds?: CountedTransactionKind[]
     features?: string[]
     isPublic?: boolean
     isActive?: boolean
@@ -315,6 +331,13 @@ export class ApiClient {
       ...rest,
       currency: currency ?? 'VND',
       limits: { maxGarages, maxStaff, maxTransactionsPerDay },
+    })
+  }
+
+  updatePlan(planId: string, input: Partial<Omit<Plan, 'id' | 'code'>>): Promise<Plan> {
+    return jsonRequest(this.request, 'PATCH', `/v1/admin/plans/${encodeURIComponent(planId)}`, {
+      token: this.token,
+      body: input,
     })
   }
 

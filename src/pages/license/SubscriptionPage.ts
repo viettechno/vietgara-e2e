@@ -16,15 +16,15 @@ export class SubscriptionPage {
   async choosePlan(planName: string): Promise<void> {
     await this.planCard(planName).getByRole('button', { name: 'Choose this plan' }).click()
     const dialog = this.page.getByRole('dialog')
-    // Release 5.2: choosing a plan quotes a manual bank transfer (the plan
-    // applies when a platform admin approves the payment), so the dialog
+    // Choosing a plan quotes manual payment (credit is applied to the amount
+    // due, and the owner may declare a transfer or cash), so the dialog
     // confirms with "Get the payment details", not "Confirm".
     await dialog.getByRole('button', { name: 'Get the payment details' }).click()
   }
 
-  /** The "I have paid" form: payer, amount (prefilled with the amount due), the transfer screenshot; sends it for review. */
+  /** The payment declaration form: payer, amount due, and optional bank evidence; sends it for review. */
   async declareTransfer(input: { payerName: string; evidence?: { name: string; mimeType: string; buffer: Buffer } }): Promise<void> {
-    await this.page.getByRole('button', { name: 'I have paid: declare the transfer' }).click()
+    await this.page.getByRole('button', { name: 'Declare payment' }).click()
     const dialog = this.page.getByRole('dialog')
     await dialog.getByLabel('Payer name').fill(input.payerName)
     if (input.evidence) await dialog.getByLabel('Evidence (screenshot or PDF)').setInputFiles(input.evidence)

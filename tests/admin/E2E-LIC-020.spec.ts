@@ -7,12 +7,13 @@
 // owner who then asks for a plan is shown what the admin saved. The permission
 // checks, the credit adjustments and "a quote keeps the instructions it
 // started with" are in the blackbox suite.
-import { expect, test } from '../../src/fixtures/index.js'
+import { env, expect, test } from '../../src/fixtures/index.js'
 
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64')
 
 test('E2E-LIC-020 platform payment details are edited by the admin and shown to owners', async ({
   page,
+  browser,
   adminSession,
   signIn,
   freshOwner,
@@ -26,11 +27,17 @@ test('E2E-LIC-020 platform payment details are edited by the admin and shown to 
   await page.getByLabel('Account number').fill('0123456789')
   await page.getByLabel('Account holder').fill(holder)
   await page.getByLabel('Transfer instructions').fill('Write the reference in the transfer note.')
+  await page.getByLabel('Support phone').fill('0900000020')
+  await page.getByLabel('Support e-mail').fill('support020@vietgara.test')
+  await page.getByLabel('Support Zalo').fill('VietGara LIC020')
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByText('Payment details saved.')).toBeVisible()
 
   await page.reload()
   await expect(page.getByLabel('Account holder')).toHaveValue(holder)
+  await expect(page.getByLabel('Support phone')).toHaveValue('0900000020')
+  await expect(page.getByLabel('Support e-mail')).toHaveValue('support020@vietgara.test')
+  await expect(page.getByLabel('Support Zalo')).toHaveValue('VietGara LIC020')
 
   // Step 3: a PNG is accepted as the QR code, a text file is not.
   await page.getByLabel('QR code image').setInputFiles({ name: 'qr.png', mimeType: 'image/png', buffer: PNG })
@@ -40,6 +47,24 @@ test('E2E-LIC-020 platform payment details are edited by the admin and shown to 
 
   // Step 4: an owner who asks for a plan is shown what the admin saved.
   const owner = await freshOwner('lic020')
+  const ownerContext = await browser.newContext({ baseURL: env.webBaseUrl })
+  try {
+    const ownerPage = await ownerContext.newPage()
+    await ownerPage.addInitScript((session) => {
+      localStorage.setItem('vietgara.language', 'en')
+      localStorage.setItem('vietgara.accessToken', session.accessToken ?? '')
+      localStorage.setItem('vietgara.refreshToken', session.refreshToken ?? '')
+      if (session.user) localStorage.setItem('vietgara.user', JSON.stringify(session.user))
+    }, owner.session)
+    await ownerPage.goto('/subscription')
+    await expect(ownerPage.getByText('Need a larger plan or help?')).toBeVisible()
+    await expect(ownerPage.getByText('0900000020')).toBeVisible()
+    await expect(ownerPage.getByText('support020@vietgara.test')).toBeVisible()
+    await expect(ownerPage.getByText('VietGara LIC020')).toBeVisible()
+  } finally {
+    await ownerContext.close()
+  }
+
   const plans = await owner.api.listPlans()
   const plan = (plans.data ?? []).find((p) => p.code !== 'trial')
   const request = await owner.api.post<{ instructions?: { accountHolder?: string; bankName?: string } }>(

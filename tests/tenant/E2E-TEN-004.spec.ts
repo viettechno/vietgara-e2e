@@ -17,6 +17,8 @@ test('E2E-TEN-004 a second garage beyond the trial limit is refused', async ({ p
   await garages.nameField.fill('QA Gara TEN004 Second')
   await garages.saveButton.click()
 
-  await expect(page.getByText('Your plan limit is reached. Upgrade to add more.')).toBeVisible()
+  await expect(
+    page.getByText('Your plan limit is reached. Upgrade to add more, or contact support if you are already on the largest plan.'),
+  ).toBeVisible()
   await expect(garages.garageRow('QA Gara TEN004 Second')).toBeHidden()
 })

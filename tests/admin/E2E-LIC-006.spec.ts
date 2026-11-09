@@ -20,8 +20,8 @@ test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', 
   await plansPage.newPlanButton.click()
   await page.getByLabel('Code').fill(limitCode)
   await page.getByLabel('Name').fill('QA Limit Test')
-  await page.getByLabel('Price').fill('100000')
-  await page.getByLabel('Billing cycle').selectOption('BILLING_CYCLE_MONTHLY')
+  await page.getByLabel('Price').fill('1000000')
+  await page.getByLabel('Billing cycle').selectOption('BILLING_CYCLE_YEARLY')
   await page.getByLabel('Max garages').fill('1')
   await page.getByLabel('Max staff').fill('2')
   await page.getByLabel('Max transactions per day').fill('10')
@@ -40,6 +40,8 @@ test('E2E-LIC-006 platform admin changes plan limits; owners see them at once', 
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await expect(page.getByText('Changes saved.').first()).toBeVisible()
 
-  // Verify the plan shows updated limits
+  // The existing subscriber receives the updated limit without changing its period.
+  const updatedSubscription = await owner.api.getMySubscription()
+  expect(updatedSubscription.plan?.limits?.maxStaff).toBe(3)
   await expect(plansPage.row(limitCode)).toBeVisible()
 })

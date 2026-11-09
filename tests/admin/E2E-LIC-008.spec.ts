@@ -11,6 +11,9 @@ test('E2E-LIC-008 platform admin finds and extends a subscription', async ({ pag
   const owner = await freshOwner('lic008-owner')
   const subBefore = await owner.api.getMySubscription()
   const trialEnd = subBefore.currentPeriodEnd ?? ''
+  const remainingTrialMs = new Date(trialEnd).getTime() - Date.now()
+  expect(remainingTrialMs).toBeGreaterThan(59.5 * 24 * 60 * 60 * 1000)
+  expect(remainingTrialMs).toBeLessThan(60.5 * 24 * 60 * 60 * 1000)
 
   const subsPage = new AdminSubscriptionsPage(page)
   await subsPage.goto()
