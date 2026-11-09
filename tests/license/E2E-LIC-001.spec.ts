@@ -1,4 +1,4 @@
-// E2E-LIC-001 · A new owner gets a 14-day trial with trial limits
+// E2E-LIC-001 · A new owner gets a 2-month trial with trial limits
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
 //
 // The sign-up itself is E2E-IAM-001's subject; here a verified owner reads
@@ -6,8 +6,9 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'
 
-test('E2E-LIC-001 a new owner gets a 14-day trial with trial limits', async ({ page, signIn, freshOwner }) => {
+test('E2E-LIC-001 a new owner gets a 2-month trial with trial limits', async ({ page, signIn, freshOwner }) => {
   const owner = await freshOwner('lic001')
+  const subscriptionData = await owner.api.getMySubscription()
   await signIn(owner.session)
 
   const subscription = new SubscriptionPage(page)
@@ -15,15 +16,24 @@ test('E2E-LIC-001 a new owner gets a 14-day trial with trial limits', async ({ p
 
   await expect(page.getByText('Free trial').first()).toBeVisible()
   await expect(page.getByText('Trial', { exact: true }).first()).toBeVisible()
+  expect(subscriptionData.creditBalance ?? '0').toBe('0')
+  const trialEnd = new Date(subscriptionData.currentPeriodEnd ?? '')
+  expect(trialEnd.getTime() - Date.now()).toBeGreaterThan(59.5 * 24 * 60 * 60 * 1000)
+  expect(trialEnd.getTime() - Date.now()).toBeLessThan(60.5 * 24 * 60 * 60 * 1000)
   // Usage meters render the label and the "used / max" value in separate
-  // spans, so each half is asserted on its own (trial: 1 garage, 5 staff).
+  // spans, so each half is asserted on its own (trial: 1 garage, 5 staff,
+  // and 50 counted transactions).
   // Scoped to #main: the sidebar link carries the same exact text.
   await expect(page.locator('#main').getByText('Garages', { exact: true })).toBeVisible()
   await expect(page.getByText('0 / 1', { exact: true })).toBeVisible()
   await expect(page.locator('#main').getByText('Staff', { exact: true })).toBeVisible()
   await expect(page.getByText('0 / 5', { exact: true })).toBeVisible()
+  await expect(page.locator('#main').getByText('Transactions today', { exact: true })).toBeVisible()
+  await expect(page.getByText('0 / 50', { exact: true })).toBeVisible()
   for (const plan of ['Starter', 'Pro', 'Garage chain']) {
     await expect(subscription.planCard(plan)).toBeVisible()
   }
+  await expect(subscription.planCard('Starter')).toContainText('2,990,000')
+  await expect(subscription.planCard('Starter')).toContainText('/year')
   await expect(page.getByText('days left in your free trial')).toBeVisible()
 })

@@ -23,6 +23,15 @@ export type Permission = Schemas['v1Permission']
 export type Plan = Schemas['v1Plan']
 export type Subscription = Schemas['v1Subscription']
 export type PlanPaymentRequest = Schemas['v1PlanPaymentRequest']
+export type CreditLedgerEntry = {
+  kind?: string
+  amount?: string
+  balanceAfter?: string
+  remaining?: string
+  createdAt?: string
+  expiresAt?: string
+  note?: string
+}
 export type SubscriptionSummary = Schemas['v1SubscriptionSummary']
 export type SubscriptionStatus = Schemas['v1SubscriptionStatus']
 export type Entitlements = Schemas['v1Entitlements']

@@ -15,6 +15,7 @@ import type {
   Supplier,
   ConvertQuoteResponse,
   Customer,
+  CreditLedgerEntry,
   Entitlements,
   Garage,
   GoodsReceipt,
@@ -272,6 +273,18 @@ export class ApiClient {
     return this.get('/v1/me/subscription')
   }
 
+  listMyCreditLedger(): Promise<ListResponse<CreditLedgerEntry>> {
+    return this.get('/v1/me/subscription/credit-ledger')
+  }
+
+  listMyPlanPaymentRequests(): Promise<ListResponse<PlanPaymentRequest>> {
+    return this.get('/v1/me/subscription/payment-requests')
+  }
+
+  getMyPlanPaymentRequest(requestId: string): Promise<PlanPaymentRequest> {
+    return this.get(`/v1/me/subscription/payment-requests/${encodeURIComponent(requestId)}`)
+  }
+
   /**
    * Moves the owner onto a plan the way Release 5.2 does it: a plan-change
    * payment request, the transfer declared with evidence, and a platform
@@ -315,6 +328,13 @@ export class ApiClient {
       ...rest,
       currency: currency ?? 'VND',
       limits: { maxGarages, maxStaff, maxTransactionsPerDay },
+    })
+  }
+
+  updatePlan(planId: string, input: Partial<Omit<Plan, 'id' | 'code'>>): Promise<Plan> {
+    return jsonRequest(this.request, 'PATCH', `/v1/admin/plans/${encodeURIComponent(planId)}`, {
+      token: this.token,
+      body: input,
     })
   }
 

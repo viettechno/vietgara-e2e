@@ -4,7 +4,7 @@
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'
 
-test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', async ({ page, adminSession, signIn }) => {
+test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', async ({ page, adminSession, signIn, freshOwner }) => {
   await signIn(adminSession, undefined)
 
   const plansPage = new AdminPlansPage(page)
@@ -56,4 +56,13 @@ test('E2E-LIC-005 platform admin creates plans; hidden and duplicate plans', asy
   await plansPage.row(yearlyCode).getByRole('button', { name: 'Edit' }).click()
   await expect(page.getByLabel('Code')).toBeDisabled()
   await page.getByRole('button', { name: 'Cancel' }).click()
+
+  // The public yearly plan is offered to owners; the hidden plan is not.
+  const owner = await freshOwner('lic005')
+  const offered = (await owner.api.listPlans()).data ?? []
+  const ownerYearly = offered.find((plan) => plan.code === yearlyCode)
+  expect(ownerYearly?.billingCycle).toBe('BILLING_CYCLE_YEARLY')
+  expect(ownerYearly?.price).toBe('5000000')
+  expect(ownerYearly?.limits?.maxGarages).toBe(3)
+  expect(offered.some((plan) => plan.code === hiddenCode)).toBe(false)
 })

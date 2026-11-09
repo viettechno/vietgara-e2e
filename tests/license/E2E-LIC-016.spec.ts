@@ -25,6 +25,8 @@ test('E2E-LIC-016 the admin rejects a request with a reason; the owner submits a
   const subscription = new SubscriptionPage(page)
   await subscription.goto()
   await subscription.choosePlan('Starter')
+  await expect(subscription.planCard('Starter')).toContainText('/year')
+  await expect(page.getByText('2,990,000').first()).toBeVisible()
   await subscription.declareTransfer({
     payerName: 'QA Payer',
     evidence: { name: 'transfer.png', mimeType: 'image/png', buffer: SCREENSHOT },
@@ -44,6 +46,7 @@ test('E2E-LIC-016 the admin rejects a request with a reason; the owner submits a
   await subscription.goto()
   await expect(page.getByText('Your payment for the Starter plan was rejected')).toBeVisible()
   await expect(page.getByText('Transfer not received')).toBeVisible()
+  await expect(page.getByText('Free trial').first()).toBeVisible()
   await expect(page.getByText('days left in your free trial')).toBeVisible()
 
   // ...and a rejected request does not block a new one.
