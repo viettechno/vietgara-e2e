@@ -1,15 +1,14 @@
-// E2E-QUO-012 · The daily transaction limit blocks quote creation, not closing
+// E2E-QUO-012 · The configured daily limit blocks quote creation, not closing
 // docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 //
-// A plan with 2 transactions a day (created and approved through the
-// platform admin API): the quote and its conversion use them up, the
-// Subscription page shows 2 / 2, a third quote is refused, and closing the
-// repair order still works because closing is not a creation.
+// The plan counts both quotes and repair orders: the quote and its conversion
+// use the 2-document limit, while closing still works because it is not a
+// creation.
 import { expect, test } from '../../src/fixtures/index.js'
 import { QuoteFormPage } from '../../src/pages/quotes/QuoteFormPage.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'
 
-test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, signIn, freshOwner, adminApi }) => {
+test('E2E-QUO-012 the configured daily limit blocks quote creation, not closing', async ({ page, signIn, freshOwner, adminApi }) => {
   const code = `qa-txn-limit-${Date.now()}`
   const plan = await adminApi.createPlan({
     code,
@@ -19,6 +18,7 @@ test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, 
     maxGarages: 1,
     maxStaff: 5,
     maxTransactionsPerDay: 2,
+    countedTransactionKinds: ['TRANSACTION_KIND_QUOTE', 'TRANSACTION_KIND_REPAIR_ORDER'],
     isPublic: true,
     isActive: true,
   })
@@ -29,7 +29,7 @@ test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, 
   const customer = await owner.api.createCustomer(garage.id ?? '', { fullName: 'QA Customer An QUO012', phone: '0911000012' })
   const vehicle = await owner.api.createVehicle(garage.id ?? '', { customerId: customer.id ?? '', licensePlate: '51A-121.21' })
 
-  // Transaction 1: the quote. Transaction 2: its conversion.
+  // Counted document 1: the quote. Counted document 2: its repair order.
   const quote = await owner.api.createQuote(garage.id ?? '', {
     customerId: customer.id ?? '',
     vehicleId: vehicle.id ?? '',
@@ -47,7 +47,7 @@ test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, 
   await signIn(owner.session, garage.id)
 
   await new SubscriptionPage(page).goto()
-  await expect(page.getByText('Transactions today')).toBeVisible()
+  await expect(page.getByText('Counted documents today')).toBeVisible()
   await expect(page.getByText('2 / 2').first()).toBeVisible()
 
   // Transaction 3 is refused.
@@ -57,7 +57,9 @@ test('E2E-QUO-012 the daily limit blocks creation, not closing', async ({ page, 
   await quoteForm.pickSearchSelect(quoteForm.vehicleField, vehicle.licensePlate ?? '', vehicle.licensePlate ?? '')
   await quoteForm.fillLine(0, { itemType: 'Labor', description: 'Second job', quantity: '1', unitPrice: '100000' })
   await quoteForm.saveButton.click()
-  await expect(page.getByText('Your plan limit is reached. Upgrade to add more.')).toBeVisible()
+  await expect(
+    page.getByText('Your plan limit is reached. Upgrade to add more, or contact support if you are already on the largest plan.'),
+  ).toBeVisible()
 
   // Closing is a separate action from creation and is not counted.
   const order = converted.repairOrderId ?? ''

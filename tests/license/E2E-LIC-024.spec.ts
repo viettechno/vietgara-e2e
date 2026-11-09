@@ -19,6 +19,8 @@ test('E2E-LIC-024 credit is used oldest first and lapses one year after it was e
     maxGarages: 1,
     maxStaff: 5,
     maxTransactionsPerDay: 50,
+    isPublic: true,
+    isActive: true,
   })
   const subscription = await owner.api.changeMyPlan(plan.id ?? '', adminApi)
   const subscriptionId = subscription.id ?? ''
@@ -92,6 +94,8 @@ test('E2E-LIC-024 credit is used oldest first and lapses one year after it was e
     maxGarages: 1,
     maxStaff: 5,
     maxTransactionsPerDay: 50,
+    isPublic: true,
+    isActive: true,
   })
   const availableCreditQuote = await quote(cheaperPlan.id ?? '', 'PLAN_PAYMENT_KIND_CHANGE')
   expect(availableCreditQuote.creditApplied).toBe('200000')

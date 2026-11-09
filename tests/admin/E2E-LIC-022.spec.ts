@@ -11,7 +11,7 @@ test('E2E-LIC-022 the admin sets the trial length; running trials keep theirs', 
 
   const editTrial = async (days: string): Promise<void> => {
     await plansPage.row('trial').getByRole('button', { name: 'Edit' }).click()
-    await page.getByLabel('Trial days').fill(days)
+    await page.getByLabel('Trial duration in days').fill(days)
     await page.getByRole('button', { name: 'Save', exact: true }).click()
     await expect(page.getByText('Changes saved.').first()).toBeVisible()
   }
@@ -32,7 +32,7 @@ test('E2E-LIC-022 the admin sets the trial length; running trials keep theirs', 
     expect((await existingOwner.api.getMySubscription()).currentPeriodEnd).toBe(existingBefore.currentPeriodEnd)
 
     await plansPage.row('trial').getByRole('button', { name: 'Edit' }).click()
-    const trialDays = page.getByLabel('Trial days')
+    const trialDays = page.getByLabel('Trial duration in days')
     await trialDays.fill('0')
     await page.getByRole('button', { name: 'Save', exact: true }).click()
     await expect(trialDays).toHaveValue('0')
@@ -40,7 +40,7 @@ test('E2E-LIC-022 the admin sets the trial length; running trials keep theirs', 
     await page.getByRole('button', { name: 'Cancel' }).click()
 
     await plansPage.row('starter').getByRole('button', { name: 'Edit' }).click()
-    await expect(page.getByLabel('Trial days')).toHaveCount(0)
+    await expect(page.getByLabel('Trial duration in days')).toHaveCount(0)
     await page.getByRole('button', { name: 'Cancel' }).click()
   } finally {
     const dialog = page.getByRole('dialog')

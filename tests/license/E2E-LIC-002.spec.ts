@@ -24,7 +24,7 @@ test('E2E-LIC-002 owner switches from the trial to a paid plan', async ({ page, 
   await subscription.choosePlan('Starter')
   await expect(page.getByText('Payment details for Starter are ready below.')).toBeVisible()
   await expect(page.getByText('Transfer reference')).toBeVisible()
-  await expect(page.getByText('Amount to transfer')).toBeVisible()
+  await expect(page.getByText('Amount to pay')).toBeVisible()
   await expect(subscription.planCard('Starter')).toContainText('/year')
   await expect(page.getByText('2,990,000').first()).toBeVisible() // yearly price; a trial has no credit
   const quote = (await owner.api.listMyPlanPaymentRequests()).data?.[0]

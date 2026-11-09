@@ -20,7 +20,7 @@ test('E2E-LIC-025 the owner pays the amount due in cash and the admin approves i
   await subscription.choosePlan('Starter')
   await expect(page.getByText('2,990,000').first()).toBeVisible()
 
-  await page.getByRole('button', { name: 'I have paid: declare the transfer' }).click()
+  await page.getByRole('button', { name: 'Declare payment' }).click()
   const declaration = page.getByRole('dialog')
   await declaration.getByLabel('Payment method').selectOption('PAYMENT_METHOD_CASH')
   await expect(declaration.getByLabel('Payer bank')).toHaveCount(0)

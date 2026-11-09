@@ -59,6 +59,8 @@ import type {
   SupplierPayable,
 } from './types.js'
 
+type CountedTransactionKind = 'TRANSACTION_KIND_REPAIR_ORDER' | 'TRANSACTION_KIND_QUOTE' | 'TRANSACTION_KIND_SETTLEMENT'
+
 export type RegisterInput = { email: string; password: string; fullName: string; phone?: string; locale?: string }
 export type GarageInput = { name: string; address?: string; timezone?: string; defaultQuoteApprovalMode?: QuoteApprovalMode }
 export type CustomerInput = { fullName: string; phone?: string; email?: string; address?: string; personalDataConsent?: boolean }
@@ -319,6 +321,7 @@ export class ApiClient {
     maxGarages: number
     maxStaff: number
     maxTransactionsPerDay: number
+    countedTransactionKinds?: CountedTransactionKind[]
     features?: string[]
     isPublic?: boolean
     isActive?: boolean

@@ -22,13 +22,13 @@ test('E2E-LIC-001 a new owner gets a 2-month trial with trial limits', async ({ 
   expect(trialEnd.getTime() - Date.now()).toBeLessThan(60.5 * 24 * 60 * 60 * 1000)
   // Usage meters render the label and the "used / max" value in separate
   // spans, so each half is asserted on its own (trial: 1 garage, 5 staff,
-  // and 50 counted transactions).
+  // and 50 counted documents).
   // Scoped to #main: the sidebar link carries the same exact text.
   await expect(page.locator('#main').getByText('Garages', { exact: true })).toBeVisible()
   await expect(page.getByText('0 / 1', { exact: true })).toBeVisible()
   await expect(page.locator('#main').getByText('Staff', { exact: true })).toBeVisible()
   await expect(page.getByText('0 / 5', { exact: true })).toBeVisible()
-  await expect(page.locator('#main').getByText('Transactions today', { exact: true })).toBeVisible()
+  await expect(page.locator('#main').getByText('Counted documents today', { exact: true })).toBeVisible()
   await expect(page.getByText('0 / 50', { exact: true })).toBeVisible()
   for (const plan of ['Starter', 'Pro', 'Garage chain']) {
     await expect(subscription.planCard(plan)).toBeVisible()

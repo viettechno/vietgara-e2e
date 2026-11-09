@@ -22,9 +22,9 @@ export class SubscriptionPage {
     await dialog.getByRole('button', { name: 'Get the payment details' }).click()
   }
 
-  /** The "I have paid" form: payer, amount (prefilled with the amount due), the transfer screenshot; sends it for review. */
+  /** The payment declaration form: payer, amount due, and optional bank evidence; sends it for review. */
   async declareTransfer(input: { payerName: string; evidence?: { name: string; mimeType: string; buffer: Buffer } }): Promise<void> {
-    await this.page.getByRole('button', { name: 'I have paid: declare the transfer' }).click()
+    await this.page.getByRole('button', { name: 'Declare payment' }).click()
     const dialog = this.page.getByRole('dialog')
     await dialog.getByLabel('Payer name').fill(input.payerName)
     if (input.evidence) await dialog.getByLabel('Evidence (screenshot or PDF)').setInputFiles(input.evidence)
