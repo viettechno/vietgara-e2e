@@ -135,7 +135,8 @@ export interface paths {
     put?: never
     /**
      * Approves the payment: the plan applies at once and a new period starts;
-     *     the limits are validated again (PLAN_LIMIT_REACHED).
+     *     the limits are validated again (PLAN_LIMIT_REACHED) and so is the credit:
+     *     CREDIT_EXPIRED when credit applied in the quote has lapsed since.
      *     REQUEST_NOT_OPEN unless SUBMITTED.
      */
     post: operations['LicenseAdminService_ApprovePlanPayment']
@@ -191,6 +192,14 @@ export interface paths {
     delete?: never
     options?: never
     head?: never
+    /**
+     * Edits a plan. While a subscription uses the plan its commercial terms are
+     *     locked: price, currency, billing cycle, limits, counted transaction kinds
+     *     and features cannot change (PLAN_HAS_SUBSCRIBERS); a change of terms is a
+     *     new plan. The name, description, visibility, availability and order stay
+     *     editable, and so does everything on the "trial" plan, which every owner
+     *     starts on. Sending a term back unchanged is not a change.
+     */
     patch: operations['LicenseAdminService_UpdatePlan']
     trace?: never
   }
@@ -1633,7 +1642,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** FR-BIL-07 (Release 13.0): a payment-out voucher (phiếu chi) as a PDF. */
+    /** FR-BIL-07 (Release 11.0): a payment-out voucher (phiếu chi) as a PDF. */
     get: operations['DocumentService_ExportPaymentOutVoucherPdf']
     put?: never
     post?: never
@@ -1761,7 +1770,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** FR-INV-16 (Release 13.0): a purchase order as a PDF. */
+    /** FR-INV-16 (Release 11.0): a purchase order as a PDF. */
     get: operations['DocumentService_ExportPurchaseOrderPdf']
     put?: never
     post?: never
@@ -2440,7 +2449,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * FR-REC-04 (Release 13.0): the reconciliation of a period
+     * FR-REC-04 (Release 11.0): the reconciliation of a period
      *     (ReceivableService.GetReconciliationReport) as an Excel workbook.
      */
     get: operations['DocumentService_ExportReceivableReconciliationExcel']
@@ -2460,7 +2469,7 @@ export interface paths {
       cookie?: never
     }
     /**
-     * FR-DOC-02 (Release 13.0): the receivables list
+     * FR-DOC-02 (Release 11.0): the receivables list
      *     (ReceivableService.ListReceivables) as an Excel workbook.
      */
     get: operations['DocumentService_ExportReceivablesExcel']
@@ -2595,7 +2604,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** FR-INV-17 (Release 13.0): the supplier payables as an Excel workbook. */
+    /** FR-INV-17 (Release 11.0): the supplier payables as an Excel workbook. */
     get: operations['DocumentService_ExportSupplierPayablesExcel']
     put?: never
     post?: never
@@ -4323,6 +4332,9 @@ export interface components {
       /** Format: date-time */
       paidAt?: string
       evidence?: components['schemas']['v1PaymentEvidence']
+      paymentMethod?: components['schemas']['vietgaraLicenseV1PaymentMethod']
+      /** @description Optional note for a cash payment, at most 2,000 Unicode code points. */
+      cashNote?: string
     }
     NotificationServiceUpdateNotificationSettingsBody: {
       /** @description At most 100 characters. */
@@ -4380,7 +4392,7 @@ export interface components {
     SettlementServiceRecordSettlementPaymentBody: {
       /** Format: int64 */
       amount: string
-      method: components['schemas']['v1PaymentMethod']
+      method: components['schemas']['vietgaraBillingV1PaymentMethod']
       note?: string
       /**
        * @description Voucher details; each defaults to the billing party's (or customer's)
@@ -4872,9 +4884,11 @@ export interface components {
      *      - CREDIT_ENTRY_KIND_EARNED: A downgrade's surplus.
      *      - CREDIT_ENTRY_KIND_APPLIED: Credit used by a payment.
      *      - CREDIT_ENTRY_KIND_ADJUSTMENT: A correction by a platform admin.
+     *      - CREDIT_ENTRY_KIND_EXPIRED: Credit that lapsed unused one year after it was earned.
      * @enum {string}
      */
-    v1CreditEntryKind: 'CREDIT_ENTRY_KIND_EARNED' | 'CREDIT_ENTRY_KIND_APPLIED' | 'CREDIT_ENTRY_KIND_ADJUSTMENT'
+    v1CreditEntryKind:
+      'CREDIT_ENTRY_KIND_EARNED' | 'CREDIT_ENTRY_KIND_APPLIED' | 'CREDIT_ENTRY_KIND_ADJUSTMENT' | 'CREDIT_ENTRY_KIND_EXPIRED'
     /** @description CreditLedgerEntry is one change of the owner's account credit. */
     v1CreditLedgerEntry: {
       kind?: components['schemas']['v1CreditEntryKind']
@@ -4889,6 +4903,17 @@ export interface components {
       note?: string
       /** Format: date-time */
       createdAt?: string
+      /**
+       * Format: date-time
+       * @description Credit added by this entry lapses at expires_at (one year after it was
+       *     earned); unset on entries that use or remove credit.
+       */
+      expiresAt?: string
+      /**
+       * Format: int64
+       * @description The part of an added amount not used or lapsed yet.
+       */
+      remaining?: string
     }
     /**
      * @description Customer is a vehicle owner served by one garage (FR-CUS-01). It needs no
@@ -5145,8 +5170,8 @@ export interface components {
     /**
      * @description DocumentType is a document a garage can print (FR-DOC-04).
      *
-     *      - DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER: Release 13.0 (FR-BIL-07): the payment-out voucher (phiếu chi).
-     *      - DOCUMENT_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): the purchase order.
+     *      - DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER: Release 11.0 (FR-BIL-07): the payment-out voucher (phiếu chi).
+     *      - DOCUMENT_TYPE_PURCHASE_ORDER: Release 11.0 (FR-INV-16): the purchase order.
      * @enum {string}
      */
     v1DocumentType:
@@ -6134,8 +6159,8 @@ export interface components {
      *      - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.
      *      - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.
      *      - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.
-     *      - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 13.0 (FR-REC-03): a reminder that a settlement is overdue.
-     *      - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not
+     *      - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 11.0 (FR-REC-03): a reminder that a settlement is overdue.
+     *      - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 11.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not
      *     switchable: it appears in the log only, never in the settings.
      * @enum {string}
      */
@@ -6362,15 +6387,14 @@ export interface components {
       transferInstructions?: string
       /** @description The QR code image, a signed URL valid for 5 minutes; empty when none. */
       readonly qrUrl?: string
+      /**
+       * @description How owners reach the platform about needs beyond the plans or questions
+       *     (shown next to the plans); each is empty when not set.
+       */
+      supportPhone?: string
+      supportEmail?: string
+      supportZalo?: string
     }
-    /**
-     * @description PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE
-     *     is recorded manually in Release 1.4 (staff sees a bank app or gateway
-     *     dashboard confirmation and records it); automatic confirmation via a
-     *     payment gateway webhook is Release 2.0 (FR-PAY-02).
-     * @enum {string}
-     */
-    v1PaymentMethod: 'PAYMENT_METHOD_CASH' | 'PAYMENT_METHOD_BANK_TRANSFER' | 'PAYMENT_METHOD_ONLINE'
     /** @description PaymentOutAllocation applies part of a voucher to one payable. */
     v1PaymentOutAllocation: {
       payableId: string
@@ -6406,7 +6430,7 @@ export interface components {
        *     whose goods receipt was cancelled in the meantime stays cancelled.
        */
       amount: string
-      method: components['schemas']['v1PaymentMethod']
+      method: components['schemas']['vietgaraBillingV1PaymentMethod']
       /** @description Printed on the voucher; defaults to a standard text. */
       reason?: string
       note?: string
@@ -6511,6 +6535,17 @@ export interface components {
       readonly createdAt?: string
       /** Format: date-time */
       readonly updatedAt?: string
+      /**
+       * Format: int32
+       * @description Length of the free trial in days. Only the "trial" plan has it (required
+       *     there, rejected on other plans); it applies to trials started afterwards.
+       */
+      trialDays?: number
+      /**
+       * @description The document kinds that count against limits.max_transactions_per_day;
+       *     other kinds are neither counted nor limited. Defaults to repair orders.
+       */
+      countedTransactionKinds?: components['schemas']['v1TransactionKind'][]
     }
     /** @description PlanLimits caps usage across all garages of the subscribing owner. */
     v1PlanLimits: {
@@ -6524,7 +6559,7 @@ export interface components {
       maxStaff?: number
       /**
        * Format: int32
-       * @description Business documents (quotes, repair orders, settlements) created per
+       * @description Business documents of the plan's counted_transaction_kinds created per
        *     calendar day (Asia/Ho_Chi_Minh).
        */
       maxTransactionsPerDay?: number
@@ -6539,8 +6574,8 @@ export interface components {
     v1PlanPaymentKind: 'PLAN_PAYMENT_KIND_CHANGE' | 'PLAN_PAYMENT_KIND_RENEW'
     /**
      * @description PlanPaymentRequest is an owner's request to switch to a plan, or to renew
-     *     the current one, paid by a manual bank transfer (FR-LIC-07). The amounts
-     *     are fixed when it is quoted and honoured at approval.
+     *     the current one, paid by bank transfer or cash (FR-LIC-07). The amounts are
+     *     fixed when it is quoted and honoured at approval.
      */
     v1PlanPaymentRequest: {
       readonly id?: string
@@ -6591,6 +6626,9 @@ export interface components {
       reviewedAt?: string
       /** Format: date-time */
       createdAt?: string
+      paymentMethod?: components['schemas']['vietgaraLicenseV1PaymentMethod']
+      /** @description The owner's note for a cash payment; empty when not provided. */
+      cashNote?: string
     }
     /**
      * @description PlanPaymentStatus is the state of a payment request (LLD 3.3).
@@ -6670,6 +6708,10 @@ export interface components {
       readonly qrUrl?: string
       /** Format: date-time */
       readonly updatedAt?: string
+      /** @description Contact details shown to owners next to the plans. */
+      supportPhone?: string
+      supportEmail?: string
+      supportZalo?: string
     }
     /**
      * @description PlatformPermission is one action a platform user may perform (FR-IAM-10).
@@ -6682,7 +6724,7 @@ export interface components {
      *
      *      - PLATFORM_PERMISSION_PLAN_READ: Plans, and the platform payment details.
      *      - PLATFORM_PERMISSION_SUBSCRIPTION_READ: Subscriptions, payment requests and credit.
-     *      - PLATFORM_PERMISSION_STATS_READ: Platform dashboards (Phase 12).
+     *      - PLATFORM_PERMISSION_STATS_READ: Platform dashboards (Phase 14).
      *      - PLATFORM_PERMISSION_GARAGE_DIRECTORY_READ: Names and owners of garages, no business data.
      *      - PLATFORM_PERMISSION_USER_READ: Look up a user; never password or token data.
      *      - PLATFORM_PERMISSION_PLATFORM_STAFF_READ: Platform roles, groups, staff and invitations.
@@ -7124,7 +7166,7 @@ export interface components {
       readonly amount?: string
       /** @description The settlement number for a charge, the voucher number otherwise. */
       readonly reference?: string
-      method?: components['schemas']['v1PaymentMethod']
+      method?: components['schemas']['vietgaraBillingV1PaymentMethod']
       /** Format: date-time */
       readonly occurredAt?: string
     }
@@ -7148,7 +7190,7 @@ export interface components {
        * @description Days after the due date this reminder was scheduled for.
        */
       readonly offsetDays?: number
-      /** @description "email" today; push joins with Release 11.0. */
+      /** @description "email" today; push joins with Release 16.0. */
       readonly channel?: string
       outcome?: components['schemas']['v1ReminderOutcome']
       /** @description For a skip: DISABLED, OPTED_OUT, SUPPRESSED, NO_EMAIL or SUPERSEDED. */
@@ -7207,11 +7249,11 @@ export interface components {
       readonly customerName?: string
       /** Format: int64 */
       readonly amount?: string
-      method?: components['schemas']['v1PaymentMethod']
+      method?: components['schemas']['vietgaraBillingV1PaymentMethod']
     }
     /** @description ReconciliationMethodTotal is the amount collected by one payment method. */
     v1ReconciliationMethodTotal: {
-      method?: components['schemas']['v1PaymentMethod']
+      method?: components['schemas']['vietgaraBillingV1PaymentMethod']
       /** Format: int64 */
       readonly amount?: string
     }
@@ -7646,7 +7688,7 @@ export interface components {
        * @description Integer VND.
        */
       readonly amount?: string
-      method?: components['schemas']['v1PaymentMethod']
+      method?: components['schemas']['vietgaraBillingV1PaymentMethod']
       readonly note?: string
       /** Format: date-time */
       readonly createdAt?: string
@@ -8139,6 +8181,11 @@ export interface components {
        */
       periodPaidAmount?: string
       openRequest?: components['schemas']['v1PlanPaymentRequest']
+      /**
+       * Format: date-time
+       * @description When the earliest unused part of the credit lapses; unset when no credit.
+       */
+      nextCreditExpiry?: string
     }
     /**
      * @description SubscriptionStatus (LLD 3.1): past_due is read-only during the grace
@@ -8160,7 +8207,7 @@ export interface components {
     /**
      * @description Supplier is a business that sells parts to the garage, kept in the
      *     garage's directory (FR-SUP-01). It is not a customer; insurers are not
-     *     suppliers either and come back in their own record in Phase 17.
+     *     suppliers either and come back in their own record in Phase 18.
      */
     v1Supplier: {
       readonly id?: string
@@ -8427,6 +8474,12 @@ export interface components {
        */
       readonly averageTurnaroundMinutes?: string
     }
+    /**
+     * @description TransactionKind is a kind of business document a plan may count against
+     *     its daily transaction limit.
+     * @enum {string}
+     */
+    v1TransactionKind: 'TRANSACTION_KIND_REPAIR_ORDER' | 'TRANSACTION_KIND_QUOTE' | 'TRANSACTION_KIND_SETTLEMENT'
     /**
      * @description UnassignedPart is a low-stock part that no order could take because it
      *     has no default supplier.
@@ -8781,6 +8834,21 @@ export interface components {
       | 'WRITE_OFF_REASON_EXPIRED'
       | 'WRITE_OFF_REASON_INTERNAL_USE'
       | 'WRITE_OFF_REASON_WARRANTY_REPLACEMENT'
+    /**
+     * @description PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE
+     *     is recorded manually in Release 1.4 (staff sees a bank app or gateway
+     *     dashboard confirmation and records it); automatic confirmation via a
+     *     payment gateway webhook is Release 2.0 (FR-PAY-02).
+     * @enum {string}
+     */
+    vietgaraBillingV1PaymentMethod: 'PAYMENT_METHOD_CASH' | 'PAYMENT_METHOD_BANK_TRANSFER' | 'PAYMENT_METHOD_ONLINE'
+    /**
+     * @description PaymentMethod is how the owner paid the amount due (FR-LIC-07).
+     *
+     *      - PAYMENT_METHOD_CASH: Handed to the platform in cash; the admin confirms it on approval.
+     * @enum {string}
+     */
+    vietgaraLicenseV1PaymentMethod: 'PAYMENT_METHOD_BANK_TRANSFER' | 'PAYMENT_METHOD_CASH'
   }
   responses: never
   parameters: never
@@ -12208,8 +12276,8 @@ export interface operations {
          *      - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.
          *      - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.
          *      - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.
-         *      - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 13.0 (FR-REC-03): a reminder that a settlement is overdue.
-         *      - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not
+         *      - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 11.0 (FR-REC-03): a reminder that a settlement is overdue.
+         *      - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 11.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not
          *     switchable: it appears in the log only, never in the settings.
          */
         type?:

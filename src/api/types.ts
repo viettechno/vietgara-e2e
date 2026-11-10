@@ -76,7 +76,7 @@ export type StockTransactionType = Schemas['v1StockTransactionType']
 export type Settlement = Schemas['v1Settlement']
 export type SettlementPayment = Schemas['v1SettlementPayment']
 export type SettlementStatus = Schemas['v1SettlementStatus']
-export type PaymentMethod = Schemas['v1PaymentMethod']
+export type PaymentMethod = Schemas['vietgaraBillingV1PaymentMethod']
 export type Pagination = Schemas['v1Pagination']
 export type ApiErrorBody = Schemas['v1ErrorResponse']
 
