@@ -5,12 +5,14 @@ export class RegisterPage {
   readonly fullName: Locator
   readonly email: Locator
   readonly password: Locator
+  readonly confirmPassword: Locator
   readonly submit: Locator
 
   constructor(readonly page: Page) {
     this.fullName = page.getByLabel('Full name')
     this.email = page.getByLabel('Email', { exact: true })
     this.password = page.getByLabel('Password', { exact: true })
+    this.confirmPassword = page.getByLabel('Repeat password', { exact: true })
     this.submit = page.getByRole('button', { name: 'Sign up' })
   }
 
@@ -22,6 +24,7 @@ export class RegisterPage {
     await this.fullName.fill(input.fullName)
     await this.email.fill(input.email)
     await this.password.fill(input.password)
+    await this.confirmPassword.fill(input.password)
     await this.submit.click()
   }
 }
