@@ -842,7 +842,7 @@ export class ApiClient {
     return this.postIdempotent(`/v1/garages/${garageId}/settlements/${settlementId}/payments`, input, idempotencyKey)
   }
 
-  // ---- Phase 13: receivables, payables, purchase orders, data requests -----
+  // ---- Phase 11: receivables, payables, purchase orders, data requests -----
 
   listReceivables(garageId: string, params: { includePaid?: boolean; overdueOnly?: boolean } = {}): Promise<ListResponse<Receivable>> {
     return this.get(`/v1/garages/${garageId}/receivables${query({ page: 1, pageSize: 50, ...params })}`)
