@@ -83,7 +83,7 @@ export type ApiErrorBody = Schemas['v1ErrorResponse']
 /** A list answer: {data, pagination}. */
 export type ListResponse<T> = { data?: T[]; pagination?: Pagination }
 
-// Phase 13: receivables, payables, purchase orders, reports, data requests.
+// Phase 11: receivables, payables, purchase orders, reports, data requests.
 export type Receivable = Schemas['v1Receivable']
 export type ReceivableSettings = Schemas['v1ReceivableSettings']
 export type PaymentOutVoucher = Schemas['v1PaymentOutVoucher']
