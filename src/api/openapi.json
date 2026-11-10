@@ -24,7 +24,7 @@
     },
     {
       "name": "CustomerLinkService",
-      "description": "CustomerLinkService links a garage's customer profile with a VietGara\nuser, with the user's consent (FR-CUS-06). Suppliers use their own link\nin Phase 17. Needs PERMISSION_CUSTOMER_WRITE."
+      "description": "CustomerLinkService links a garage's customer profile with a VietGara\nuser, with the user's consent (FR-CUS-06). Suppliers use their own link\nin Phase 18. Needs PERMISSION_CUSTOMER_WRITE."
     },
     {
       "name": "DataRequestService",
@@ -52,7 +52,7 @@
     },
     {
       "name": "DocumentService",
-      "description": "DocumentService renders PDFs and Excel reports on request (FRD 3.13).\nEvery document is generated fresh from the owning module's own data, read\nthrough a narrow interface the same way every other cross-module read\nworks (HLD Section 2: a module never queries another module's tables\ndirectly), with a built-in template per document type, paper size and\nversion (Release 10.0; a garage designing its own templates is FR-DOC-03,\nPhase 14). Each RPC needs the same\npermission as the data it renders (quote.read, billing.read,\ninventory.read), not a permission of its own."
+      "description": "DocumentService renders PDFs and Excel reports on request (FRD 3.13).\nEvery document is generated fresh from the owning module's own data, read\nthrough a narrow interface the same way every other cross-module read\nworks (HLD Section 2: a module never queries another module's tables\ndirectly), with a built-in template per document type, paper size and\nversion (Release 10.0; a garage designing its own templates is FR-DOC-03,\nPhase 13). Each RPC needs the same\npermission as the data it renders (quote.read, billing.read,\ninventory.read), not a permission of its own."
     },
     {
       "name": "FileService",
@@ -557,7 +557,7 @@
     },
     "/api/v1/admin/plan-payment-requests/{requestId}:approve": {
       "post": {
-        "summary": "Approves the payment: the plan applies at once and a new period starts;\nthe limits are validated again (PLAN_LIMIT_REACHED).\nREQUEST_NOT_OPEN unless SUBMITTED.",
+        "summary": "Approves the payment: the plan applies at once and a new period starts;\nthe limits are validated again (PLAN_LIMIT_REACHED) and so is the credit:\nCREDIT_EXPIRED when credit applied in the quote has lapsed since.\nREQUEST_NOT_OPEN unless SUBMITTED.",
         "operationId": "LicenseAdminService_ApprovePlanPayment",
         "responses": {
           "200": {
@@ -712,6 +712,7 @@
     },
     "/api/v1/admin/plans/{planId}": {
       "patch": {
+        "summary": "Edits a plan. While a subscription uses the plan its commercial terms are\nlocked: price, currency, billing cycle, limits, counted transaction kinds\nand features cannot change (PLAN_HAS_SUBSCRIBERS); a change of terms is a\nnew plan. The name, description, visibility, availability and order stay\neditable, and so does everything on the \"trial\" plan, which every owner\nstarts on. Sending a term back unchanged is not a change.",
         "operationId": "LicenseAdminService_UpdatePlan",
         "responses": {
           "200": {
@@ -4952,7 +4953,7 @@
           },
           {
             "name": "type",
-            "description": "Filters; unspecified means all.\n\n - NOTIFICATION_TYPE_QUOTE_READY: Customer: the quote with the link to approve it. Essential.\n - NOTIFICATION_TYPE_QUOTE_DECIDED: Staff: a quote was approved or rejected.\n - NOTIFICATION_TYPE_VEHICLE_READY: Customer: the vehicle is ready for pick-up.\n - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Customer: a payment was recorded and a balance is left.\n - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.\n - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.\n - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.\n - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 13.0 (FR-REC-03): a reminder that a settlement is overdue.\n - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not\nswitchable: it appears in the log only, never in the settings.",
+            "description": "Filters; unspecified means all.\n\n - NOTIFICATION_TYPE_QUOTE_READY: Customer: the quote with the link to approve it. Essential.\n - NOTIFICATION_TYPE_QUOTE_DECIDED: Staff: a quote was approved or rejected.\n - NOTIFICATION_TYPE_VEHICLE_READY: Customer: the vehicle is ready for pick-up.\n - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Customer: a payment was recorded and a balance is left.\n - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.\n - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.\n - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.\n - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 11.0 (FR-REC-03): a reminder that a settlement is overdue.\n - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 11.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not\nswitchable: it appears in the log only, never in the settings.",
             "in": "query",
             "required": false,
             "schema": {
@@ -6100,7 +6101,7 @@
     },
     "/api/v1/garages/{garageId}/payment-out-vouchers/{voucherId}/pdf": {
       "get": {
-        "summary": "FR-BIL-07 (Release 13.0): a payment-out voucher (phiếu chi) as a PDF.",
+        "summary": "FR-BIL-07 (Release 11.0): a payment-out voucher (phiếu chi) as a PDF.",
         "operationId": "DocumentService_ExportPaymentOutVoucherPdf",
         "responses": {
           "200": {
@@ -6577,7 +6578,7 @@
     },
     "/api/v1/garages/{garageId}/purchase-orders/{purchaseOrderId}/pdf": {
       "get": {
-        "summary": "FR-INV-16 (Release 13.0): a purchase order as a PDF.",
+        "summary": "FR-INV-16 (Release 11.0): a purchase order as a PDF.",
         "operationId": "DocumentService_ExportPurchaseOrderPdf",
         "responses": {
           "200": {
@@ -8830,7 +8831,7 @@
     },
     "/api/v1/garages/{garageId}/reports/receivable-reconciliation/excel": {
       "get": {
-        "summary": "FR-REC-04 (Release 13.0): the reconciliation of a period\n(ReceivableService.GetReconciliationReport) as an Excel workbook.",
+        "summary": "FR-REC-04 (Release 11.0): the reconciliation of a period\n(ReceivableService.GetReconciliationReport) as an Excel workbook.",
         "operationId": "DocumentService_ExportReceivableReconciliationExcel",
         "responses": {
           "200": {
@@ -8887,7 +8888,7 @@
     },
     "/api/v1/garages/{garageId}/reports/receivables/excel": {
       "get": {
-        "summary": "FR-DOC-02 (Release 13.0): the receivables list\n(ReceivableService.ListReceivables) as an Excel workbook.",
+        "summary": "FR-DOC-02 (Release 11.0): the receivables list\n(ReceivableService.ListReceivables) as an Excel workbook.",
         "operationId": "DocumentService_ExportReceivablesExcel",
         "responses": {
           "200": {
@@ -9327,7 +9328,7 @@
     },
     "/api/v1/garages/{garageId}/reports/supplier-payables/excel": {
       "get": {
-        "summary": "FR-INV-17 (Release 13.0): the supplier payables as an Excel workbook.",
+        "summary": "FR-INV-17 (Release 11.0): the supplier payables as an Excel workbook.",
         "operationId": "DocumentService_ExportSupplierPayablesExcel",
         "responses": {
           "200": {
@@ -15118,6 +15119,13 @@
           },
           "evidence": {
             "$ref": "#/components/schemas/v1PaymentEvidence"
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/vietgaraLicenseV1PaymentMethod"
+          },
+          "cashNote": {
+            "type": "string",
+            "description": "Optional note for a cash payment, at most 2,000 Unicode code points."
           }
         },
         "required": ["payerName", "transferredAmount"]
@@ -15257,7 +15265,7 @@
             "format": "int64"
           },
           "method": {
-            "$ref": "#/components/schemas/v1PaymentMethod"
+            "$ref": "#/components/schemas/vietgaraBillingV1PaymentMethod"
           },
           "note": {
             "type": "string"
@@ -15994,8 +16002,8 @@
       },
       "v1CreditEntryKind": {
         "type": "string",
-        "enum": ["CREDIT_ENTRY_KIND_EARNED", "CREDIT_ENTRY_KIND_APPLIED", "CREDIT_ENTRY_KIND_ADJUSTMENT"],
-        "description": "CreditEntryKind is why the account credit changed (FR-LIC-09).\n\n - CREDIT_ENTRY_KIND_EARNED: A downgrade's surplus.\n - CREDIT_ENTRY_KIND_APPLIED: Credit used by a payment.\n - CREDIT_ENTRY_KIND_ADJUSTMENT: A correction by a platform admin."
+        "enum": ["CREDIT_ENTRY_KIND_EARNED", "CREDIT_ENTRY_KIND_APPLIED", "CREDIT_ENTRY_KIND_ADJUSTMENT", "CREDIT_ENTRY_KIND_EXPIRED"],
+        "description": "CreditEntryKind is why the account credit changed (FR-LIC-09).\n\n - CREDIT_ENTRY_KIND_EARNED: A downgrade's surplus.\n - CREDIT_ENTRY_KIND_APPLIED: Credit used by a payment.\n - CREDIT_ENTRY_KIND_ADJUSTMENT: A correction by a platform admin.\n - CREDIT_ENTRY_KIND_EXPIRED: Credit that lapsed unused one year after it was earned."
       },
       "v1CreditLedgerEntry": {
         "type": "object",
@@ -16021,6 +16029,16 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Credit added by this entry lapses at expires_at (one year after it was\nearned); unset on entries that use or remove credit."
+          },
+          "remaining": {
+            "type": "string",
+            "format": "int64",
+            "description": "The part of an added amount not used or lapsed yet."
           }
         },
         "description": "CreditLedgerEntry is one change of the owner's account credit."
@@ -16471,7 +16489,7 @@
           "DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER",
           "DOCUMENT_TYPE_PURCHASE_ORDER"
         ],
-        "description": "DocumentType is a document a garage can print (FR-DOC-04).\n\n - DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER: Release 13.0 (FR-BIL-07): the payment-out voucher (phiếu chi).\n - DOCUMENT_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): the purchase order."
+        "description": "DocumentType is a document a garage can print (FR-DOC-04).\n\n - DOCUMENT_TYPE_PAYMENT_OUT_VOUCHER: Release 11.0 (FR-BIL-07): the payment-out voucher (phiếu chi).\n - DOCUMENT_TYPE_PURCHASE_ORDER: Release 11.0 (FR-INV-16): the purchase order."
       },
       "v1EndSupportGrantResponse": {
         "type": "object",
@@ -18645,7 +18663,7 @@
           "NOTIFICATION_TYPE_PAYMENT_REMINDER",
           "NOTIFICATION_TYPE_PURCHASE_ORDER"
         ],
-        "description": "NotificationType is one e-mail a garage can switch off (FR-NOT-05,\nFR-INV-04).\n\n - NOTIFICATION_TYPE_QUOTE_READY: Customer: the quote with the link to approve it. Essential.\n - NOTIFICATION_TYPE_QUOTE_DECIDED: Staff: a quote was approved or rejected.\n - NOTIFICATION_TYPE_VEHICLE_READY: Customer: the vehicle is ready for pick-up.\n - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Customer: a payment was recorded and a balance is left.\n - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.\n - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.\n - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.\n - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 13.0 (FR-REC-03): a reminder that a settlement is overdue.\n - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 13.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not\nswitchable: it appears in the log only, never in the settings."
+        "description": "NotificationType is one e-mail a garage can switch off (FR-NOT-05,\nFR-INV-04).\n\n - NOTIFICATION_TYPE_QUOTE_READY: Customer: the quote with the link to approve it. Essential.\n - NOTIFICATION_TYPE_QUOTE_DECIDED: Staff: a quote was approved or rejected.\n - NOTIFICATION_TYPE_VEHICLE_READY: Customer: the vehicle is ready for pick-up.\n - NOTIFICATION_TYPE_PAYMENT_RECEIVED: Customer: a payment was recorded and a balance is left.\n - NOTIFICATION_TYPE_SETTLEMENT_RECEIPT: Customer: the settlement is paid; the receipt is attached. Essential.\n - NOTIFICATION_TYPE_SETTLEMENT_PAID: Staff: a settlement is fully paid.\n - NOTIFICATION_TYPE_LOW_STOCK: Staff: a part fell to or under its reorder threshold.\n - NOTIFICATION_TYPE_PAYMENT_REMINDER: Release 11.0 (FR-REC-03): a reminder that a settlement is overdue.\n - NOTIFICATION_TYPE_PURCHASE_ORDER: Release 11.0 (FR-INV-16): a purchase order e-mailed to a supplier. Not\nswitchable: it appears in the log only, never in the settings."
       },
       "v1NotificationTypeSetting": {
         "type": "object",
@@ -19006,14 +19024,19 @@
             "type": "string",
             "description": "The QR code image, a signed URL valid for 5 minutes; empty when none.",
             "readOnly": true
+          },
+          "supportPhone": {
+            "type": "string",
+            "description": "How owners reach the platform about needs beyond the plans or questions\n(shown next to the plans); each is empty when not set."
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportZalo": {
+            "type": "string"
           }
         },
         "description": "PaymentInstructions are the platform's payment details shown with a\npayment request (FR-LIC-10)."
-      },
-      "v1PaymentMethod": {
-        "type": "string",
-        "enum": ["PAYMENT_METHOD_CASH", "PAYMENT_METHOD_BANK_TRANSFER", "PAYMENT_METHOD_ONLINE"],
-        "description": "PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE\nis recorded manually in Release 1.4 (staff sees a bank app or gateway\ndashboard confirmation and records it); automatic confirmation via a\npayment gateway webhook is Release 2.0 (FR-PAY-02)."
       },
       "v1PaymentOutAllocation": {
         "type": "object",
@@ -19070,7 +19093,7 @@
             "description": "Integer VND, positive and at least the sum of the allocations. An\nallocation goes only to an OPEN payable of the voucher's supplier, once\nper payable and for at most its remaining amount, checked under a lock so\nthat two vouchers cannot take the same remainder (INVALID_ALLOCATION).\nVoiding takes the allocations off the payables that still exist; one\nwhose goods receipt was cancelled in the meantime stays cancelled."
           },
           "method": {
-            "$ref": "#/components/schemas/v1PaymentMethod"
+            "$ref": "#/components/schemas/vietgaraBillingV1PaymentMethod"
           },
           "reason": {
             "type": "string",
@@ -19222,6 +19245,18 @@
             "type": "string",
             "format": "date-time",
             "readOnly": true
+          },
+          "trialDays": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Length of the free trial in days. Only the \"trial\" plan has it (required\nthere, rejected on other plans); it applies to trials started afterwards."
+          },
+          "countedTransactionKinds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/v1TransactionKind"
+            },
+            "description": "The document kinds that count against limits.max_transactions_per_day;\nother kinds are neither counted nor limited. Defaults to repair orders."
           }
         },
         "description": "Plan is a subscription offer (FR-LIC-05).",
@@ -19242,7 +19277,7 @@
           "maxTransactionsPerDay": {
             "type": "integer",
             "format": "int32",
-            "description": "Business documents (quotes, repair orders, settlements) created per\ncalendar day (Asia/Ho_Chi_Minh)."
+            "description": "Business documents of the plan's counted_transaction_kinds created per\ncalendar day (Asia/Ho_Chi_Minh)."
           }
         },
         "description": "PlanLimits caps usage across all garages of the subscribing owner."
@@ -19349,9 +19384,16 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "paymentMethod": {
+            "$ref": "#/components/schemas/vietgaraLicenseV1PaymentMethod"
+          },
+          "cashNote": {
+            "type": "string",
+            "description": "The owner's note for a cash payment; empty when not provided."
           }
         },
-        "description": "PlanPaymentRequest is an owner's request to switch to a plan, or to renew\nthe current one, paid by a manual bank transfer (FR-LIC-07). The amounts\nare fixed when it is quoted and honoured at approval."
+        "description": "PlanPaymentRequest is an owner's request to switch to a plan, or to renew\nthe current one, paid by bank transfer or cash (FR-LIC-07). The amounts are\nfixed when it is quoted and honoured at approval."
       },
       "v1PlanPaymentStatus": {
         "type": "string",
@@ -19506,6 +19548,16 @@
             "type": "string",
             "format": "date-time",
             "readOnly": true
+          },
+          "supportPhone": {
+            "type": "string",
+            "description": "Contact details shown to owners next to the plans."
+          },
+          "supportEmail": {
+            "type": "string"
+          },
+          "supportZalo": {
+            "type": "string"
           }
         },
         "description": "PlatformPaymentSettings are the details owners transfer to (FR-LIC-10)."
@@ -19526,7 +19578,7 @@
           "PLATFORM_PERMISSION_SUPPORT_WRITE",
           "PLATFORM_PERMISSION_AUDIT_READ"
         ],
-        "description": "PlatformPermission is one action a platform user may perform (FR-IAM-10).\nThe catalogue is fixed and grouped by module, like the garage catalogue,\nbut it is a separate scope: it has no garage. A write permission includes\nthe read permission of its module. A Platform Admin (configured in the\ndeployment) holds every permission; admin staff hold the union of the\nroles of their platform staff groups. Permissions are evaluated on every\nrequest from the database, so a removal applies at once.\n\n - PLATFORM_PERMISSION_PLAN_READ: Plans, and the platform payment details.\n - PLATFORM_PERMISSION_SUBSCRIPTION_READ: Subscriptions, payment requests and credit.\n - PLATFORM_PERMISSION_STATS_READ: Platform dashboards (Phase 12).\n - PLATFORM_PERMISSION_GARAGE_DIRECTORY_READ: Names and owners of garages, no business data.\n - PLATFORM_PERMISSION_USER_READ: Look up a user; never password or token data.\n - PLATFORM_PERMISSION_PLATFORM_STAFF_READ: Platform roles, groups, staff and invitations.\n - PLATFORM_PERMISSION_SUPPORT_READ: Open and use support grants (Release 8.2).\n - PLATFORM_PERMISSION_AUDIT_READ: Read the platform audit log."
+        "description": "PlatformPermission is one action a platform user may perform (FR-IAM-10).\nThe catalogue is fixed and grouped by module, like the garage catalogue,\nbut it is a separate scope: it has no garage. A write permission includes\nthe read permission of its module. A Platform Admin (configured in the\ndeployment) holds every permission; admin staff hold the union of the\nroles of their platform staff groups. Permissions are evaluated on every\nrequest from the database, so a removal applies at once.\n\n - PLATFORM_PERMISSION_PLAN_READ: Plans, and the platform payment details.\n - PLATFORM_PERMISSION_SUBSCRIPTION_READ: Subscriptions, payment requests and credit.\n - PLATFORM_PERMISSION_STATS_READ: Platform dashboards (Phase 14).\n - PLATFORM_PERMISSION_GARAGE_DIRECTORY_READ: Names and owners of garages, no business data.\n - PLATFORM_PERMISSION_USER_READ: Look up a user; never password or token data.\n - PLATFORM_PERMISSION_PLATFORM_STAFF_READ: Platform roles, groups, staff and invitations.\n - PLATFORM_PERMISSION_SUPPORT_READ: Open and use support grants (Release 8.2).\n - PLATFORM_PERMISSION_AUDIT_READ: Read the platform audit log."
       },
       "v1PlatformPermissionInfo": {
         "type": "object",
@@ -20293,7 +20345,7 @@
             "readOnly": true
           },
           "method": {
-            "$ref": "#/components/schemas/v1PaymentMethod"
+            "$ref": "#/components/schemas/vietgaraBillingV1PaymentMethod"
           },
           "occurredAt": {
             "type": "string",
@@ -20323,7 +20375,7 @@
           },
           "channel": {
             "type": "string",
-            "description": "\"email\" today; push joins with Release 11.0.",
+            "description": "\"email\" today; push joins with Release 16.0.",
             "readOnly": true
           },
           "outcome": {
@@ -20420,7 +20472,7 @@
             "readOnly": true
           },
           "method": {
-            "$ref": "#/components/schemas/v1PaymentMethod"
+            "$ref": "#/components/schemas/vietgaraBillingV1PaymentMethod"
           }
         },
         "description": "ReconciliationLine is one movement of the period."
@@ -20429,7 +20481,7 @@
         "type": "object",
         "properties": {
           "method": {
-            "$ref": "#/components/schemas/v1PaymentMethod"
+            "$ref": "#/components/schemas/vietgaraBillingV1PaymentMethod"
           },
           "amount": {
             "type": "string",
@@ -21220,7 +21272,7 @@
             "readOnly": true
           },
           "method": {
-            "$ref": "#/components/schemas/v1PaymentMethod"
+            "$ref": "#/components/schemas/vietgaraBillingV1PaymentMethod"
           },
           "note": {
             "type": "string",
@@ -22087,6 +22139,11 @@
           },
           "openRequest": {
             "$ref": "#/components/schemas/v1PlanPaymentRequest"
+          },
+          "nextCreditExpiry": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the earliest unused part of the credit lapses; unset when no credit."
           }
         },
         "description": "Subscription belongs to an owner user and covers all their garages\n(FR-LIC-01..04)."
@@ -22160,7 +22217,7 @@
             "readOnly": true
           }
         },
-        "description": "Supplier is a business that sells parts to the garage, kept in the\ngarage's directory (FR-SUP-01). It is not a customer; insurers are not\nsuppliers either and come back in their own record in Phase 17.",
+        "description": "Supplier is a business that sells parts to the garage, kept in the\ngarage's directory (FR-SUP-01). It is not a customer; insurers are not\nsuppliers either and come back in their own record in Phase 18.",
         "required": ["name"]
       },
       "v1SupplierAging": {
@@ -22639,6 +22696,11 @@
           }
         },
         "description": "TechnicianPerformance is one technician's work in a period (FR-RPT-02)."
+      },
+      "v1TransactionKind": {
+        "type": "string",
+        "enum": ["TRANSACTION_KIND_REPAIR_ORDER", "TRANSACTION_KIND_QUOTE", "TRANSACTION_KIND_SETTLEMENT"],
+        "description": "TransactionKind is a kind of business document a plan may count against\nits daily transaction limit."
       },
       "v1UnassignedPart": {
         "type": "object",
@@ -23398,6 +23460,16 @@
           "WRITE_OFF_REASON_WARRANTY_REPLACEMENT"
         ],
         "description": "WriteOffReason is why stock is written off (FR-INV-09)."
+      },
+      "vietgaraBillingV1PaymentMethod": {
+        "type": "string",
+        "enum": ["PAYMENT_METHOD_CASH", "PAYMENT_METHOD_BANK_TRANSFER", "PAYMENT_METHOD_ONLINE"],
+        "description": "PaymentMethod: how a payment was actually collected (FR-BIL-03). ONLINE\nis recorded manually in Release 1.4 (staff sees a bank app or gateway\ndashboard confirmation and records it); automatic confirmation via a\npayment gateway webhook is Release 2.0 (FR-PAY-02)."
+      },
+      "vietgaraLicenseV1PaymentMethod": {
+        "type": "string",
+        "enum": ["PAYMENT_METHOD_BANK_TRANSFER", "PAYMENT_METHOD_CASH"],
+        "description": "PaymentMethod is how the owner paid the amount due (FR-LIC-07).\n\n - PAYMENT_METHOD_CASH: Handed to the platform in cash; the admin confirms it on approval."
       }
     }
   }
