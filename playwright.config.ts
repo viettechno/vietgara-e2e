@@ -33,7 +33,10 @@ export default defineConfig({
 
   use: {
     baseURL: webBaseUrl,
-    timezoneId: 'Pacific/Pago_Pago', // TEMPORARY repro: browser date behind the garage's
+    // The garages of the baseline and of freshOwner use the default time zone, Asia/Ho_Chi_Minh, and the console
+    // proposes "today" from the browser's clock. A runner in UTC is a day behind the garage from 17:00 to 24:00
+    // UTC, so a screen filtered up to "today" (E2E-RPT-007) did not show what the test had just closed.
+    timezoneId: 'Asia/Ho_Chi_Minh',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     // Video for failures only: `npx playwright install chromium` also
