@@ -33,6 +33,7 @@ export default defineConfig({
 
   use: {
     baseURL: webBaseUrl,
+    timezoneId: 'Pacific/Pago_Pago', // TEMPORARY repro: browser date behind the garage's
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     // Video for failures only: `npx playwright install chromium` also
