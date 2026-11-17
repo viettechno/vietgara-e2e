@@ -1,7 +1,7 @@
 // Typed loader for the shared VietGara test dataset.
 //
 // Vendored copy of `typescript/src/index.ts` from vietgara-testdata at the
-// tag named in `testdata.version` (v0.2.0). It is copied rather than taken
+// tag named in `testdata.version` (v0.4.1). It is copied rather than taken
 // as an npm `file:` dependency so `npm ci` works without a prior
 // `npm run testdata` checkout; re-sync it with
 // `.testdata/typescript/src/index.ts` whenever the pin moves and keep the
@@ -11,7 +11,7 @@ import { join } from 'node:path'
 import { parseAllDocuments } from 'yaml'
 
 /** Upstream tag this copy was taken from. Bump together with `testdata.version`. */
-export const SYNCED_WITH_TESTDATA = 'v0.2.0'
+export const SYNCED_WITH_TESTDATA = 'v0.4.1'
 
 export interface Dataset {
   version: number
@@ -26,6 +26,7 @@ export interface Dataset {
   customers: Customer[]
   suppliers: Supplier[]
   catalogue?: Catalogue
+  load?: LoadTest
 }
 
 export interface Environment {
@@ -130,6 +131,49 @@ export interface Catalogue {
   items: Item[]
 }
 
+/** The load-test population: profiles with counts, and the pools the seeder draws from. */
+export interface LoadTest {
+  requires?: string
+  profiles: LoadProfile[]
+  familyNames: string[]
+  givenNames: string[]
+  vehicles: LoadVehicle[]
+  parts: LoadPart[]
+  jobs: LoadJob[]
+}
+
+export interface LoadProfile {
+  key: string
+  description?: string
+  garages: number
+  ownerPlan: string
+  customersPerGarage: number
+  vehiclesPerCustomer: number
+  /** Received per part, in base units. */
+  openingStock: number
+  /** VND per base unit. */
+  unitCost: number
+}
+
+export interface LoadVehicle {
+  make: string
+  model: string
+  year: number
+}
+
+/** A part every load-test garage stocks; salePrice is VND per base unit. */
+export interface LoadPart {
+  sku: string
+  name: string
+  salePrice: number
+}
+
+/** A job every load-test garage offers; price is VND. */
+export interface LoadJob {
+  name: string
+  price: number
+}
+
 export interface Unit {
   key: string
   name: string
@@ -150,12 +194,16 @@ export interface Item {
   baseUnit: string
   packaging?: Packaging[]
   reorderThreshold?: number
+  /** VND per base unit (whole dong). */
+  salePrice?: number
   defaultSupplier?: string
 }
 
 export interface Packaging {
   unit: string
   factor: number
+  /** Overrides base price times factor for this packaging unit. */
+  salePrice?: number
 }
 
 const datasetSections = new Set<keyof Dataset>([
@@ -171,12 +219,13 @@ const datasetSections = new Set<keyof Dataset>([
   'customers',
   'suppliers',
   'catalogue',
+  'load',
 ])
 
 /**
  * Loads and merges the YAML files in dataDir into the shared typed dataset.
  * Duplicate top-level sections and unknown top-level keys are rejected.
- * Use the dataset repository's make validate target for schema and reference checks.
+ * Use the repository's make validate target for schema and reference checks.
  */
 export async function load(dataDir: string): Promise<Dataset> {
   let entries

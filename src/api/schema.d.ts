@@ -3801,6 +3801,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/me/password:change': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * FR-IAM-13 (Release 10.4): changes the signed-in user's password, after
+     *     the current one. The new password follows the sign-up rule (8 to 72
+     *     bytes). Every other session of the user is revoked, and the call answers a
+     *     new one; a turned-on MFA is not asked again. Errors: PASSWORD_INCORRECT
+     *     (403), NO_PASSWORD (412, the user signs in with Google only) and
+     *     VALIDATION on new_password.
+     */
+    post: operations['AuthService_ChangePassword']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/me/platform-invitations': {
     parameters: {
       query?: never
@@ -4734,6 +4758,15 @@ export interface components {
      * @enum {string}
      */
     v1CandidateMembership: 'CANDIDATE_MEMBERSHIP_NONE' | 'CANDIDATE_MEMBERSHIP_MEMBER' | 'CANDIDATE_MEMBERSHIP_INVITED'
+    v1ChangePasswordRequest: {
+      /** @description The signed-in user's current password. */
+      currentPassword: string
+      /** @description The new password: 8 to 72 bytes. */
+      newPassword: string
+    }
+    v1ChangePasswordResponse: {
+      session?: components['schemas']['v1Session']
+    }
     v1ChangeVehicleOwnerResponse: {
       vehicle?: components['schemas']['v1Vehicle']
     }
@@ -17973,6 +18006,39 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['v1DisableMfaResponse']
+        }
+      }
+      /** @description Error (API Specification Section 1.1). */
+      default: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1ErrorResponse']
+        }
+      }
+    }
+  }
+  AuthService_ChangePassword: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['v1ChangePasswordRequest']
+      }
+    }
+    responses: {
+      /** @description A new session: every other one of the user was revoked. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['v1Session']
         }
       }
       /** @description Error (API Specification Section 1.1). */
