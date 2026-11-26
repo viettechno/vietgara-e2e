@@ -39,11 +39,16 @@
     "pg": "^8.23.1",
     "prettier": "^3.10.1",
     "swagger2openapi": "^7.0.8",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.74.0",
     "yaml": "^2.9.1"
   },
   "engines": {
     "node": ">=24"
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
   }
 }
