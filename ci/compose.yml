@@ -11,7 +11,7 @@ name: vietgara-e2e
 
 services:
   pgsql:
-    image: postgres:18.4
+    image: postgres:19.0
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -58,7 +58,7 @@ services:
 
   # Catches every e-mail the backend sends: the suite reads OTP codes from its API.
   mailpit:
-    image: axllent/mailpit:latest
+    image: axllent/mailpit:v1.27
     ports:
       - '127.0.0.1:${MAILPIT_UI_PORT:-8025}:8025'
 
