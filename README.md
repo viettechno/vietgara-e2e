@@ -139,6 +139,21 @@ npm run test:quarantine                       # @quarantine-tagged subset only (
 npx playwright test --list --grep @quarantine # what is currently quarantined
 ```
 
+## Run it on your machine from your own checkouts
+
+```bash
+make e2e-local                        # build the images, run the whole suite, remove the stack
+make e2e-local GREP=E2E-IAM-001       # only the scenarios whose title matches
+make e2e-local KEEP=1                 # leave the stack running afterwards (http://localhost:8000, Mailpit on :8025)
+make e2e-local-down                   # stop it and delete its data
+make e2e-local SKIP_BUILD=1           # reuse the images from the last run
+make e2e-local ARGS="--headed"        # anything after ARGS goes to `playwright test`
+```
+
+`scripts/e2e-local.sh` builds `vietgara-backend`, `vietgara-owner-web` and `vietgara-admin-web` from the checkouts next to this repository (set `BACKEND_DIR`, `OWNER_WEB_DIR` or `ADMIN_WEB_DIR` if they live elsewhere), tags them `ghcr.io/viettechno/<name>:local`, starts `ci/compose.yml` with them, seeds the baseline, restarts the backend for the admin grant, runs the suite and removes the stack. It does what the CI job does, on images of your own code, so you test an unmerged change before it is published.
+
+It builds for what the Docker daemon runs, which it asks Docker for: `linux/arm64` on an Apple-silicon Mac, `linux/amd64` on an Intel machine or a typical Linux box. Nothing is emulated, and it ignores a `DOCKER_DEFAULT_PLATFORM` left over in your shell (it sets its own for the builds and for every container). `PLATFORM=linux/amd64` forces another target, for example to try the image production runs; it is slow, because the daemon then emulates it. `SKIP_BUILD=1` refuses images that were built for another platform. The only requirements are Docker, Node.js and the three checkouts.
+
 ## The stack from published images (what CI uses)
 
 No source checkout is needed: `ci/compose.yml` runs Postgres, Redis, Kafka, Mailpit, the backend, both web apps and Kong from the **public** images in `ghcr.io/viettechno/*`. The gateway config `ci/kong.yml` is a copy of `vietgara-backend/kong/kong.yml` (that repository is private); keep it in step when the gateway changes there.
@@ -152,7 +167,7 @@ npm test
 docker compose -f ci/compose.yml down -v
 ```
 
-Images are tagged with `git describe` (`v1.5.0`, `v1.5.0-4-g0c94831`) and published when a change merges to `master` or a `v*` tag is pushed, so the suite tests what ships, not an unmerged branch. The backend image is `linux/amd64` only: on Apple silicon set `DOCKER_DEFAULT_PLATFORM=linux/amd64`. To try an unpublished web build, build the image locally (`docker build --platform linux/amd64 -t ghcr.io/viettechno/vietgara-owner-web:local ../vietgara-owner-web`) and set `OWNER_WEB_TAG=local`. Use `KONG_PROXY_PORT` / `MAILPIT_UI_PORT` to avoid clashing with a dev stack already on 8000 / 8025.
+Images are tagged with `git describe` (`v1.5.0`, `v1.5.0-4-g0c94831`) and published when a change merges to `master` or a `v*` tag is pushed, so the suite tests what ships, not an unmerged branch. The published images are `linux/amd64` only: on Apple silicon, pulling them needs `DOCKER_DEFAULT_PLATFORM=linux/amd64` and runs them emulated, which is slow. To test your own code, use [`make e2e-local`](#run-it-on-your-machine-from-your-own-checkouts) instead. Use `KONG_PROXY_PORT` / `MAILPIT_UI_PORT` to avoid clashing with a dev stack already on 8000 / 8025.
 
 ### Run it by hand against chosen versions (GitHub Actions)
 
