@@ -1,5 +1,5 @@
 // E2E-QUO-008 · MANUAL mode: the advisor records the customer's decision directly
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 //
 // MANUAL mode has no link and no e-mail: the send only marks the quote
 // ready, and the decision panel records it. Each line's Approve/Reject

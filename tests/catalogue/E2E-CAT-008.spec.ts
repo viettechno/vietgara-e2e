@@ -1,5 +1,5 @@
 // E2E-CAT-008 · Excel exports: revenue and stock movements
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { newIdempotencyKey } from '../../src/api/client.js'

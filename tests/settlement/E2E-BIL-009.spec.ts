@@ -1,5 +1,5 @@
 // E2E-BIL-009 · Permissions: billing view and billing write
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 import { expect, test } from '../../src/fixtures/index.js'
 
 test('E2E-BIL-009 permissions: billing view and billing write', async ({ page, freshOwner, signIn }) => {

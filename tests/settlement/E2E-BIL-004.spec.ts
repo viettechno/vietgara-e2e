@@ -1,5 +1,5 @@
 // E2E-BIL-004 · Each payment gets a numbered payment voucher
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 //
 // The two payments of E2E-BIL-003 are recorded through the API (that spec
 // is the payment form's subject): the settlement page lists two vouchers

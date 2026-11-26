@@ -1,5 +1,5 @@
 // E2E-IAM-011 · Reset a forgotten password
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 //
 // Covers steps 1–5 (request, code, new password, old refused, new works).
 // Step 6 (a second browser is signed out too) needs a second live session

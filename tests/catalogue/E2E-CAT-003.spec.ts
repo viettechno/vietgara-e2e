@@ -1,5 +1,5 @@
 // E2E-CAT-003 · A new quote line prefills from the selling price; a later price change leaves the quote unchanged
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { QuoteFormPage } from '../../src/pages/quotes/QuoteFormPage.js'
 

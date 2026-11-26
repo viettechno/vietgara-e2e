@@ -1,5 +1,5 @@
 // E2E-CUS-015 · Link request confirmed with the one-time code
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 //
 // The advisor asks the user who owns the customer's verified e-mail to link;
 // the code goes to that user, who reads it out; the advisor enters it. The

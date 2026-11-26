@@ -1,5 +1,5 @@
 // E2E-INV-026 · A return to supplier records the credit; cancelling puts the parts back
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the suppliers, the part and the completed receipt are set up over the API, and the
 // owner acts as MANAGER_A1. The receipt search only lists receipts of the chosen supplier, so the

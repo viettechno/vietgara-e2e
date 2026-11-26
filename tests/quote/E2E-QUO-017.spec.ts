@@ -1,5 +1,5 @@
 // E2E-QUO-017 · A hidden consumable follows its job when the quote converts
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 //
 // API only (the scenario is marked Automated (API)).
 import { expect, test } from '../../src/fixtures/index.js'

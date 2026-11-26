@@ -1,5 +1,5 @@
 // E2E-INV-027 · Return of unused parts from a repair order, after its stock issue is posted
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the part, its stock and the repair order are set up over the API, and the owner
 // acts as MANAGER_A1. The draft issue offers no return on screen, so step 1's refusal is asserted

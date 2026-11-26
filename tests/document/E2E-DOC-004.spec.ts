@@ -1,5 +1,5 @@
 // E2E-DOC-004 · Print settings belong to the garage; changing them needs the permission
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/11_Documents.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/11_Documents.md
 //
 // The owner picks A5 for the quote and turns the copy mark on, in the
 // garage settings; the choice is kept; a member who may read the garage but

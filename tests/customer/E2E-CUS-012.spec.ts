@@ -1,5 +1,5 @@
 // E2E-CUS-012 · Permissions: view-only, no access, and full access
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { CustomersPage } from '../../src/pages/customers/CustomersPage.js'

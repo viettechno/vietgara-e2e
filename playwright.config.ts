@@ -8,7 +8,7 @@ const webBaseUrl = process.env.WEB_BASE_URL ?? 'http://localhost:8000'
 const adminWebBaseUrl = process.env.ADMIN_WEB_BASE_URL || 'http://admin.localhost:8000'
 
 // See README.md "Running the suite" and .env.example. Scenario source of
-// truth: vietgara-docs/docs/05-Testing/E2E_Scenarios -- every spec title
+// truth: vietgara-docs/docs/en/05-Testing/E2E_Scenarios -- every spec title
 // should read `E2E-<MODULE>-<NNN> · <same title as the doc>`.
 export default defineConfig({
   testDir: './tests',

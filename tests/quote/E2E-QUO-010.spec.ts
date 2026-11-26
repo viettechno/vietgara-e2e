@@ -1,5 +1,5 @@
 // E2E-QUO-010 · Convert an approved quote into a repair order, preserving only approved lines
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 //
 // The approval happens on the public link (E2E-QUO-006's path, one approve
 // + one reject over the API here); the conversion itself is the UI under

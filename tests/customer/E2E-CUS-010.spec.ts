@@ -1,5 +1,5 @@
 // E2E-CUS-010 · Manage suppliers
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 //
 // Since Release 5.0 a partner is a supplier: the screen is Suppliers and has
 // no insurer type. The second garage proves suppliers belong to one garage.

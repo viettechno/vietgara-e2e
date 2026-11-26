@@ -1,5 +1,5 @@
 // E2E-LIC-002 · Owner switches from the trial to a paid plan
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 //
 // Release 5.2: the owner quotes the plan, declares the bank transfer with a
 // screenshot (both in the owner web), and a platform admin approves it in the

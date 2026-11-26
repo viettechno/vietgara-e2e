@@ -1,5 +1,5 @@
 // E2E-INV-016 · A technician sees quantities but no cost
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Cost (average cost, stock value, unit cost, totals, the purchases and valuation
 // reports) is for callers with inventory.cost.read; the default Technician role

@@ -1,5 +1,5 @@
 // E2E-IAM-018 · Interface and e-mail language
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 import { env, expect, test } from '../../src/fixtures/index.js'
 import { LoginPage, AccountMenu } from '../../src/pages/auth/LoginPage.js'
 

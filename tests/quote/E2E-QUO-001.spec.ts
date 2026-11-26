@@ -1,5 +1,5 @@
 // E2E-QUO-001 · Create a draft quote with labor and part lines
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { QuoteFormPage } from '../../src/pages/quotes/QuoteFormPage.js'
 

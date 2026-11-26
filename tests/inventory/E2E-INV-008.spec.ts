@@ -1,5 +1,5 @@
 // E2E-INV-008 · Closing a repair order with part lines posts its stock issue and deducts stock
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // The suite's flagship cross-module test: Repair Order (closing) and
 // Inventory (stock on hand) meet through repair_order.closed, an

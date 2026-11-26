@@ -1,5 +1,5 @@
 // E2E-IAM-020 · Platform admin uses the admin web; others are denied; the owner web has no admin pages
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 //
 // Runs in the admin-chromium project (admin origin). Covers the scenario's
 // admin-web steps: the admin signs in and both Plans and Subscriptions load;

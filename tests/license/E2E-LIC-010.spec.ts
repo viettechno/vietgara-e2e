@@ -1,5 +1,5 @@
 // E2E-LIC-010 · Period ends: the owner's garages become read-only
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 //
 // The period end is moved with SQL helper H1 (src/fixtures/timeshift.ts) and
 // the stack's expiry job (every 5 s in ci/compose.yml) does the rest.

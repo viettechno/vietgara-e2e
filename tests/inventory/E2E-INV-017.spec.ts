@@ -1,5 +1,5 @@
 // E2E-INV-017 · A repair order's stock issue reserves its parts; "issue now" posts it (partial)
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // The draft issue is created by an event a moment after the order, so the card
 // is polled for with reloads, like the deduction in E2E-INV-008. Partial: the

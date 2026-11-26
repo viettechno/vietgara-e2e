@@ -1,5 +1,5 @@
 // E2E-LIC-025 · The owner pays the amount due in cash and the admin approves it
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { openAdminPage } from '../../src/fixtures/admin-page.js'
 import { AdminPaymentRequestsPage } from '../../src/pages/admin/AdminPages.js'

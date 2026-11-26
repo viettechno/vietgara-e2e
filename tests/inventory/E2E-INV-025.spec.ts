@@ -1,5 +1,5 @@
 // E2E-INV-025 · A write-off reduces stock at average cost; refused beyond on hand; cancelling puts the parts back
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the part and its stock are set up over the API, and the owner acts as MANAGER_A1.
 // A cancelled write-off offers no second cancel on screen, so the refusal of step 7 is asserted over the API.

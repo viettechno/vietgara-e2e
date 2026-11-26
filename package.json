@@ -1,7 +1,7 @@
 {
   "name": "vietgara-e2e",
   "version": "1.0.0",
-  "description": "Automated end-to-end tests for VietGara (Playwright + TypeScript), driving the real web admin against a running backend. Scenario source of truth: vietgara-docs/docs/05-Testing/E2E_Scenarios.",
+  "description": "Automated end-to-end tests for VietGara (Playwright + TypeScript), driving the real web admin against a running backend. Scenario source of truth: vietgara-docs/docs/en/05-Testing/E2E_Scenarios.",
   "private": true,
   "type": "module",
   "scripts": {

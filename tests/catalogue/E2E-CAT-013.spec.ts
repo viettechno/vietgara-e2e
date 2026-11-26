@@ -1,5 +1,5 @@
 // E2E-CAT-013 · Job permissions follow the quote permissions; jobs are per garage
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 //
 // API only (the scenario is marked Automated (API)).
 import { expect, test } from '../../src/fixtures/index.js'

@@ -1,5 +1,5 @@
 // E2E-LIC-016 · The admin rejects a request with a reason; the owner submits again
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 //
 // The owner declares a transfer, the platform admin rejects it with a
 // reason in the admin web, the owner sees the reason and the plan unchanged,

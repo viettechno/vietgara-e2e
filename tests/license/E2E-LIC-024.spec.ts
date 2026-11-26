@@ -1,5 +1,5 @@
 // E2E-LIC-024 · Credit is used oldest first and lapses one year after it was earned
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { waitForStatus } from '../../src/fixtures/expiry-setup.js'
 import { ageCreditEntry, endPeriod, expireCreditEntry, timeshiftAvailable } from '../../src/fixtures/timeshift.js'

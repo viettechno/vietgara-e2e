@@ -1,5 +1,5 @@
 // E2E-IAM-008 · Sign in and wrong credentials
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 import { env, expect, test } from '../../src/fixtures/index.js'
 import { AccountMenu, LoginPage } from '../../src/pages/auth/LoginPage.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'

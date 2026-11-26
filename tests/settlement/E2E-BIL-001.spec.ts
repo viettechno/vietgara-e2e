@@ -1,5 +1,5 @@
 // E2E-BIL-001 · Create a settlement from a closed repair order
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 //
 // The closed order is built over the API (E2E-QUO-010 + E2E-REP-008's path);
 // creating the settlement from it, and downloading its receipt PDF, is the

@@ -1,6 +1,6 @@
 // E2E-INV-001 · Add a part code to the catalogue
 // (also exercises E2E-INV-003 · A goods receipt raises stock on hand when it is completed)
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { SUPPLIER_1, createSuppliers } from '../../src/fixtures/inventory.js'
 import { CataloguePage } from '../../src/pages/catalogue/CataloguePage.js'

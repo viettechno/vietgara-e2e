@@ -1,5 +1,5 @@
 // E2E-CAT-002 · Receive by the case, issue by the can
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { SUPPLIER_1, createSuppliers } from '../../src/fixtures/inventory.js'
 import { beer330 } from '../../src/fixtures/catalogue.js'

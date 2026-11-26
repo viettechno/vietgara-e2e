@@ -1,5 +1,5 @@
 // E2E-LIC-005 · Platform admin creates plans; hidden and duplicate plans
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 // Runs in the admin-chromium project (admin origin).
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'

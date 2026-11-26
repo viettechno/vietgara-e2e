@@ -1,5 +1,5 @@
 // E2E-PLT-001 · Platform staff: an invited user gets read-only subscription access, then loses it
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/10_Platform_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/10_Platform_Staff.md
 //
 // Runs in the admin-chromium project (admin origin). The platform admin sets
 // up a role with only `subscription.read` and a group "Billing support"; a

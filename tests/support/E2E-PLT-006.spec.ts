@@ -1,5 +1,5 @@
 // E2E-PLT-006 · Admin staff request a garage, the owner approves, staff read
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/10_Platform_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/10_Platform_Staff.md
 //
 // The owner's side in the owner web: a request from platform support waits on
 // the Support access page, the owner approves it, sees the grant, and revokes

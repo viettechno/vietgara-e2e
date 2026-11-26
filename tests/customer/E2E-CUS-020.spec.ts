@@ -1,5 +1,5 @@
 // E2E-CUS-020 · A locked field is corrected with a reason, by staff who may; documents keep their snapshot
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 //
 // Also E2E-CUS-019 as the page shows it: a vehicle used by a live quote says
 // its identity is locked. The rules (all six fields refused, a plate already

@@ -1,5 +1,5 @@
 // E2E-INV-023 · Cancelling a draft closes it; cancelling a completed count posts its reversal, refused once the stock is used
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial. The draft is cancelled on screen. The reversal of a *completed* count (steps 4-5)
 // is driven over the API: owner-web 7.1 shows Cancel count on drafts only, so the screen

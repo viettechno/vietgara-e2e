@@ -1,5 +1,5 @@
 // E2E-CUS-021 · Change the owner of a vehicle; its history stays
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 //
 // The browser part: the "Change owner" dialog of the vehicle page picks the
 // new owner, the reason is optional, the same owner is refused, and the repair

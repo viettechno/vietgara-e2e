@@ -1,5 +1,5 @@
 // E2E-REP-016 · A repair order lacking stock waits on parts, and comes back when stock arrives
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 //
 // The orders are made over the API; order B's waiting banner and its issue's "Short by" are read on screen.
 import { expect, test } from '../../src/fixtures/index.js'

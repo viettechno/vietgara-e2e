@@ -1,5 +1,5 @@
 // E2E-TEN-014 · Change a member's groups; permissions change at once
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/02_Garage_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/02_Garage_Staff.md
 // Note: Full scenario requires two browsers (owner + viewer). Viewer checks
 // deferred until two-context actor fixture is available. This tests the
 // owner's group change UI flow.

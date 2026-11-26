@@ -1,5 +1,5 @@
 // E2E-CUS-001 · Create a customer with consent and find them by search
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 import { env, expect, test } from '../../src/fixtures/index.js'
 import { CustomersPage } from '../../src/pages/customers/CustomersPage.js'
 

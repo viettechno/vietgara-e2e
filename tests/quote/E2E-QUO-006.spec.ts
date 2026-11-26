@@ -1,5 +1,5 @@
 // E2E-QUO-006 · The customer decides each line from the public link
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 //
 // No sign-in: the public link is the whole point. Setup (draft + send) goes
 // over the API; every decision and assertion is the customer-facing page.

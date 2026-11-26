@@ -1,5 +1,5 @@
 // E2E-INV-012 · Completing a receipt updates stock and the weighted-average cost
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { createSuppliers } from '../../src/fixtures/inventory.js'
 import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'

@@ -1,5 +1,5 @@
 // E2E-QUO-012 · The configured daily limit blocks quote creation, not closing
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 //
 // The plan counts both quotes and repair orders: the quote and its conversion
 // use the 2-document limit, while closing still works because it is not a

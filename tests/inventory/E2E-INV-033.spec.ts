@@ -1,5 +1,5 @@
 // E2E-INV-033 · Import parts: a 500-row file with 5 bad rows lists all 5 and saves nothing; after fixing, parts, units, barcodes and opening stock appear
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // The screen is what this spec is about: the preview lists every problem at once with its row and
 // column, offers no confirmation, and nothing is saved until the fixed file is confirmed. The API rules

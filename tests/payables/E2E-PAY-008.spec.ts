@@ -1,5 +1,5 @@
 // E2E-PAY-008 · The payables screen and the payment-out voucher form
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/15_Payables_Vouchers.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/15_Payables_Vouchers.md
 //
 // Two goods receipts of one supplier make two payables (an event, so the setup
 // waits for them over the API). The form applies a payment to the oldest first,

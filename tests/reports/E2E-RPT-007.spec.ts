@@ -1,5 +1,5 @@
 // E2E-RPT-007 · The report screens
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/17_Reports.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/17_Reports.md
 //
 // A closed repair order shows its profit (here without a cost: no part was
 // issued, and the screens say so); the Reports page has the technician report

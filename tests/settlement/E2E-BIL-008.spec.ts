@@ -1,5 +1,5 @@
 // E2E-BIL-008 · The outstanding filter and the dashboard revenue follow the settlement
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 //
 // One fully paid and one pending settlement today: the outstanding filter
 // keeps only the pending one, and the dashboard's monthly revenue includes

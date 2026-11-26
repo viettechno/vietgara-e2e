@@ -1,5 +1,5 @@
 // E2E-REP-015 · Cancel a repair order before work starts: the reservation is released
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { completeAndClose, expectRefused, stockedPart } from '../../src/fixtures/inventory.js'
 import { customerWithVehicle, lineOf, openOrder, waitForIssue, waitForReserved } from '../../src/fixtures/jobs.js'
