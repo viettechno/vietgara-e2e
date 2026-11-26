@@ -1,5 +1,5 @@
 // E2E-BIL-011 · An invoice is requested only when the billing party is complete
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 //
 // The browser part of FR-CUS-07 on the settlement: choose who is billed,
 // tick "The customer asked for a VAT invoice", and be told what the company

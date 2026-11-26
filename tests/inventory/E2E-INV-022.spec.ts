@@ -1,5 +1,5 @@
 // E2E-INV-022 · Two drafts merge into one; uncounted lines are skipped on completion
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the drafts are made over the API. The screen cannot merge fewer than two
 // drafts (the button stays disabled), so the validation error of step 2 and the

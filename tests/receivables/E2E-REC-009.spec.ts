@@ -1,5 +1,5 @@
 // E2E-REC-009 · The receivables screen: filter, search and the reminder schedule
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/14_Receivables.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/14_Receivables.md
 //
 // The settlement becomes a receivable through an event, so the setup waits for
 // it over the API; what the screen shows is asserted in the UI. Nothing is

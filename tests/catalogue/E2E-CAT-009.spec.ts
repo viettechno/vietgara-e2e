@@ -1,5 +1,5 @@
 // E2E-CAT-009 · Permissions: catalogue read-only, and full access
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { CataloguePage } from '../../src/pages/catalogue/CataloguePage.js'
 

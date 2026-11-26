@@ -1,5 +1,5 @@
 // E2E-INV-031 · Scan into a goods receipt: a line, one more of the same, cases for a case code; unknown and inactive codes are told
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // A USB scanner types the code and Enter into the field, which is what the spec does. The parts and
 // their barcodes are set up over the API; the phone camera is not covered here (manual).

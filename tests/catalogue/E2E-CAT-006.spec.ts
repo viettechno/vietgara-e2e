@@ -1,5 +1,5 @@
 // E2E-CAT-006 · Part images: up to three, thumbnail in the lists
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { PNG_1X1 } from '../../src/fixtures/catalogue.js'
 import { CataloguePage } from '../../src/pages/catalogue/CataloguePage.js'

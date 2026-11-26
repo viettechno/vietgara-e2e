@@ -1,5 +1,5 @@
 // E2E-REP-006 · Update a line's own progress; the order's overall status is derived
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { RepairOrderCreateForm, RepairOrderDetailPage } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 

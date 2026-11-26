@@ -1,5 +1,5 @@
 // E2E-LIC-008 · Platform admin finds and extends a subscription
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 // Runs in the admin-chromium project (admin origin).
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminSubscriptionsPage } from '../../src/pages/admin/AdminPages.js'

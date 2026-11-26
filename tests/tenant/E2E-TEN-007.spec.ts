@@ -1,5 +1,5 @@
 // E2E-TEN-007 · Invite an existing user by e-mail and accept from the e-mail link
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/02_Garage_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/02_Garage_Staff.md
 //
 // The inviter drives the real Staff UI; the invitee (a second actor) follows
 // the real invitation e-mail link and accepts in the UI. Leaves no member

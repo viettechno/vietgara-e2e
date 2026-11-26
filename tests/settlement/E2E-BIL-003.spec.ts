@@ -1,5 +1,5 @@
 // E2E-BIL-003 · Record a partial payment, then the rest
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 //
 // Total 970,000 (see src/fixtures/order-chain.ts): 500,000 cash leaves
 // 470,000 outstanding; a 470,000 bank transfer closes it. A third payment

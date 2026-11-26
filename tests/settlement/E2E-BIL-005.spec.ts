@@ -1,5 +1,5 @@
 // E2E-BIL-005 · Void a payment and restore the outstanding amount
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/08_Settlement.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/08_Settlement.md
 //
 // The paid settlement of E2E-BIL-003 (500,000 + 470,000) is set up through
 // the API. Voiding needs a reason; the voucher stays on file marked

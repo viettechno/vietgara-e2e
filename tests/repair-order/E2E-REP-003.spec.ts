@@ -1,5 +1,5 @@
 // E2E-REP-003 · A repair order created from an approved quote inherits its data
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
 
 test('E2E-REP-003 repair order from approved quote inherits data', async ({ page, api, freshOwner, signIn }) => {

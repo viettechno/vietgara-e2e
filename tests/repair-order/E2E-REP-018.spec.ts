@@ -1,5 +1,5 @@
 // E2E-REP-018 · Permissions for line changes and cancellation
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 //
 // API only (the scenario is marked Automated (API)).
 import { expect, test } from '../../src/fixtures/index.js'

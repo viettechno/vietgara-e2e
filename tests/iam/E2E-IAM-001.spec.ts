@@ -1,5 +1,5 @@
 // E2E-IAM-001 · Sign up with e-mail and verify with the code
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 import { env, expect, test } from '../../src/fixtures/index.js'
 import { RegisterPage, VerifyEmailPage } from '../../src/pages/auth/RegisterPage.js'
 

@@ -1,5 +1,5 @@
 // E2E-IAM-022 · Turn on MFA with an authenticator app and sign in with the code
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { Authenticator } from '../../src/fixtures/totp.js'
 import { AccountMenu, LoginPage } from '../../src/pages/auth/LoginPage.js'

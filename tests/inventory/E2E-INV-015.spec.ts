@@ -1,5 +1,5 @@
 // E2E-INV-015 · Purchases by supplier and stock valuation, on screen (partial)
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the Excel exports (step 4) are checked by hand.
 import { expect, test } from '../../src/fixtures/index.js'

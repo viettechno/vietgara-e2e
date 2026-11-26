@@ -1,5 +1,5 @@
 // E2E-PO-008 · The purchase order screens
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/16_Purchase_Orders.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/16_Purchase_Orders.md
 //
 // A part below its reorder threshold with a default supplier is ordered from the
 // low-stock list; the draft is edited, sent by e-mail (the supplier's mail lands

@@ -1,5 +1,5 @@
 // E2E-TEN-022 · One owner cannot reach another owner's garage
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/02_Garage_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/02_Garage_Staff.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { GarageSwitcher } from '../../src/pages/garages/GarageSwitcher.js'

@@ -1,5 +1,5 @@
 // E2E-NOT-002 · Switch a type off and change the sender name in the garage settings
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/12_Notifications.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/12_Notifications.md
 //
 // The owner switches "Quote ready" off and names the sender in the garage
 // settings; both survive a reload; sending a quote then shows up in the

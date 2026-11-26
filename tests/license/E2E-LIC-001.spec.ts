@@ -1,5 +1,5 @@
 // E2E-LIC-001 · A new owner gets a 2-month trial with trial limits
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 //
 // The sign-up itself is E2E-IAM-001's subject; here a verified owner reads
 // the trial they landed on: plan, status, usage and the offered plans.

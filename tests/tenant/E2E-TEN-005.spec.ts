@@ -1,5 +1,5 @@
 // E2E-TEN-005 · Switch the active garage
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/02_Garage_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/02_Garage_Staff.md
 //
 // Needs two garages, so the owner moves to Pro first (one API call — the
 // plan change itself is E2E-LIC-002's subject, not this spec's).

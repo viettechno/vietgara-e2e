@@ -1,5 +1,5 @@
 // E2E-TEN-006 · Deactivate and reactivate a garage (owner actions)
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/02_Garage_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/02_Garage_Staff.md
 // Note: The full scenario requires two browsers (owner + advisor). The advisor
 // checks are deferred until the two-context actor fixture is available.
 import { expect, test } from '../../src/fixtures/index.js'

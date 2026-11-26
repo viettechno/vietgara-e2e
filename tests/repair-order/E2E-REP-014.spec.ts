@@ -1,5 +1,5 @@
 // E2E-REP-014 · The draft stock issue follows the part lines; a posted issue freezes the parts
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 //
 // The lines change over the API (the line screen is E2E-REP-013's subject); the order's
 // Stock issue card is read on screen, and Issue now is pressed there.

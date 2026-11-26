@@ -1,5 +1,5 @@
 // E2E-INV-010 · Permissions: view-only, and full access
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Three actors: the owner (full access), a Technician member (inventory
 // view only, per the default Technician role), and an outsider with no

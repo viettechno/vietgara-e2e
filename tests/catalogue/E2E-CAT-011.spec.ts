@@ -1,5 +1,5 @@
 // E2E-CAT-011 · Delete or deactivate a job; an inactive job leaves the picker and can be reactivated
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { expectRefused } from '../../src/fixtures/inventory.js'
 import { customerWithVehicle, draftQuote, oilParts } from '../../src/fixtures/jobs.js'

@@ -1,5 +1,5 @@
 // E2E-REP-017 · A hidden consumable on the order is deducted, not billed, not printed, and does not hold the order back
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 //
 // API only (the scenario is marked Automated (API)).
 import { expect, test } from '../../src/fixtures/index.js'

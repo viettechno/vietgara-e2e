@@ -1,5 +1,5 @@
 // E2E-INV-011 · A goods receipt with a supplier on each line; completion is blocked while a line has none (partial)
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the UI offers no way to clear one line's supplier while the receipt
 // has a header supplier (the line inherits it), so "completion is blocked" is

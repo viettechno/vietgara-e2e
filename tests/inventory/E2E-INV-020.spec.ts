@@ -1,5 +1,5 @@
 // E2E-INV-020 · Count a shelf: matched, over and short lines; completion makes stock equal the count
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // Partial: the parts are set up over the API and the owner acts as MANAGER_A1; the
 // refusal of an uncounted count (step 3) is asserted over the API, because the screen

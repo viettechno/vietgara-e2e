@@ -1,5 +1,5 @@
 // E2E-CUS-005 · Register a vehicle for a customer
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 //
 // Vehicles register from their owner's page (the /vehicles screen is a
 // lookup), so the UI flow opens the customer detail and adds the vehicle

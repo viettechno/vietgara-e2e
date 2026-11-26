@@ -1,5 +1,5 @@
 // E2E-PLT-002 · A role change applies at once; a role in use cannot be deleted
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/10_Platform_Staff.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/10_Platform_Staff.md
 // Runs in the admin-chromium project (admin origin).
 //
 // The browser part: the platform admin creates a role and a group in the admin

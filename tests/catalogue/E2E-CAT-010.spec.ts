@@ -1,5 +1,5 @@
 // E2E-CAT-010 · Create and edit a job with suggested parts; its rules and validation
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 //
 // The job is made and edited on screen; the rules the form does not pre-empt (negative price,
 // the same part twice, a quantity of 0 or 1.0005, 31 parts, an inactive part) are asserted over the API.

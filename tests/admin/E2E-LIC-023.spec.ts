@@ -1,5 +1,5 @@
 // E2E-LIC-023 · Only the kinds a plan counts use its daily limit; a plan with subscribers cannot change them
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 // Runs in the admin-chromium project (admin origin); business documents use the API fixture.
 import { expect, test } from '../../src/fixtures/index.js'
 import { AdminPlansPage } from '../../src/pages/admin/AdminPages.js'

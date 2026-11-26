@@ -1,5 +1,5 @@
 // E2E-CAT-012 · A part or packaging unit that a job suggests is protected
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 //
 // API only (the scenario is marked Automated (API)): the screens show the same refusals.
 import { expect, test } from '../../src/fixtures/index.js'

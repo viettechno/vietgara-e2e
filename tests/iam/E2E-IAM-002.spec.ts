@@ -1,5 +1,5 @@
 // E2E-IAM-002 · Unverified user can only use the Account page
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 import { env, expect, test } from '../../src/fixtures/index.js'
 import { LoginPage } from '../../src/pages/auth/LoginPage.js'
 

@@ -1,5 +1,5 @@
 // E2E-IAM-023 · A recovery code signs in once
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { enableMfa } from '../../src/fixtures/mfa.js'
 import { AccountMenu, LoginPage } from '../../src/pages/auth/LoginPage.js'

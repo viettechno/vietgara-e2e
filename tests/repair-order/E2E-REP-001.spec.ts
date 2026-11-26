@@ -1,5 +1,5 @@
 // E2E-REP-001 · Create an ad-hoc repair order
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { RepairOrderCreateForm } from '../../src/pages/repair-orders/RepairOrderFormPage.js'
 

@@ -1,5 +1,5 @@
 // E2E-REP-013 · Add, edit and remove lines of an open repair order
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { completeAndClose, expectRefused } from '../../src/fixtures/inventory.js'
 import { customerWithVehicle, lineOf, oilParts, openOrder } from '../../src/fixtures/jobs.js'

@@ -1,5 +1,5 @@
 // E2E-IAM-037 · Change the password from the owner web console
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/01_Identity_Access.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/01_Identity_Access.md
 // The admin console shows the same card; it is covered by its component tests, because the
 // baseline platform admin cannot change its password without breaking every other scenario.
 import { expect, test } from '../../src/fixtures/index.js'

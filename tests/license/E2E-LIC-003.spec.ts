@@ -1,5 +1,5 @@
 // E2E-LIC-003 · Downgrade is refused while usage exceeds the new plan
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { GaragesPage } from '../../src/pages/garages/GaragesPage.js'
 import { SubscriptionPage } from '../../src/pages/license/SubscriptionPage.js'

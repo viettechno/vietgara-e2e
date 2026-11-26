@@ -1,5 +1,5 @@
 // E2E-CAT-005 · Category tree (three levels) and filtering by category and brand
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/09_Catalogue.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/09_Catalogue.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { CataloguePage } from '../../src/pages/catalogue/CataloguePage.js'
 import { InventoryPage } from '../../src/pages/inventory/InventoryPage.js'

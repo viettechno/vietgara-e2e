@@ -1,5 +1,5 @@
 // E2E-REP-008 · Closing requires every line to be completed
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/06_Repair_Order.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/06_Repair_Order.md
 //
 // Line setup goes over the API (line progress itself is E2E-REP-006's
 // subject); the close gate — disabled button, hints, then the close — is

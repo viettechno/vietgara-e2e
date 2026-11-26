@@ -1,5 +1,5 @@
 // E2E-CUS-017 · Tax profiles: one personal, many company, tax ID check, default moves
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/04_Customer_Vehicle_Partner.md
 //
 // The browser part of FR-CUS-07: the customer page's "Tax profiles" section.
 // The rules behind it (a second personal profile refused, 10 or 13 digit tax

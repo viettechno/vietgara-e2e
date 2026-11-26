@@ -1,5 +1,5 @@
 // E2E-DSR-010 · The request page and the customer's data requests
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/18_Data_Requests.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/18_Data_Requests.md
 //
 // A person asks on the public page to see their data; the e-mailed link is
 // opened and the confirmation says how many garages were reached. The staff

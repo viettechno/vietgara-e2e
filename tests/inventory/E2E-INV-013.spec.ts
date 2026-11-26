@@ -1,5 +1,5 @@
 // E2E-INV-013 · Cancelling a completed receipt restores stock and cost; refused once the stock is used
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/07_Inventory.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/07_Inventory.md
 //
 // The stock is "used" by posting the stock issue of a repair order over the
 // API (the scenario closes the order; closing is E2E-INV-018's subject).

@@ -1,5 +1,5 @@
 // E2E-LIC-011 · Grace period ends: garages are suspended; admin extension restores them
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/03_License_Subscription.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/03_License_Subscription.md
 //
 // Past due (helper H1), then the grace end (helper H2): the garage is
 // locked for the owner and staff and a second e-mail arrives. The platform

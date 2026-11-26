@@ -1,5 +1,5 @@
 // E2E-QUO-015 · Pick a job on a quote: the labor line and the part lines appear, editable
-// docs: vietgara-docs/docs/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
+// docs: vietgara-docs/docs/en/05-Testing/E2E_Scenarios/05_Quote_Pricing.md
 import { expect, test } from '../../src/fixtures/index.js'
 import { expectRefused } from '../../src/fixtures/inventory.js'
 import { customerWithVehicle, draftQuote, oilChange } from '../../src/fixtures/jobs.js'
