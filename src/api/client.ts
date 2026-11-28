@@ -833,6 +833,12 @@ export class ApiClient {
     return this.get(`/v1/garages/${garageId}/settlements/${settlementId}`)
   }
 
+  // ---- Release 13.1: print agents --------------------------------------------
+
+  listPrintAgents(garageId: string): Promise<{ agents?: { id?: string; printers?: { name?: string }[] }[] }> {
+    return this.get(`/v1/garages/${garageId}/print-agents`)
+  }
+
   recordSettlementPayment(
     garageId: string,
     settlementId: string,

@@ -32,13 +32,16 @@ test('E2E-DOC-015 the owner adds a print agent and its printer, and a voucher pr
   const pairing = page.getByRole('dialog', { name: 'Pair “Quầy”' })
   const code = (await pairing.getByTestId('pairing-code').textContent()) ?? ''
   expect(code).toMatch(/^[A-Z2-9]{4}-[A-Z2-9]{4}$/)
-  await expect(pairing.getByText(`setup --server`)).toContainText(code)
+  await expect(pairing.getByTestId('pairing-command')).toContainText(`setup --server`)
+  await expect(pairing.getByTestId('pairing-command')).toContainText(code)
   await expect(pairing.getByRole('link', { name: /Download the agent for Windows/ })).toBeVisible()
   await pairing.getByText('Close', { exact: true }).click()
 
   // Step 2: the agent pairs and connects; the console says so.
   const agent = await connectAgent(await pairAgent(owner.api, code))
   try {
+    // The server has stored the printers the agent reported.
+    await expect.poll(async () => (await owner.api.listPrintAgents(gid)).agents?.[0]?.printers?.map((p) => p.name)).toEqual(['XP-80C'])
     await page.reload()
     await expect(page.getByText('Connected', { exact: true })).toBeVisible()
     await expect(page.getByText('QUAY-PC · e2e')).toBeVisible()

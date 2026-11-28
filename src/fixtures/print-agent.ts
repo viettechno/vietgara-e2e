@@ -26,7 +26,8 @@ export async function pairAgent(api: ApiClient, code: string): Promise<string> {
     os: 'windows/amd64',
     version: 'e2e',
   })
-  return paired.agentKey ?? ''
+  if (!paired.agentKey) throw new Error('the pairing answered no agentKey')
+  return paired.agentKey
 }
 
 /** Connects as the agent with its key and reports one printer, XP-80C. */
@@ -34,19 +35,35 @@ export async function connectAgent(key: string): Promise<FakeAgent> {
   const url = `${env.apiBaseUrl.replace(/^http/, 'ws')}v1/print-agents/connect`
   const socket = new WebSocket(url, { headers: { Authorization: `Bearer ${key}` } })
   const queue: AgentMessage[] = []
-  const waiting: ((message: AgentMessage) => void)[] = []
+  const waiting: { resolve: (message: AgentMessage) => void; reject: (error: Error) => void }[] = []
+  let closed: Error | undefined
   socket.addEventListener('message', (event) => {
-    const message = JSON.parse(String(event.data)) as AgentMessage
+    let message: AgentMessage
+    try {
+      message = JSON.parse(String(event.data)) as AgentMessage
+    } catch {
+      return // not a message of the protocol
+    }
     const next = waiting.shift()
-    if (next) next(message)
+    if (next) next.resolve(message)
     else queue.push(message)
+  })
+  // A closed socket fails every read at once, with its code, instead of a test timeout.
+  socket.addEventListener('close', (event) => {
+    closed = new Error(`the agent's socket closed: ${event.code} ${event.reason}`)
+    for (const next of waiting.splice(0)) next.reject(closed)
   })
   await new Promise<void>((resolve, reject) => {
     socket.addEventListener('open', () => resolve(), { once: true })
     socket.addEventListener('error', () => reject(new Error('the agent could not connect')), { once: true })
   })
 
-  const read = () => new Promise<AgentMessage>((resolve) => (queue.length > 0 ? resolve(queue.shift()!) : waiting.push(resolve)))
+  const read = () =>
+    new Promise<AgentMessage>((resolve, reject) => {
+      if (queue.length > 0) resolve(queue.shift()!)
+      else if (closed) reject(closed)
+      else waiting.push({ resolve, reject })
+    })
   const send = (message: object) => socket.send(JSON.stringify(message))
 
   const hello = await read()
