@@ -833,12 +833,6 @@ export class ApiClient {
     return this.get(`/v1/garages/${garageId}/settlements/${settlementId}`)
   }
 
-  // ---- Release 13.1: print agents --------------------------------------------
-
-  listPrintAgents(garageId: string): Promise<{ agents?: { id?: string; printers?: { name?: string }[] }[] }> {
-    return this.get(`/v1/garages/${garageId}/print-agents`)
-  }
-
   recordSettlementPayment(
     garageId: string,
     settlementId: string,
@@ -846,6 +840,12 @@ export class ApiClient {
     idempotencyKey: string,
   ): Promise<Settlement> {
     return this.postIdempotent(`/v1/garages/${garageId}/settlements/${settlementId}/payments`, input, idempotencyKey)
+  }
+
+  // ---- Release 13.1: print agents --------------------------------------------
+
+  listPrintAgents(garageId: string): Promise<{ agents?: { id?: string; printers?: { name?: string }[] }[] }> {
+    return this.get(`/v1/garages/${garageId}/print-agents`)
   }
 
   // ---- Phase 11: receivables, payables, purchase orders, data requests -----

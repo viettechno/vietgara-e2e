@@ -30,6 +30,7 @@ test('E2E-DOC-015 the owner adds a print agent and its printer, and a voucher pr
   await page.getByRole('dialog').getByRole('textbox', { name: /Name/ }).fill('Quầy')
   await page.getByRole('button', { name: 'Create the pairing code' }).click()
   const pairing = page.getByRole('dialog', { name: 'Pair “Quầy”' })
+  await expect(pairing.getByTestId('pairing-code')).toHaveText(/^[A-Z2-9]{4}-[A-Z2-9]{4}$/)
   const code = (await pairing.getByTestId('pairing-code').textContent()) ?? ''
   expect(code).toMatch(/^[A-Z2-9]{4}-[A-Z2-9]{4}$/)
   await expect(pairing.getByTestId('pairing-command')).toContainText(`setup --server`)

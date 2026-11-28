@@ -67,8 +67,13 @@ export async function connectAgent(key: string): Promise<FakeAgent> {
   const send = (message: object) => socket.send(JSON.stringify(message))
 
   // A read that waits at most 20 seconds, with a message that says what was missing.
-  const within = <T>(promise: Promise<T>, what: string) =>
-    Promise.race([promise, new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`no ${what} reached the agent`)), 20_000))])
+  const within = <T>(promise: Promise<T>, what: string): Promise<T> => {
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`no ${what} reached the agent`)), 20_000)
+    })
+    return Promise.race([promise, timeout]).finally(() => clearTimeout(timer))
+  }
 
   try {
     const hello = await within(read(), 'hello')
