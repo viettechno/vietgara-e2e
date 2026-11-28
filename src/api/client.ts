@@ -842,6 +842,12 @@ export class ApiClient {
     return this.postIdempotent(`/v1/garages/${garageId}/settlements/${settlementId}/payments`, input, idempotencyKey)
   }
 
+  // ---- Release 13.1: print agents --------------------------------------------
+
+  listPrintAgents(garageId: string): Promise<{ agents?: { id?: string; printers?: { name?: string }[] }[] }> {
+    return this.get(`/v1/garages/${garageId}/print-agents`)
+  }
+
   // ---- Phase 11: receivables, payables, purchase orders, data requests -----
 
   listReceivables(garageId: string, params: { includePaid?: boolean; overdueOnly?: boolean } = {}): Promise<ListResponse<Receivable>> {
