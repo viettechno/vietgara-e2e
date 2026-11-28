@@ -7,12 +7,12 @@ import { env } from './env.js'
 type AgentMessage = {
   type: string
   agentId?: string
-  job?: { id: string; printer: string; format: string; paperSize?: string; data: string }
+  job?: { id: string; printer: string; format: string; paperSize?: string; title: string; data: string }
 }
 
 export type FakeAgent = {
   /** The next job the server sends, with its bytes decoded. */
-  nextJob(): Promise<{ id: string; printer: string; format: string; paperSize?: string; data: Buffer }>
+  nextJob(): Promise<{ id: string; printer: string; format: string; paperSize?: string; title: string; data: Buffer }>
   /** Reports a job printed. */
   printed(jobId: string): void
   close(): void
@@ -66,17 +66,30 @@ export async function connectAgent(key: string): Promise<FakeAgent> {
     })
   const send = (message: object) => socket.send(JSON.stringify(message))
 
-  const hello = await read()
-  if (hello.type !== 'hello') throw new Error(`expected hello, got ${hello.type}`)
+  // A read that waits at most 20 seconds, with a message that says what was missing.
+  const within = <T>(promise: Promise<T>, what: string) =>
+    Promise.race([promise, new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`no ${what} reached the agent`)), 20_000))])
+
+  try {
+    const hello = await within(read(), 'hello')
+    if (hello.type !== 'hello') throw new Error(`expected hello, got ${hello.type}`)
+  } catch (error) {
+    socket.close()
+    throw error
+  }
   send({ type: 'printers', hostname: 'QUAY-PC', os: 'windows/amd64', version: 'e2e', printers: [{ name: 'XP-80C', default: true }] })
 
   return {
-    async nextJob() {
-      for (;;) {
-        const message = await read()
-        if (message.type === 'job' && message.job) return { ...message.job, data: Buffer.from(message.job.data, 'base64') }
-      }
-    },
+    nextJob: () =>
+      within(
+        (async () => {
+          for (;;) {
+            const message = await read()
+            if (message.type === 'job' && message.job) return { ...message.job, data: Buffer.from(message.job.data, 'base64') }
+          }
+        })(),
+        'job',
+      ),
     printed: (jobId) => send({ type: 'result', jobId, status: 'printed' }),
     close: () => socket.close(),
   }

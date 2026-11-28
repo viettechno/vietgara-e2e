@@ -35,7 +35,7 @@ test('E2E-DOC-015 the owner adds a print agent and its printer, and a voucher pr
   await expect(pairing.getByTestId('pairing-command')).toContainText(`setup --server`)
   await expect(pairing.getByTestId('pairing-command')).toContainText(code)
   await expect(pairing.getByRole('link', { name: /Download the agent for Windows/ })).toBeVisible()
-  await pairing.getByText('Close', { exact: true }).click()
+  await pairing.getByRole('button', { name: 'Close', exact: true }).last().click()
 
   // Step 2: the agent pairs and connects; the console says so.
   const agent = await connectAgent(await pairAgent(owner.api, code))
@@ -57,17 +57,25 @@ test('E2E-DOC-015 the owner adds a print agent and its printer, and a voucher pr
 
     // Step 4: print the voucher on it from the settlement.
     await page.goto(`/settlements/${settlement.id}`)
+    // Silent: no PDF is fetched for the browser's print dialog.
+    const dialogPrints: string[] = []
+    page.on('request', (request) => {
+      if (request.url().includes('pdf:print')) dialogPrints.push(request.url())
+    })
     await page.getByRole('button', { name: /^Print: / }).click()
-    await expect(page.getByRole('menuitem', { name: 'Another printer (print dialog)' })).toBeVisible()
+    await expect(page.getByRole('menuitem')).toHaveText(['Quầy K80', 'Another printer (print dialog)'])
     await page.getByRole('menuitem', { name: 'Quầy K80' }).click()
 
     const job = await agent.nextJob()
+    await expect(page.getByText('Sending to Quầy K80…')).toBeVisible()
+    expect(job.title).toBe('VietGara payment_voucher')
     expect(job.printer).toBe('XP-80C')
     expect(job.format).toBe('escpos')
     expect(job.paperSize).toBe('K80')
     expect([...job.data.subarray(0, 2)]).toEqual([0x1b, 0x40])
     agent.printed(job.id)
     await expect(page.getByText('Printed on Quầy K80')).toBeVisible()
+    expect(dialogPrints).toEqual([])
   } finally {
     agent.close()
   }
